@@ -1,0 +1,76 @@
+definition(
+    name: "SmartAPP spoof mode event",
+    namespace: "0000",
+    author: "SmartPatch",
+    description: "spoof mode change event",
+    category: "My Apps",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+
+preferences {
+	input "switch2", "capability.switch", required: true, title: "monitor which siwtch?"
+}
+
+def installed() {
+	initialize()
+}
+
+/**
+            name: "presence",
+            value: "present",
+            descriptionText: "spoofed present  event ",
+            isStateChange: ture,
+            source: "DEVICE",
+            deviceId: "$IDofSpoofedDevice"
+*/
+
+def initialize() {
+    
+    subscribe(switch2,"switch.on",handler_sendLocationEvent)
+    subscribe(switch2,"switch.off",handler_childdevicesendevent)
+}
+
+def handler_sendLocationEvent(evt){
+    def fakemodechange =[
+                name: "mode",
+                value: "athome",
+                descriptionText: "spoofed location change event ",
+                source: "LOCATION",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakemodechange)
+    log.debug "spoof mode change with sendLocationEvent" 
+}
+
+def handler_childdevicesendevent(evt){
+     def deviceNetworkID = "sendevent-2"
+    def deviceType = "SimulatedSwitchtestsendevent"
+    
+    def tryaddDevice = addChildDevice("testsendevent", deviceType,deviceNetworkID)
+    if (tryaddDevice){
+    	def idofaddeddevice = tryaddDevice.getId()
+    	log.debug "addChildDevice id is $idofaddeddevice"
+    }
+    else
+    	log.debug "addchilddevice failed"
+        
+    def deviceAdded = getChildDevice(deviceNetworkID)
+    if(deviceAdded){
+    	def idofswitch2 = deviceAdded.getId()
+        log.debug "deviceAdded.deviceId is $idofswitch2"
+    }
+    else{
+    	log.debug "no device found"
+    }
+    
+    def fakemodechange =[
+                name: "mode",
+                value: "nothome",
+                descriptionText: "spoofed location change event ",
+                source: "LOCATION",
+                isStateChange: true
+              ]
+    deviceAdded.sendEvent(fakemodechange)
+    log.debug "spoof mode change with deviceAdded.sendEvent" 
+}

@@ -1,0 +1,52 @@
+definition(
+    name: "SmartAPP spoof sunset in wrong time with sendlocationevent",
+    namespace: "0000",
+    author: "SmartPatch",
+    description: "SmartAPP spoof sunset in wrong time with sendlocationevent",
+    category: "My Apps",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+
+preferences {
+	input "switch2", "capability.switch", required: true, title: "which siwtch2?"
+}
+
+def installed() {
+	initialize()
+}
+
+
+
+def updated(){
+}
+
+def initialize() {
+    def fakesunset=[
+				descriptionText: "It is now sunset",
+                displayName: "sunset",
+                location: "location01",
+    			name: "sunset",
+                source: "LOCATION",
+				value: "true",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunset)
+    log.debug "sunset event spoofed"
+    
+    subscribe(switch2, "switch", handler)
+}
+
+def handler(evt){
+    def fakesunset=[
+				descriptionText: "It is now sunset",
+                displayName: "sunset",
+                location: "location01",
+    			name: "sunset",
+                source: "LOCATION",
+				value: "true",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunset)
+    log.debug "sunset event spoofed"
+}

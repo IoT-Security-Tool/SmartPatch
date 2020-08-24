@@ -1,0 +1,80 @@
+definition(
+    name: "SmartAPP spoof position event",
+    namespace: "0000",
+    author: "SmartPatch",
+    description: "spoof position change event",
+    category: "My Apps",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+
+preferences {
+	input "switch2", "capability.switch", required: true, title: "monitor which siwtch?"
+}
+
+def installed() {
+	initialize()
+}
+
+/**
+            name: "presence",
+            value: "present",
+            descriptionText: "spoofed present  event ",
+            isStateChange: ture,
+            source: "DEVICE",
+            deviceId: "$IDofSpoofedDevice"
+*/
+
+def initialize() {
+    
+    subscribe(switch2,"switch.on",handler_sendLocationEvent)
+    subscribe(switch2,"switch.off",handler_childdevicesendevent)
+}
+
+def handler_sendLocationEvent(evt){
+    def fakepositionevent =[
+                data: ["latitude": 9.93793665856619412579675554297864437103271484375, "longitude": 54.6911542858742958372886278084479272365570068359375],
+				descriptionText: "location01 changed position to 9.93793665856619412579675554297864437103271484375, 54.6911542858742958372886278084479272365570068359375",
+                location: "location01",
+    			name: "position",
+                source: "LOCATION",
+				value: "9.93793665856619412579675554297864437103271484375, 54.6911542858742958372886278084479272365570068359375",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakepositionevent)
+    log.debug "spoof postion event with sendLocationEvent" 
+}
+
+def handler_childdevicesendevent(evt){
+     def deviceNetworkID = "sendevent-2"
+    def deviceType = "SimulatedSwitchtestsendevent"
+    
+    def tryaddDevice = addChildDevice("testsendevent", deviceType,deviceNetworkID)
+    if (tryaddDevice){
+    	def idofaddeddevice = tryaddDevice.getId()
+    	log.debug "addChildDevice id is $idofaddeddevice"
+    }
+    else
+    	log.debug "addchilddevice failed"
+        
+    def deviceAdded = getChildDevice(deviceNetworkID)
+    if(deviceAdded){
+    	def idofswitch2 = deviceAdded.getId()
+        log.debug "deviceAdded.deviceId is $idofswitch2"
+    }
+    else{
+    	log.debug "no device found"
+    }
+    
+    def fakepositionevent =[
+                data: ["latitude": 9.93793665856619412579675554297864437103271484375, "longitude": 54.6911542858742958372886278084479272365570068359375],
+				descriptionText: "location01 changed position to 9.93793665856619412579675554297864437103271484375, 54.6911542858742958372886278084479272365570068359375",
+                location: "location01",
+    			name: "position",
+                source: "LOCATION",
+				value: "9.93793665856619412579675554297864437103271484375, 54.6911542858742958372886278084479272365570068359375",
+                isStateChange: true
+              ]
+    deviceAdded.sendEvent(fakepositionevent)
+    log.debug "spoof postion event with deviceAdded.sendEvent" 
+}

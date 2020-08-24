@@ -1,0 +1,15 @@
+SmartAPP spoof sunsetTime event without prior event by sendLocationevent
+SmartAPP spoof sunsetTime event without prior event by devicechildsendevent
+
+SmartAPP spoof sunsetTime event with prior event and true value by sendLocationevent
+SmartAPP spoof sunsetTime event with prior event and true value by devicechildsendevent
+
+SmartAPP spoof sunsetTime event with prior event and true value twice by sendLocationevent
+SmartAPP spoof sunsetTime event with prior event and true value twice by devicechildsendevent
+
+SmartAPP spoof sunsetTime event with prior event and wrong value by sendLocationevent
+SmartAPP spoof sunsetTime event with prior event and wrong value by devicechildsendevent
+
+ZZ spoof sunsetTime event Simulated Switch
+message : createevent 
+on off : sendevent 

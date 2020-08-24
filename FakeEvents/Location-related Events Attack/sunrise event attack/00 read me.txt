@@ -1,0 +1,8 @@
+smartapp spoof sunrise event:
+childdevice.sendEvent
+sendLocationEvent
+
+
+device handler spoof sunrise event:
+on off : sendevent 
+message on off : createevent 

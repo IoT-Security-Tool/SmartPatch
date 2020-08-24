@@ -1,0 +1,52 @@
+definition(
+    name: "SmartAPP spoof sunrise in correct time with sendlocationevent",
+    namespace: "0000",
+    author: "SmartPatch",
+    description: "SmartAPP spoof sunrise in correct time with sendlocationevent",
+    category: "My Apps",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+
+preferences {
+	input "switch2", "capability.switch", required: true, title: "which siwtch2?"
+}
+
+def installed() {
+	initialize()
+}
+
+
+
+def updated(){
+}
+
+def initialize() {
+    def fakesunrise=[
+				descriptionText: "It is now sunrise",
+                displayName: "sunrise",
+                location: "location01",
+    			name: "sunrise",
+                source: "LOCATION",
+				value: "true",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunrise)
+    log.debug "sunrise event spoofed"
+    
+    subscribe(switch2, "switch", handler)
+}
+
+def handler(evt){
+    def fakesunrise=[
+				descriptionText: "It is now sunrise",
+                displayName: "sunrise",
+                location: "location01",
+    			name: "sunrise",
+                source: "LOCATION",
+				value: "true",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunrise)
+    log.debug "sunrise event spoofed"
+}

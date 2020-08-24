@@ -1,0 +1,76 @@
+definition(
+    name: "SmartAPP spoof sunriseTime event with prior event and true value twice by sendLocationevent",
+    namespace: "0000",
+    author: "SmartPatch",
+    description: "SmartAPP spoof sunriseTime event with prior event and true value twice by sendLocationevent",
+    category: "My Apps",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+
+preferences {
+	input "switch2", "capability.switch", required: true, title: "which siwtch2?"
+}
+
+def installed() {
+	initialize()
+}
+
+
+
+def updated(){
+}
+
+def initialize() {
+    def fakesunrise=[
+				descriptionText: "It is now sunrise",
+                displayName: "sunrise",
+                location: "location01",
+    			name: "sunrise",
+                source: "LOCATION",
+				value: "true",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunrise)
+    log.debug "sunrise event spoofed"
+
+    def fakesunriseTime=[
+				descriptionText: "Next sunrise is at 9:19 AM",
+                displayName: "sunrise time",
+                location: "location01",
+    			name: "sunriseTime",
+                source: "LOCATION",
+				value: "2019-01-12T08:22:00.000Z",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunriseTime)
+    log.debug "sunriseTime event spoofed"
+    
+    subscribe(switch2, "switch", handler)
+}
+
+def handler(evt){
+    def fakesunrise=[
+				descriptionText: "It is now sunrise",
+                displayName: "sunrise",
+                location: "location01",
+    			name: "sunrise",
+                source: "LOCATION",
+				value: "true",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunrise)
+    log.debug "sunrise event spoofed"
+
+    def fakesunriseTime=[
+				descriptionText: "Next sunrise is at 9:19 AM",
+                displayName: "sunrise time",
+                location: "location01",
+    			name: "sunriseTime",
+                source: "LOCATION",
+				value: "2019-01-12T08:22:00.000Z",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunriseTime)
+    log.debug "sunriseTime event spoofed"
+}

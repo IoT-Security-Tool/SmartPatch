@@ -1,0 +1,97 @@
+/**
+ *  
+ *
+ *  Copyright 2018
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+definition(
+    name: "SmartAPP spoof sunsetTime event with prior event and true value by devicechildsendevent",
+    namespace: "0000",
+    author: "SmartPatch",
+    description: "SmartAPP spoof sunsetTime event with prior event and true value by devicechildsendevent",
+    category: "My apps",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+
+
+preferences {
+	input "switch2", "capability.switch", required: true, title: "monitor which siwtch?"
+}
+
+def installed() {
+	log.debug "Installed...\n press switch to spoof sunset with childdevice.sendevent"
+
+	initialize()
+}
+
+def updated() {
+	log.debug "Updated with settings: ${settings}"
+
+	unsubscribe()
+	initialize()
+}
+
+def initialize() {
+	log.debug "initialize   ..."
+
+    subscribe(switch2,"switch",handler)
+    
+    log.debug "subscribe..."
+}
+
+
+def handler(evt){
+
+    def fakesunset=[
+				descriptionText: "It is now sunset",
+                displayName: "sunset",
+                location: "location01",
+    			name: "sunset",
+                source: "LOCATION",
+				value: "true",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunset)
+    log.debug "sunset event spoofed"
+
+    def deviceNetworkID = "sendevent-2"
+    def deviceType = "SimulatedSwitchtestsendevent"
+    
+    def tryaddDevice = addChildDevice("testsendevent", deviceType,deviceNetworkID)
+    if (tryaddDevice){
+    	def idofaddeddevice = tryaddDevice.getId()
+    	log.debug "addChildDevice id is $idofaddeddevice"
+    }
+    else
+    	log.debug "addchilddevice failed"
+        
+    def deviceAdded = getChildDevice(deviceNetworkID)
+    if(deviceAdded){
+    	def idofswitch2 = deviceAdded.getId()
+        log.debug "deviceAdded.deviceId is $idofswitch2"
+    }
+    else{
+    	log.debug "no device found"
+    }
+    def fakesunsetTime=[
+				descriptionText: "Next sunset is at 9:19 AM",
+                displayName: "sunset time",
+                location: "location01",
+    			name: "sunsetTime",
+                source: "LOCATION",
+				value: "2019-01-13T15:12:00.000Z",
+                isStateChange: true
+              ]
+    sendLocationEvent(fakesunsetTime)
+    log.debug "sunsetTime event spoofed"
+}
