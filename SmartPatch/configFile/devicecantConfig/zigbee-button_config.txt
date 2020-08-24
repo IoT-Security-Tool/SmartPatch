@@ -1,0 +1,14 @@
+{"type":"sendEvent","linenumber":54,"arguments":["event"]}
+{"type":"createEvent","linenumber":71,"arguments":["event) : ["]}
+{"type":"createEvent","linenumber":151,"arguments":["name: \"button\""," value: buttonState"," data: [buttonNumber: buttonNumber]"," descriptionText: descriptionText"," isStateChange: true"]}
+{"type":"createEvent","linenumber":222,"arguments":["name: \"button\""," value: buttonState"," data: [buttonNumber: buttonNumber]"," descriptionText: descriptionText"," isStateChange: true"]}
+{"type":"MethodNode","name":"installed","linenumber":233}
+{"type":"sendEvent","linenumber":238,"arguments":["name: \"button\""," value: \"pushed\""," data: [buttonNumber: it+1]"," displayed: false"]}
+{"type":"MethodNode","name":"initialize","linenumber":246}
+{"type":"sendEvent","linenumber":248,"arguments":["name: \"DeviceWatch-Enroll\""," value: JsonOutput.toJson([protocol: \"zigbee\""," scheme:\"untracked\"])"," displayed: false"]}
+{"type":"sendEvent","linenumber":250,"arguments":["name: \"numberOfButtons\""," value: 2"," displayed: false"]}
+{"type":"sendEvent","linenumber":254,"arguments":["name: \"numberOfButtons\""," value: 2"," displayed: false"]}
+{"type":"sendEvent","linenumber":257,"arguments":["name: \"numberOfButtons\""," value: 1"," displayed: false"]}
+{"type":"sendEvent","linenumber":260,"arguments":["name: \"numberOfButtons\""," value: 4"," displayed: false"]}
+{"type":"sendEvent","linenumber":263,"arguments":["name: \"numberOfButtons\""," value: 4"," displayed: false"]}
+{"type":"sendEvent","linenumber":268,"arguments":["name: \"numberOfButtons\""," value: 4"," displayed: false"]}

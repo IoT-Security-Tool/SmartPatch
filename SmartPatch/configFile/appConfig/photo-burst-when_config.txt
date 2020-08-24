@@ -1,0 +1,10 @@
+{"type":"MethodNode","name":"installed","linenumber":54,"lastlinenumber":57}
+{"type":"MethodNode","name":"updated","linenumber":59,"lastlinenumber":63}
+{"type":"MethodNode","name":"subscribeToEvents","linenumber":65,"lastlinenumber":72}
+{"type":"subscribe","linenumber":66,"arguments":["contact","contact.open","sendMessage"]}
+{"type":"subscribe","linenumber":67,"arguments":["acceleration","acceleration.active","sendMessage"]}
+{"type":"subscribe","linenumber":68,"arguments":["motion","motion.active","sendMessage"]}
+{"type":"subscribe","linenumber":69,"arguments":["mySwitch","switch.on","sendMessage"]}
+{"type":"subscribe","linenumber":70,"arguments":["arrivalPresence","presence.present","sendMessage"]}
+{"type":"subscribe","linenumber":71,"arguments":["departurePresence","presence.not present","sendMessage"]}
+{"type":"MethodNode","name":"sendMessage","linenumber":74,"lastlinenumber":91,"arg":["evt"]}

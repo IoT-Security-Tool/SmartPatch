@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"initialize","linenumber":60,"lastlinenumber":62}
+{"type":"sendEvent","linenumber":61,"arguments":"(name: \"DeviceWatch-Enroll\", value: \"{\\\"protocol\\\": \\\"LAN\\\", \\\"scheme\\\":\\\"untracked\\\", \\\"hubHardwareId\\\": \\\"${device.hub.hardwareID}\\\"}\", displayed: false)"}
+{"type":"MethodNode","name":"installed","linenumber":64,"lastlinenumber":67}
+{"type":"MethodNode","name":"updated","linenumber":69,"lastlinenumber":72}
+{"type":"MethodNode","name":"parse","linenumber":75,"lastlinenumber":89,"arg":["description"]}
+{"type":"createEvent","linenumber":86,"arguments":"(name: \"${map?.name}\", value: \"${map?.value}\")"}
+{"type":"MethodNode","name":"on","linenumber":92,"lastlinenumber":94}
+{"type":"MethodNode","name":"off","linenumber":96,"lastlinenumber":98}
+{"type":"MethodNode","name":"setLevel","linenumber":100,"lastlinenumber":107,"arg":["percent","rate"]}
+{"type":"MethodNode","name":"setColorTemperature","linenumber":109,"lastlinenumber":116,"arg":["value"]}
+{"type":"MethodNode","name":"refresh","linenumber":118,"lastlinenumber":121}

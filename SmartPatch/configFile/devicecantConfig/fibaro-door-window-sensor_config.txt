@@ -1,0 +1,11 @@
+{"type":"createEvent","linenumber":136,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":159,"arguments":["map"]}
+{"type":"createEvent","linenumber":173,"arguments":["map)"," response(zwave.wakeUpV1.wakeUpNoMoreInformation())"]}
+{"type":"createEvent","linenumber":186,"arguments":["map"]}
+{"type":"createEvent","linenumber":192,"arguments":["name: \"contact\""," value: \"open\""," descriptionText: \"$device.displayName is open\""]}
+{"type":"createEvent","linenumber":194,"arguments":["name: \"contact\""," value: \"closed\""," descriptionText: \"$device.displayName is closed\""]}
+{"type":"createEvent","linenumber":219,"arguments":["map"]}
+{"type":"createEvent","linenumber":233,"arguments":["name:\"temperature\""," value:\"-99\""]}
+{"type":"createEvent","linenumber":235,"arguments":["name:\"temperature\""," value:\"\""]}
+{"type":"createEvent","linenumber":249,"arguments":["descriptionText: \"$device.displayName MSR: $msr\""," isStateChange: false"]}
+{"type":"sendEvent","linenumber":257,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}

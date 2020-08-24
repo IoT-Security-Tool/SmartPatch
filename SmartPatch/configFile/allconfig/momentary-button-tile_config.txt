@@ -1,0 +1,7 @@
+{"type":"MethodNode","name":"parse","linenumber":44,"lastlinenumber":45,"arg":["description"]}
+{"type":"MethodNode","name":"push","linenumber":47,"lastlinenumber":51}
+{"type":"sendEvent","linenumber":48,"arguments":"(name: \"switch\", value: \"on\", isStateChange: true, displayed: false)"}
+{"type":"sendEvent","linenumber":49,"arguments":"(name: \"switch\", value: \"off\", isStateChange: true, displayed: false)"}
+{"type":"sendEvent","linenumber":50,"arguments":"(name: \"momentary\", value: \"pushed\", isStateChange: true)"}
+{"type":"MethodNode","name":"on","linenumber":53,"lastlinenumber":55}
+{"type":"MethodNode","name":"off","linenumber":57,"lastlinenumber":59}

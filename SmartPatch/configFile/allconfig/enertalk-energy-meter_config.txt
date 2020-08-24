@@ -1,0 +1,1 @@
+{"type":"MethodNode","name":"getLinkedApp","linenumber":65,"lastlinenumber":104}

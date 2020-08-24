@@ -1,0 +1,108 @@
+import java.util.UUID
+/**
+ *  Copyright 2015 SmartThings
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ *  Text Me When It Opens
+ *
+ *  Author: SmartThings
+ */
+definition(
+    name: "Text Me When It Opens",
+    namespace: "smartthings",
+    author: "SmartThings",
+    description: "Get a text message sent to your phone when an open/close sensor is opened.",
+    category: "Convenience",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Meta/window_contact.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Meta/window_contact@2x.png"
+)
+
+preferences {
+	section("When the door opens...") {
+		input "contact1", "capability.contactSensor", title: "Where?"
+	}
+	section("Text me at...") {
+        input("recipients", "contact", title: "Send notifications to") {
+            input "phone1", "phone", title: "Phone number?"
+        }
+	}
+}
+
+def installed()
+{
+	subscribe(contact1, "contact.open", contactOpenHandler)
+}
+
+def updated()
+{
+	unsubscribe()
+	subscribe(contact1, "contact.open", contactOpenHandler)
+}
+
+def contactOpenHandler(evt) {
+    //collect the evt.name evt.value evt.deviceId, evt.id, ID_h, signature, ID_e, and send to external web server for verificaiton
+    //also remember to put  func: "verify", into the query parameter
+
+    //get signature from evt.data
+    def startIndex = evt.data.indexOf("-sign-")
+    def endIndex = evt.data.indexOf("+sign+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No signatrue in event"
+        return
+    }
+    def signString = evt.data.substring(startIndex + "-sign-".length(),endIndex)
+
+    //get ID_e from evt.data
+    startIndex = evt.data.indexOf("-IDe-")
+    endIndex = evt.data.indexOf("+IDe+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No IDe in event"
+        return
+    }
+    def ID_e = evt.data.substring(startIndex + "-IDe-".length(),endIndex)
+
+    log.debug "evt.data: $evt.data \n sing is: $signString \n IDe is $ID_e \n"
+    def params = [
+            uri: state.URL,
+            path: state.PATH,
+            query: [func: "verify", name: "$evt.name", value: "$evt.value", deviceID: "$evt.deviceId", ID_e: ID_e, ID_h: state.ID_handler, sign: signString]
+    ]
+    def verify = null
+    //get the verify result from the external web server
+    try {
+        httpGet(params) { resp ->
+            verify = resp.data
+            log.debug "response data: ${resp.data}"
+        }
+    } catch (e) {
+        log.error "something went wrong: $e"
+    }
+    if("$verify".contentEquals('false\n')){
+        log.trace "event verification failed..."
+        return
+    }
+
+	log.trace "$evt.value: $evt, $settings"
+  log.debug "$contact1 was opened, sending text"
+    if (location.contactBookEnabled) {
+        sendNotificationToContacts("Your ${contact1.label ?: contact1.name} was opened", recipients)
+    }
+    else {
+        sendSms(phone1, "Your ${contact1.label ?: contact1.name} was opened")
+    }
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+}
+def initialize() {
+}

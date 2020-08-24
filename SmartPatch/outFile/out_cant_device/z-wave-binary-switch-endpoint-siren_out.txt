@@ -1,0 +1,174 @@
+ import java.util.UUID
+"License"
+"AS IS"
+metadata {
+	definition(name: "Z-Wave Binary Switch Endpoint Siren", namespace: "smartthings", author: "SmartThings", mnmn: "SmartThings", vid: "SmartThings-smartthings-Z-Wave_Siren", ocfDeviceType: "x.com.st.d.siren") {
+		capability "Actuator"
+		capability "Health Check"
+		capability "Refresh"
+		capability "Sensor"
+		capability "Switch"
+		capability "Alarm"
+	}
+
+	tiles {
+		standardTile("alarm", "device.alarm", width: 2, height: 2) {
+			state "off", label: 'off', action: 'alarm.strobe', icon: "st.alarm.alarm.alarm", backgroundColor: "#ffffff"
+			state "both", label: 'alarm!', action: 'alarm.off', icon: "st.alarm.alarm.alarm", backgroundColor: "#e86d13"
+		}
+		standardTile("off", "device.alarm", inactiveLabel: false, decoration: "flat") {
+			state "default", label: '', action: "alarm.off", icon: "st.secondary.off"
+		}
+		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat") {
+			state "default", label: '', action: "refresh.refresh", icon: "st.secondary.refresh"
+		}
+
+		main "alarm"
+		details(["alarm", "off", "refresh"])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+	configure()
+//	sendEvent(name: "alarm", value: "off", isStateChange: true)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "alarm",  value: "off",  isStateChange: true]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "alarm",  value: "off",  isStateChange: true, data: [sign: "${signatureResult1}"])
+
+}
+
+def updated() {
+	configure()
+}
+
+def configure() {
+//	sendEvent(name: "checkInterval", value: 2 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID, offlinePingable: "1"])
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 2 * 60 * 60 + 2 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"]]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 2 * 60 * 60 + 2 * 60,  displayed: false,  data: [ sign: "${signatureResult2}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"])
+	response(refresh())
+}
+
+def handleZWave(physicalgraph.zwave.commands.basicv1.BasicReport cmd) {
+	sendAlarmAndSwitchEvents(cmd)
+}
+
+def handleZWave(physicalgraph.zwave.commands.basicv1.BasicSet cmd) {
+	sendAlarmAndSwitchEvents(cmd)
+}
+
+def handleZWave(physicalgraph.zwave.commands.switchbinaryv1.SwitchBinaryReport cmd) {
+	sendAlarmAndSwitchEvents(cmd)
+}
+
+def sendAlarmAndSwitchEvents(physicalgraph.zwave.Command cmd) {
+//	sendEvent(name: "alarm", value: cmd.value ? "both" : "off")
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "alarm",  value: cmd.value ? "both" : "off"]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "alarm",  value: cmd.value ? "both" : "off", data: [sign: "${signatureResult3}"])
+//	sendEvent(name: "switch", value: cmd.value ? "on" : "off")
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: cmd.value ? "on" : "off"]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "switch",  value: cmd.value ? "on" : "off", data: [sign: "${signatureResult4}"])
+}
+
+def handleZWave(physicalgraph.zwave.Command cmd) {
+	[:]
+}
+
+def on() {
+	
+	if (parent.channelNumber(device.deviceNetworkId) == 2) {
+		parent.sendCommand(device.deviceNetworkId, [zwave.basicV1.basicSet(value: 0xFF), zwave.switchBinaryV1.switchBinaryGet(),"delay 2000", zwave.switchBinaryV1.switchBinaryGet()])
+	} else {
+		parent.sendCommand(device.deviceNetworkId, [zwave.basicV1.basicSet(value: 0xFF), zwave.switchBinaryV1.switchBinaryGet()])
+	}
+}
+
+def off() {
+	parent.sendCommand(device.deviceNetworkId, [zwave.basicV1.basicSet(value: 0), zwave.switchBinaryV1.switchBinaryGet()])
+}
+
+def strobe() {
+	on()
+}
+
+def siren() {
+	on()
+}
+
+def both() {
+	on()
+}
+
+def ping() {
+	refresh()
+}
+
+def refresh() {
+	parent.sendCommand(device.deviceNetworkId, zwave.switchBinaryV1.switchBinaryGet())
+}

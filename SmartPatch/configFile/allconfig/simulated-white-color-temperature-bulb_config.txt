@@ -1,0 +1,38 @@
+{"type":"MethodNode","name":"parse","linenumber":154,"lastlinenumber":168,"arg":["description"]}
+{"type":"createEvent","linenumber":165,"arguments":"(name: name, value: pair[1]?.trim())"}
+{"type":"MethodNode","name":"installed","linenumber":170,"lastlinenumber":174}
+{"type":"MethodNode","name":"updated","linenumber":176,"lastlinenumber":180}
+{"type":"MethodNode","name":"ping","linenumber":186,"lastlinenumber":188}
+{"type":"MethodNode","name":"refresh","linenumber":190,"lastlinenumber":198}
+{"type":"MethodNode","name":"configure","linenumber":200,"lastlinenumber":210}
+{"type":"sendEvent","linenumber":205,"arguments":"(name: \"DeviceWatch-Enroll\", value: [protocol: \"cloud\", scheme:\"untracked\"].encodeAsJson(), displayed: false)"}
+{"type":"MethodNode","name":"on","linenumber":212,"lastlinenumber":217}
+{"type":"MethodNode","name":"off","linenumber":219,"lastlinenumber":224}
+{"type":"MethodNode","name":"setLevel","linenumber":226,"lastlinenumber":240,"arg":["levelPercent","rate"]}
+{"type":"sendEvent","linenumber":232,"arguments":"(name: \"level\", value: boundedPercent)"}
+{"type":"MethodNode","name":"setColorTemperature","linenumber":242,"lastlinenumber":249,"arg":["kelvin"]}
+{"type":"sendEvent","linenumber":246,"arguments":"(name: \"colorTemperature\", value: kelvinNorm)"}
+{"type":"MethodNode","name":"markDeviceOnline","linenumber":251,"lastlinenumber":253}
+{"type":"MethodNode","name":"markDeviceOffline","linenumber":255,"lastlinenumber":257}
+{"type":"MethodNode","name":"setDeviceHealth","linenumber":259,"lastlinenumber":267,"arg":["healthState"]}
+{"type":"sendEvent","linenumber":265,"arguments":"(name: \"DeviceWatch-DeviceStatus\", value: healthState)"}
+{"type":"sendEvent","linenumber":266,"arguments":"(name: \"healthStatus\", value: healthState)"}
+{"type":"MethodNode","name":"initialize","linenumber":272,"lastlinenumber":284}
+{"type":"sendEvent","linenumber":275,"arguments":"(name: \"colorTemperatureRange\", value: COLOR_TEMP_RANGE)"}
+{"type":"sendEvent","linenumber":276,"arguments":"(name: \"colorTemperature\", value: COLOR_TEMP_DEFAULT)"}
+{"type":"sendEvent","linenumber":278,"arguments":"(name: \"level\", value: 100)"}
+{"type":"sendEvent","linenumber":280,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"MethodNode","name":"implicitOn","linenumber":289,"lastlinenumber":293}
+{"type":"MethodNode","name":"turnOn","linenumber":298,"lastlinenumber":300}
+{"type":"sendEvent","linenumber":299,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"MethodNode","name":"turnOff","linenumber":305,"lastlinenumber":307}
+{"type":"sendEvent","linenumber":306,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"MethodNode","name":"simulateBulbState","linenumber":313,"lastlinenumber":337,"arg":["mode"]}
+{"type":"sendEvent","linenumber":334,"arguments":"(name: \"colorIndicator\", value: colorIndicator)"}
+{"type":"sendEvent","linenumber":335,"arguments":"(name: \"bulbMode\", value: mode)"}
+{"type":"sendEvent","linenumber":336,"arguments":"(name: \"bulbValue\", value: valueText.replaceAll(\"\\n\", \"  \"))"}
+{"type":"MethodNode","name":"done","linenumber":342,"lastlinenumber":344}
+{"type":"MethodNode","name":"kelvinToHex","linenumber":352,"lastlinenumber":393,"arg":["kelvin"]}
+{"type":"MethodNode","name":"boundInt","linenumber":401,"lastlinenumber":404,"arg":["value","theRange"]}
+{"type":"MethodNode","name":"buildColorTempList","linenumber":413,"lastlinenumber":420,"arg":["kRange","kStep","kExtras"]}
+{"type":"MethodNode","name":"snapToClosest","linenumber":428,"lastlinenumber":430,"arg":["value","validValues"]}

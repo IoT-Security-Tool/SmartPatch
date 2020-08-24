@@ -1,0 +1,4 @@
+{"type":"MethodNode","name":"installed","linenumber":42,"lastlinenumber":47}
+{"type":"MethodNode","name":"updated","linenumber":49,"lastlinenumber":53,"arg":["settings"]}
+{"type":"MethodNode","name":"startTimerCallback","linenumber":55,"lastlinenumber":59}
+{"type":"MethodNode","name":"stopTimerCallback","linenumber":61,"lastlinenumber":64}

@@ -1,0 +1,7 @@
+{"type":"MethodNode","name":"installed","linenumber":75}
+{"type":"sendEvent","linenumber":77,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":83,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":112,"arguments":["name: \"switch\""," value: (cmd.value ? \"on\" : \"off\")"," descriptionText: text"]}
+{"type":"createEvent","linenumber":113,"arguments":["name:\"level\""," value: cmd.value == 99 ? 100 : cmd.value "," unit:\"%\""]}
+{"type":"createEvent","linenumber":127,"arguments":["map"]}
+{"type":"createEvent","linenumber":212,"arguments":["(physicalgraph.zwave.Command cmd) "]}

@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":33,"lastlinenumber":36}
+{"type":"subscribe","linenumber":34,"arguments":["app","appTouchHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":38,"lastlinenumber":42}
+{"type":"subscribe","linenumber":40,"arguments":["app","appTouchHandler"]}
+{"type":"MethodNode","name":"appTouch","linenumber":44,"lastlinenumber":47,"arg":["evt"]}
+{"type":"MethodNode","name":"onCommand","linenumber":49,"lastlinenumber":52,"arg":["evt"]}

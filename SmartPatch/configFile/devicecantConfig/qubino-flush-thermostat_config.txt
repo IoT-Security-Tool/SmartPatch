@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"installed","linenumber":102}
+{"type":"sendEvent","linenumber":104,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 12 * 60 "," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":105,"arguments":["name: \"setpointRange\""," value: [minSetpointTemperature"," maxSetpointTemperature]"," displayed: false"]}
+{"type":"createEvent","linenumber":133,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":150,"arguments":["map"]}
+{"type":"createEvent","linenumber":165,"arguments":["map"]}
+{"type":"createEvent","linenumber":181,"arguments":["map"]}
+{"type":"createEvent","linenumber":187,"arguments":["name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kWh\""]}
+{"type":"createEvent","linenumber":189,"arguments":["name: \"power\""," value: Math.round(cmd.scaledMeterValue)"," unit: \"W\""]}
+{"type":"createEvent","linenumber":196,"arguments":["name: \"temperature\""," value: convertTemperatureIfNeeded(cmd.scaledSensorValue"," deviceTemperatureScale"," cmd.precision)"," unit: temperatureScale"]}
+{"type":"createEvent","linenumber":206,"arguments":["name: \"supportedThermostatModes\""," value: state.supportedModes.encodeAsJson()"," displayed: false"]}

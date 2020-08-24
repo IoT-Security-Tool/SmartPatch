@@ -1,0 +1,29 @@
+{"type":"sendEvent","linenumber":99,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":101,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"sendEvent","linenumber":128,"arguments":["name: \"errorMode\""," value: \"clear\""]}
+{"type":"MethodNode","name":"installed","linenumber":135}
+{"type":"sendEvent","linenumber":137,"arguments":["name: \"checkInterval\""," value: 1920"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":142,"arguments":["name: \"switch\""," value: \"off\""," displayed: \"true\""]}
+{"type":"sendEvent","linenumber":210,"arguments":["name: \"syncStatus\""," value: \"failed\""]}
+{"type":"sendEvent","linenumber":214,"arguments":["name: \"syncStatus\""," value: \"incomplete\""]}
+{"type":"sendEvent","linenumber":218,"arguments":["name: \"syncStatus\""," value: \"incomplete\""]}
+{"type":"sendEvent","linenumber":222,"arguments":["name: \"syncStatus\""," value: \"synced\""]}
+{"type":"sendEvent","linenumber":229,"arguments":["name: \"multiStatus\""," value: statusValue"," descriptionText: statusValue"," displayed: display"]}
+{"type":"sendEvent","linenumber":256,"arguments":["name: \"switch\""," value: (cmd.value > 0) ? \"on\" : \"off\""]}
+{"type":"sendEvent","linenumber":257,"arguments":["name: \"level\""," value: (cmd.value == 99) ? 100 : cmd.value"]}
+{"type":"sendEvent","linenumber":263,"arguments":["name: \"power\""," value: cmd.scaledSensorValue"," unit: \"W\""]}
+{"type":"sendEvent","linenumber":272,"arguments":["[name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kWh\"]"]}
+{"type":"sendEvent","linenumber":275,"arguments":["[name: \"power\""," value: cmd.scaledMeterValue"," unit: \"W\"]"]}
+{"type":"createEvent","linenumber":285,"arguments":["name: \"scene\""," value: \"$cmd.sceneId\""," data: [switchType: \"$settings.param20\"]"," descriptionText: \"Scene id ${cmd.sceneId} was activated\""," isStateChange: true"]}
+{"type":"sendEvent","linenumber":308,"arguments":["name: \"button\""," value: action"," data: [buttonNumber: button]"," isStateChange: true"]}
+{"type":"sendEvent","linenumber":316,"arguments":["name: \"errorMode\""," value: \"clear\"); break"]}
+{"type":"sendEvent","linenumber":317,"arguments":["name: \"errorMode\""," value: \"overheat\"); break"]}
+{"type":"sendEvent","linenumber":321,"arguments":["name: \"errorMode\""," value: \"clear\"); break"]}
+{"type":"sendEvent","linenumber":322,"arguments":["name: \"errorMode\""," value: \"surge\"); break"]}
+{"type":"sendEvent","linenumber":323,"arguments":["name: \"errorMode\""," value: \"voltageDrop\"); break"]}
+{"type":"sendEvent","linenumber":324,"arguments":["name: \"errorMode\""," value: \"overcurrent\"); break"]}
+{"type":"sendEvent","linenumber":325,"arguments":["name: \"errorMode\""," value: \"overload\"); break"]}
+{"type":"sendEvent","linenumber":326,"arguments":["name: \"errorMode\""," value: \"loadError\"); break"]}
+{"type":"sendEvent","linenumber":330,"arguments":["name: \"errorMode\""," value: \"clear\"); break"]}
+{"type":"sendEvent","linenumber":331,"arguments":["name: \"errorMode\""," value: \"hardware\"); break"]}
+{"type":"createEvent","linenumber":341,"arguments":["\t\t\t\tdescriptionText: \"Failed to complete the network security key exchange. If you are unable to receive data from it"," you must remove it from your network and add it again.\"","\t\t\t\teventType: \"ALERT\"","\t\t\t\tname: \"secureInclusion\"","\t\t\t\tvalue: \"failed\"","\t\t\t\tdisplayed: true","\t\t"]}

@@ -1,0 +1,23 @@
+{"type":"MethodNode","name":"installed","linenumber":62,"lastlinenumber":76}
+{"type":"sendEvent","linenumber":73,"arguments":"(name: \"level\", value: 72)"}
+{"type":"sendEvent","linenumber":74,"arguments":"(name: \"mute\", value: \"unmuted\")"}
+{"type":"sendEvent","linenumber":75,"arguments":"(name: \"status\", value: \"stopped\")"}
+{"type":"MethodNode","name":"parse","linenumber":78,"lastlinenumber":80,"arg":["description"]}
+{"type":"MethodNode","name":"play","linenumber":82,"lastlinenumber":85}
+{"type":"sendEvent","linenumber":83,"arguments":"(name: \"status\", value: \"playing\")"}
+{"type":"sendEvent","linenumber":84,"arguments":"(name: \"trackDescription\", value: state.tracks[state.currentTrack])"}
+{"type":"MethodNode","name":"pause","linenumber":87,"lastlinenumber":90}
+{"type":"sendEvent","linenumber":88,"arguments":"(name: \"status\", value: \"paused\")"}
+{"type":"sendEvent","linenumber":89,"arguments":"(name: \"trackDescription\", value: state.tracks[state.currentTrack])"}
+{"type":"MethodNode","name":"stop","linenumber":92,"lastlinenumber":94}
+{"type":"sendEvent","linenumber":93,"arguments":"(name: \"status\", value: \"stopped\")"}
+{"type":"MethodNode","name":"previousTrack","linenumber":96,"lastlinenumber":102}
+{"type":"sendEvent","linenumber":101,"arguments":"(name: \"trackDescription\", value: state.tracks[state.currentTrack])"}
+{"type":"MethodNode","name":"nextTrack","linenumber":104,"lastlinenumber":110}
+{"type":"sendEvent","linenumber":109,"arguments":"(name: \"trackDescription\", value: state.tracks[state.currentTrack])"}
+{"type":"MethodNode","name":"mute","linenumber":112,"lastlinenumber":114}
+{"type":"sendEvent","linenumber":113,"arguments":"(name: \"mute\", value: \"muted\")"}
+{"type":"MethodNode","name":"unmute","linenumber":116,"lastlinenumber":118}
+{"type":"sendEvent","linenumber":117,"arguments":"(name: \"mute\", value: \"unmuted\")"}
+{"type":"MethodNode","name":"setLevel","linenumber":120,"lastlinenumber":122,"arg":["level"]}
+{"type":"sendEvent","linenumber":121,"arguments":"(name: \"level\", value: level)"}

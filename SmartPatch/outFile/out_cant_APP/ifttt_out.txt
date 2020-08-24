@@ -1,0 +1,300 @@
+import java.util.UUID
+"License"
+"AS IS"
+
+definition(
+    name: "IFTTT",
+    namespace: "smartthings",
+    author: "SmartThings",
+    description: "Put the internet to work for you.",
+    category: "SmartThings Internal",
+    iconUrl: "https://ifttt.com/images/channels/ifttt.png",
+    iconX2Url: "https://ifttt.com/images/channels/ifttt_med.png",
+    oauth: [displayName: "IFTTT", displayLink: "https://ifttt.com"],
+    usesThirdPartyAuthentication: true,
+    pausable: false
+)
+
+preferences {
+	section("Allow IFTTT to control these things...") {
+		input "switches", "capability.switch", title: "Which Switches?", multiple: true, required: false
+		input "motionSensors", "capability.motionSensor", title: "Which Motion Sensors?", multiple: true, required: false
+		input "contactSensors", "capability.contactSensor", title: "Which Contact Sensors?", multiple: true, required: false
+		input "presenceSensors", "capability.presenceSensor", title: "Which Presence Sensors?", multiple: true, required: false
+		input "temperatureSensors", "capability.temperatureMeasurement", title: "Which Temperature Sensors?", multiple: true, required: false
+		input "accelerationSensors", "capability.accelerationSensor", title: "Which Vibration Sensors?", multiple: true, required: false
+		input "waterSensors", "capability.waterSensor", title: "Which Water Sensors?", multiple: true, required: false
+		input "lightSensors", "capability.illuminanceMeasurement", title: "Which Light Sensors?", multiple: true, required: false
+		input "humiditySensors", "capability.relativeHumidityMeasurement", title: "Which Relative Humidity Sensors?", multiple: true, required: false
+		input "alarms", "capability.alarm", title: "Which Sirens?", multiple: true, required: false
+		input "locks", "capability.lock", title: "Which Locks?", multiple: true, required: false
+	}
+}
+
+mappings {
+
+	path("/:deviceType") {
+		action: [
+			GET: "list"
+		]
+	}
+	path("/:deviceType/states") {
+		action: [
+			GET: "listStates"
+		]
+	}
+	path("/:deviceType/subscription") {
+		action: [
+			POST: "addSubscription"
+		]
+	}
+	path("/:deviceType/subscriptions/:id") {
+		action: [
+			DELETE: "removeSubscription"
+		]
+	}
+	path("/:deviceType/:id") {
+		action: [
+			GET: "show",
+			PUT: "update"
+		]
+	}
+	path("/subscriptions") {
+		action: [
+			GET: "listSubscriptions"
+		]
+	}
+}
+
+def installed() {
+	
+}
+
+def updated() {
+	def currentDeviceIds = settings.collect { k, devices -> devices }.flatten().collect { it.id }.unique()
+	def subscriptionDevicesToRemove = app.subscriptions*.device.findAll { device ->
+		!currentDeviceIds.contains(device.id)
+	}
+	subscriptionDevicesToRemove.each { device ->
+		log.debug "Removing $device.displayName subscription"
+		state.remove(device.id)
+		unsubscribe(device)
+	}
+	
+}
+
+def list() {
+	
+	def type = params.deviceType
+	settings[type]?.collect{deviceItem(it)} ?: []
+}
+
+def listStates() {
+	log.debug "[PROD] states, params: ${params}"
+	def type = params.deviceType
+	def attributeName = attributeFor(type)
+	settings[type]?.collect{deviceState(it, it.currentState(attributeName))} ?: []
+}
+
+def listSubscriptions() {
+	state
+}
+
+def update() {
+	def type = params.deviceType
+	def data = request.JSON
+	def devices = settings[type]
+	def device = settings[type]?.find { it.id == params.id }
+	def command = data.command
+
+	
+	
+	if (!device) {
+		httpError(404, "Device not found")
+	} 
+	
+	if (validateCommand(device, type, command)) {
+		device."$command"()
+	} else {
+		httpError(403, "Access denied. This command is not supported by current capability.")
+	}
+}
+
+
+def validateCommand(device, deviceType, command) {
+	def capabilityCommands = getDeviceCapabilityCommands(device.capabilities)
+	def currentDeviceCapability = getCapabilityName(deviceType)
+	if (capabilityCommands[currentDeviceCapability]) {
+		return command in capabilityCommands[currentDeviceCapability] ? true : false
+	} else {
+		
+		httpError(400, "Bad request.")
+	}
+}
+
+
+def getCapabilityName(type) {
+    switch(type) {
+		case "switches":
+			return "Switch"
+		case "alarms":
+			return "Alarm"
+		case "locks":
+			return "Lock"
+		default:
+			return type
+	}
+}
+
+
+def getDeviceCapabilityCommands(deviceCapabilities) {
+	def map = [:]
+	deviceCapabilities.collect {
+		map[it.name] = it.commands.collect{ it.name.toString() }
+	}
+	return map
+}
+
+
+def show() {
+	def type = params.deviceType
+	def devices = settings[type]
+	def device = devices.find { it.id == params.id }
+
+	
+	if (!device) {
+		httpError(404, "Device not found")
+	}
+	else {
+		def attributeName = attributeFor(type)
+		def s = device.currentState(attributeName)
+		deviceState(device, s)
+	}
+}
+
+def addSubscription() {
+	log.debug "[PROD] addSubscription1"
+	def type = params.deviceType
+	def data = request.JSON
+	def attribute = attributeFor(type)
+	def devices = settings[type]
+	def deviceId = data.deviceId
+	def callbackUrl = data.callbackUrl
+	def device = devices.find { it.id == deviceId }
+
+	
+	if (device) {
+		log.debug "Adding switch subscription " + callbackUrl
+		state[deviceId] = [callbackUrl: callbackUrl]
+		subscribe(device, attribute, deviceHandler)
+	}
+	
+
+}
+
+def removeSubscription() {
+	def type = params.deviceType
+	def devices = settings[type]
+	def deviceId = params.id
+	def device = devices.find { it.id == deviceId }
+
+	
+	if (device) {
+		log.debug "Removing $device.displayName subscription"
+		state.remove(device.id)
+		unsubscribe(device)
+	}
+	
+}
+
+def deviceHandler(evt) {
+    //collect the evt.name evt.value evt.deviceId, evt.id, ID_h, signature, ID_e, and send to external web server for verificaiton
+    //also remember to put  func: "verify", into the query parameter
+
+    //get signature from evt.data
+    def startIndex = evt.data.indexOf("-sign-")
+    def endIndex = evt.data.indexOf("+sign+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No signatrue in event"
+        return
+    }
+    def signString = evt.data.substring(startIndex + "-sign-".length(),endIndex)
+
+    //get ID_e from evt.data
+    startIndex = evt.data.indexOf("-IDe-")
+    endIndex = evt.data.indexOf("+IDe+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No IDe in event"
+        return
+    }
+    def ID_e = evt.data.substring(startIndex + "-IDe-".length(),endIndex)
+
+    log.debug "evt.data: $evt.data \n sing is: $signString \n IDe is $ID_e \n"
+    def params = [
+            uri: state.URL,
+            path: state.PATH,
+            query: [func: "verify", name: "$evt.name", value: "$evt.value", deviceID: "$evt.deviceId", ID_e: ID_e, ID_h: state.ID_handler, sign: signString]
+    ]
+    def verify = null
+    //get the verify result from the external web server
+    try {
+        httpGet(params) { resp ->
+            verify = resp.data
+            log.debug "response data: ${resp.data}"
+        }
+    } catch (e) {
+        log.error "something went wrong: $e"
+    }
+    if("$verify".contentEquals('false\n')){
+        log.trace "event verification failed..."
+        return
+    }
+
+	def deviceInfo = state[evt.deviceId]
+	if (deviceInfo) {
+		try {
+			httpPostJson(uri: deviceInfo.callbackUrl, path: '',  body: [evt: [deviceId: evt.deviceId, name: evt.name, value: evt.value]]) {
+				log.debug "[PROD IFTTT] Event data successfully posted"
+			}
+		} catch (groovyx.net.http.ResponseParseException e) {
+			log.error("Error parsing ifttt payload ${e}")
+		}
+	} else {
+		log.debug "[PROD] No subscribed device found"
+	}
+}
+
+private deviceItem(it) {
+	it ? [id: it.id, label: it.displayName] : null
+}
+
+private deviceState(device, s) {
+	device && s ? [id: device.id, label: device.displayName, name: s.name, value: s.value, unixTime: s.date.time] : null
+}
+
+private attributeFor(type) {
+	switch (type) {
+		case "switches":
+			log.debug "[PROD] switch type"
+			return "switch"
+		case "locks":
+			log.debug "[PROD] lock type"
+			return "lock"
+		case "alarms":
+			log.debug "[PROD] alarm type"
+			return "alarm"
+		case "lightSensors":
+			log.debug "[PROD] illuminance type"
+			return "illuminance"
+		default:
+			log.debug "[PROD] other sensor type"
+			return type - "Sensors"
+	}
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+}
+def initialize() {
+}

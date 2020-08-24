@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":35,"lastlinenumber":38}
+{"type":"sendEvent","linenumber":37,"arguments":"(name: \"checkInterval\", value: 30 * 60, displayed: false, data: [protocol: \"zigbee\"])"}
+{"type":"MethodNode","name":"on","linenumber":40,"lastlinenumber":42}
+{"type":"MethodNode","name":"off","linenumber":44,"lastlinenumber":46}
+{"type":"MethodNode","name":"ping","linenumber":48,"lastlinenumber":50}
+{"type":"MethodNode","name":"uninstalled","linenumber":52,"lastlinenumber":54}

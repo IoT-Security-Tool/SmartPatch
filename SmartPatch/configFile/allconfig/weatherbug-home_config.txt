@@ -1,0 +1,17 @@
+{"type":"MethodNode","name":"getAppInfo","linenumber":41,"lastlinenumber":63}
+{"type":"MethodNode","name":"getLoc","linenumber":73,"lastlinenumber":85}
+{"type":"MethodNode","name":"getCurrentReport","linenumber":95,"lastlinenumber":129}
+{"type":"MethodNode","name":"installed","linenumber":168,"lastlinenumber":171}
+{"type":"MethodNode","name":"updated","linenumber":178,"lastlinenumber":198}
+{"type":"MethodNode","name":"initialize","linenumber":203,"lastlinenumber":212}
+{"type":"subscribe","linenumber":205,"arguments":["thermostatDevice","heatingSetpoint","pushLatest"]}
+{"type":"subscribe","linenumber":206,"arguments":["thermostatDevice","coolingSetpoint","pushLatest"]}
+{"type":"subscribe","linenumber":207,"arguments":["thermostatDevice","thermostatSetpoint","pushLatest"]}
+{"type":"subscribe","linenumber":208,"arguments":["thermostatDevice","thermostatMode","pushLatest"]}
+{"type":"subscribe","linenumber":209,"arguments":["thermostatDevice","thermostatFanMode","pushLatest"]}
+{"type":"subscribe","linenumber":210,"arguments":["thermostatDevice","thermostatOperatingState","pushLatest"]}
+{"type":"subscribe","linenumber":211,"arguments":["thermostatDevice","temperature","pushLatest"]}
+{"type":"MethodNode","name":"uninstalled","linenumber":219,"lastlinenumber":235}
+{"type":"MethodNode","name":"pushLatest","linenumber":243,"lastlinenumber":266,"arg":["evt"]}
+{"type":"MethodNode","name":"GetOrDefault","linenumber":272,"lastlinenumber":284,"arg":["device","attrib"]}
+{"type":"MethodNode","name":"sendToWeatherBug","linenumber":290,"lastlinenumber":307,"arg":["postParams"]}

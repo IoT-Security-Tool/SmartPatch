@@ -1,0 +1,10 @@
+{"type":"MethodNode","name":"installed","linenumber":33}
+{"type":"sendEvent","linenumber":35,"arguments":["name: \"alarm\""," value: \"off\""," isStateChange: true"]}
+{"type":"MethodNode","name":"initialize","linenumber":42}
+{"type":"sendEvent","linenumber":46,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"createEvent","linenumber":58,"arguments":["result"]}
+{"type":"createEvent","linenumber":66,"arguments":["(cmd.value"]}
+{"type":"createEvent","linenumber":73,"arguments":["(cmd.value"]}
+{"type":"createEvent","linenumber":80,"arguments":["(value) "]}
+{"type":"sendEvent","linenumber":81,"arguments":["name: \"alarm\""," value: value ? \"both\" : \"off\""]}
+{"type":"sendEvent","linenumber":82,"arguments":["name: \"switch\""," value: value ? \"on\" : \"off\""]}

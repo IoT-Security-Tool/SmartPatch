@@ -1,0 +1,194 @@
+ import java.util.UUID
+/**
+ *  Logitech Harmony Activity
+ *
+ *  Copyright 2015 Juan Risso
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+
+import groovy.json.JsonOutput
+
+metadata {
+        definition (name: "Harmony Activity", namespace: "smartthings", author: "Juan Risso") {
+        capability "Switch"
+        capability "Actuator"
+		capability "Refresh"
+		capability "Health Check"
+
+        command "huboff"
+        command "alloff"
+        command "refresh"
+	}
+
+	// simulator metadata
+	simulator {
+	}
+
+	// UI tile definitions
+	tiles {
+		standardTile("button", "device.switch", width: 2, height: 2, canChangeIcon: true) {
+			state "off", label: 'Off', action: "switch.on", icon: "st.harmony.harmony-hub-icon", backgroundColor: "#ffffff", nextState: "on"
+			state "on", label: 'On', action: "switch.off", icon: "st.harmony.harmony-hub-icon", backgroundColor: "#00A0DC", nextState: "off"
+		}
+		standardTile("refresh", "device.switch", inactiveLabel: false, decoration: "flat") {
+			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
+		}
+		standardTile("forceoff", "device.switch", inactiveLabel: false, decoration: "flat") {
+			state "default", label:'Force End', action:"switch.off", icon:"st.secondary.off"
+		}
+		standardTile("huboff", "device.switch", inactiveLabel: false, decoration: "flat") {
+			state "default", label:'End Hub Action', action:"huboff", icon:"st.harmony.harmony-hub-icon"
+		}
+		standardTile("alloff", "device.switch", inactiveLabel: false, decoration: "flat") {
+			state "default", label:'All Actions', action:"alloff", icon:"st.secondary.off"
+		}
+		main "button"
+		details(["button", "refresh", "forceoff", "huboff", "alloff"])
+	}
+}
+
+def initialize() {
+//	sendEvent(name: "DeviceWatch-Enroll", value: JsonOutput.toJson([protocol: "cloud", scheme:"untracked"]), displayed: false)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-Enroll", value: JsonOutput.toJson([protocol: "cloud", scheme:"untracked"]), displayed: false]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "DeviceWatch-Enroll", value: JsonOutput.toJson([protocol: "cloud", scheme:"untracked"]), displayed: false, data: [sign: "${signatureResult1}"])
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+	log.debug "installed()"
+	initialize()
+}
+
+def updated() {
+	log.debug "updated()"
+	initialize()
+}
+
+def parse(String description) {
+}
+
+def on() {
+//	sendEvent(name: "switch", value: "on")
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch", value: "on"]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "switch", value: "on", data: [sign: "${signatureResult2}"])
+    log.trace parent.activity(device.deviceNetworkId,"start")
+}
+
+def off() {
+//	sendEvent(name: "switch", value: "off")
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch", value: "off"]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "switch", value: "off", data: [sign: "${signatureResult3}"])
+    log.trace parent.activity(device.deviceNetworkId,"end")
+}
+
+def huboff() {
+//	sendEvent(name: "switch", value: "off")
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch", value: "off"]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "switch", value: "off", data: [sign: "${signatureResult4}"])
+    log.trace parent.activity(device.deviceNetworkId,"hub")
+}
+
+def alloff() {
+//	sendEvent(name: "switch", value: "off")
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch", value: "off"]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "switch", value: "off", data: [sign: "${signatureResult5}"])
+    log.trace parent.activity("all","end")
+}
+
+
+def refresh() {
+	log.debug "Executing 'refresh'"
+	log.trace parent.poll()
+}

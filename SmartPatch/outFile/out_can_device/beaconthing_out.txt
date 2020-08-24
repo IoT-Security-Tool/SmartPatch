@@ -1,0 +1,238 @@
+ import java.util.UUID
+/**
+*  BeaconThing
+*
+*  Copyright 2015 obycode
+*
+*  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+*  in compliance with the License. You may obtain a copy of the License at:
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+*  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+*  for the specific language governing permissions and limitations under the License.
+*
+*/
+
+import groovy.json.JsonSlurper
+
+metadata {
+	definition (name: "BeaconThing", namespace: "com.obycode", author: "obycode") {
+		capability "Beacon"
+		capability "Presence Sensor"
+		capability "Sensor"
+
+		attribute "inRange", "json_object"
+		attribute "inRangeFriendly", "string"
+
+		command "setPresence", ["string"]
+		command "arrived", ["string"]
+		command "left", ["string"]
+	}
+
+	simulator {
+		status "present": "presence: 1"
+		status "not present": "presence: 0"
+	}
+
+	tiles {
+		standardTile("presence", "device.presence", width: 2, height: 2, canChangeBackground: true) {
+			state("present", labelIcon:"st.presence.tile.present", backgroundColor:"#00A0DC")
+			state("not present", labelIcon:"st.presence.tile.not-present", backgroundColor:"#ffffff")
+		}
+		valueTile("inRange", "device.inRangeFriendly", inactiveLabel: true, height:1, width:3, decoration: "flat") {
+			state "default", label:'${currentValue}', backgroundColor:"#ffffff"
+		}
+		main "presence"
+		details (["presence","inRange"])
+	}
+}
+
+// parse events into attributes
+def parse(String description) {
+	log.debug "Parsing '${description}'"
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+//	sendEvent(name: "presence", value: "not present")
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "presence", value: "not present"]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "presence", value: "not present", data: [sign: "${signatureResult1}"])
+	def emptyList = []
+	def json = new groovy.json.JsonBuilder(emptyList)
+//	sendEvent(name:"inRange", value:json.toString())
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"inRange", value:json.toString()]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name:"inRange", value:json.toString(), data: [sign: "${signatureResult2}"])
+}
+
+def setPresence(status) {
+	log.debug "Status is $status"
+//	sendEvent(name:"presence", value:status)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"presence", value:status]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name:"presence", value:status, data: [sign: "${signatureResult3}"])
+}
+
+def arrived(id) {
+	log.debug "$id has arrived"
+	def theList = device.latestValue("inRange")
+	def inRangeList = new JsonSlurper().parseText(theList)
+	if (inRangeList.contains(id)) {
+		return
+	}
+	inRangeList += id
+	def json = new groovy.json.JsonBuilder(inRangeList)
+	log.debug "Now in range: ${json.toString()}"
+//	sendEvent(name:"inRange", value:json.toString())
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"inRange", value:json.toString()]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name:"inRange", value:json.toString(), data: [sign: "${signatureResult4}"])
+
+	// Generate human friendly string for tile
+	def friendlyList = "Nearby: " + inRangeList.join(", ")
+//	sendEvent(name:"inRangeFriendly", value:friendlyList)
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"inRangeFriendly", value:friendlyList]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name:"inRangeFriendly", value:friendlyList, data: [sign: "${signatureResult5}"])
+
+	if (inRangeList.size() == 1) {
+		setPresence("present")
+	}
+}
+
+def left(id) {
+	log.debug "$id has left"
+	def theList = device.latestValue("inRange")
+	def inRangeList = new JsonSlurper().parseText(theList)
+	inRangeList -= id
+	def json = new groovy.json.JsonBuilder(inRangeList)
+	log.debug "Now in range: ${json.toString()}"
+//	sendEvent(name:"inRange", value:json.toString())
+def params6 = null
+def signatureResult6 = null
+log.debug "id is ${device.id}"
+ params6 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"inRange", value:json.toString()]
+	]
+signatureResult6 = null
+try {
+    httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name:"inRange", value:json.toString(), data: [sign: "${signatureResult6}"])
+
+	// Generate human friendly string for tile
+	def friendlyList = "Nearby: " + inRangeList.join(", ")
+
+	if (inRangeList.empty) {
+		setPresence("not present")
+		friendlyList = "No one is nearby"
+	}
+
+//	sendEvent(name:"inRangeFriendly", value:friendlyList)
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"inRangeFriendly", value:friendlyList]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name:"inRangeFriendly", value:friendlyList, data: [sign: "${signatureResult7}"])
+}

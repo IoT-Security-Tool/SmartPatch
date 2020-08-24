@@ -1,0 +1,24 @@
+{"type":"MethodNode","name":"getSupportedCommandsMap","linenumber":132,"lastlinenumber":146}
+{"type":"MethodNode","name":"getShadeActionDelay","linenumber":148,"lastlinenumber":150}
+{"type":"MethodNode","name":"installed","linenumber":152,"lastlinenumber":157}
+{"type":"MethodNode","name":"updated","linenumber":159,"lastlinenumber":165}
+{"type":"sendEvent","linenumber":164,"arguments":"(name: \"supportedWindowShadeCommands\", value: JsonOutput.toJson(supportedCommandsMap[commands]))"}
+{"type":"MethodNode","name":"parse","linenumber":167,"lastlinenumber":169,"arg":["description"]}
+{"type":"MethodNode","name":"open","linenumber":179,"lastlinenumber":183}
+{"type":"MethodNode","name":"close","linenumber":185,"lastlinenumber":189}
+{"type":"MethodNode","name":"pause","linenumber":191,"lastlinenumber":194}
+{"type":"MethodNode","name":"presetPosition","linenumber":196,"lastlinenumber":205}
+{"type":"MethodNode","name":"openPartially","linenumber":209,"lastlinenumber":213}
+{"type":"MethodNode","name":"closePartially","linenumber":215,"lastlinenumber":219}
+{"type":"MethodNode","name":"partiallyOpen","linenumber":221,"lastlinenumber":224}
+{"type":"sendEvent","linenumber":223,"arguments":"(name: \"windowShade\", value: \"partially open\", isStateChange: true)"}
+{"type":"MethodNode","name":"opening","linenumber":226,"lastlinenumber":229}
+{"type":"sendEvent","linenumber":228,"arguments":"(name: \"windowShade\", value: \"opening\", isStateChange: true)"}
+{"type":"MethodNode","name":"closing","linenumber":231,"lastlinenumber":234}
+{"type":"sendEvent","linenumber":233,"arguments":"(name: \"windowShade\", value: \"closing\", isStateChange: true)"}
+{"type":"MethodNode","name":"opened","linenumber":236,"lastlinenumber":239}
+{"type":"sendEvent","linenumber":238,"arguments":"(name: \"windowShade\", value: \"open\", isStateChange: true)"}
+{"type":"MethodNode","name":"closed","linenumber":241,"lastlinenumber":244}
+{"type":"sendEvent","linenumber":243,"arguments":"(name: \"windowShade\", value: \"closed\", isStateChange: true)"}
+{"type":"MethodNode","name":"unknown","linenumber":246,"lastlinenumber":250}
+{"type":"sendEvent","linenumber":249,"arguments":"(name: \"windowShade\", value: \"unknown\", isStateChange: true)"}

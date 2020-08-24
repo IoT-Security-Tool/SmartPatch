@@ -1,0 +1,10 @@
+{"type":"createEvent","linenumber":117,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false)"]}
+{"type":"createEvent","linenumber":145,"arguments":["map"]}
+{"type":"createEvent","linenumber":161,"arguments":["map"]}
+{"type":"createEvent","linenumber":175,"arguments":["map"]}
+{"type":"createEvent","linenumber":196,"arguments":["map"]}
+{"type":"createEvent","linenumber":229,"arguments":["map"]}
+{"type":"sendEvent","linenumber":237,"arguments":["map"]}
+{"type":"createEvent","linenumber":256,"arguments":["descriptionText: \"$device.displayName MSR: $msr\""," isStateChange: false"]}
+{"type":"sendEvent","linenumber":283,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":286,"arguments":["name: \"water\""," value: \"dry\""]}

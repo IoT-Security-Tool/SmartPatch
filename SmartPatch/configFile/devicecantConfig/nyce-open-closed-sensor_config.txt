@@ -1,0 +1,3 @@
+{"type":"createEvent","linenumber":80,"arguments":["msg"]}
+{"type":"createEvent","linenumber":84,"arguments":["map"]}
+{"type":"sendEvent","linenumber":256,"arguments":["name: \"checkInterval\""," value: 60 * 12"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}

@@ -1,0 +1,353 @@
+ import java.util.UUID
+"License"
+"AS IS"
+metadata {
+	definition (name: "Cooper RF9500", namespace: "smartthings", author: "juano23@gmail.com", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false) {
+		capability "Switch"
+		capability "Switch Level"
+		capability "Button"
+		capability "Actuator"
+
+		
+	}
+
+	
+	simulator {
+		
+		status "on": "on/off: 1"
+		status "off": "on/off: 0"
+
+		
+		reply "zcl on-off on": "on/off: 1"
+		reply "zcl on-off off": "on/off: 0"
+	}
+
+	
+	tiles {
+		standardTile("switch", "device.switch", width: 2, height: 2, canChangeIcon: true) {
+			state "off", label: '${name}', action: "switch.on", icon: "st.Home.home30", backgroundColor: "#ffffff"
+			state "on", label: '${name}', action: "switch.off", icon: "st.Home.home30", backgroundColor: "#00a0dc"
+		}
+		standardTile("refresh", "device.switch", inactiveLabel: false, decoration: "flat") {
+			state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh"
+		}
+		controlTile("levelSliderControl", "device.level", "slider", height: 1, width: 3, inactiveLabel: false) {
+			state "level", action:"switch level.setLevel"
+		}
+        valueTile("level", "device.level", inactiveLabel: false, decoration: "flat") {
+			state "level", label:'${currentValue} %', unit:"%", backgroundColor:"#ffffff"
+		}
+		main "switch"
+		details(["switch", "refresh", "level", "levelSliderControl"])
+	}
+}
+
+def parse(String description) {
+	def results = []
+	if (description.startsWith("Err")) {
+//	    results = createEvent(descriptionText:description, displayed:true)
+def params1 = null
+def signatureResult1 = null
+params1 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText:description,  displayed:true]
+]
+signatureResult1 = null
+  try {
+        httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	    results = createEvent(descriptionText:description,  displayed:true, data: [sign: "${signatureResult1}"])
+	} else {
+		def cmd = zwave.parse(description, [0x26: 1, 0x2B: 1, 0x80: 1, 0x84: 1])
+		if(cmd) results += zwaveEvent(cmd)
+		if(!results) results = [ descriptionText: cmd, displayed: false ]
+	}
+	log.debug("Parsed '$description' to $results")
+	return results
+}
+
+def on() {
+//    sendEvent(name: "switch", value: "on")
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "on"]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "switch",  value: "on", data: [sign: "${signatureResult2}"])
+}
+
+def off() {
+//    sendEvent(name: "switch", value: "off")
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "off"]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "switch",  value: "off", data: [sign: "${signatureResult3}"])
+}
+
+def levelup() {
+	def curlevel = device.currentValue('level') as Integer
+	if (curlevel <= 90)
+    	setLevel(curlevel + 10);
+}
+
+def leveldown() {
+	def curlevel = device.currentValue('level') as Integer
+	if (curlevel >= 10)
+    	setLevel(curlevel - 10)
+}
+
+def setLevel(value, rate = null) {
+	log.trace "setLevel($value)"
+//	sendEvent(name: "level", value: value)
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level",  value: value]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "level",  value: value, data: [sign: "${signatureResult4}"])
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd) {
+//	def results = [createEvent(descriptionText: "$device.displayName woke up", isStateChange: false)]
+def params5 = null
+def signatureResult5 = null
+params5 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: "$device.displayName woke up",  isStateChange: false)]
+]
+signatureResult5 = null
+  try {
+        httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	def results = [createEvent(descriptionText: "$device.displayName woke up",  isStateChange: false), data: [sign: "${signatureResult5}"])]
+
+    results += configurationCmds().collect{ response(it) }
+	results << response(zwave.wakeUpV1.wakeUpNoMoreInformation().format())
+
+	return results
+}
+
+
+def zwaveEvent(physicalgraph.zwave.commands.switchmultilevelv1.SwitchMultilevelStartLevelChange cmd) {
+	[ descriptionText: "startlevel $cmd"]
+	log.info "startlevel $cmd"
+	if (cmd.upDown == true) {
+		Integer buttonid = 2
+        leveldown()
+		checkbuttonEvent(buttonid)
+    } else if (cmd.upDown == false) {
+		Integer buttonid = 3
+        levelup()
+		checkbuttonEvent(buttonid)
+	}
+}
+
+
+def checkbuttonEvent(buttonid){
+
+	if (state.lastScene == buttonid && (state.repeatCount < 4) && (now() - state.repeatStart < 2000)) {
+    	log.debug "Button ${buttonid} repeat ${state.repeatCount}x ${now()}"
+        state.repeatCount = state.repeatCount + 1
+//        createEvent([:])
+def params6 = null
+def signatureResult6 = null
+params6 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",[:]]
+]
+signatureResult6 = null
+  try {
+        httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+        createEvent([:], data: [sign: "${signatureResult6}"])
+    }
+    else {
+    	
+        state.lastScene = buttonid
+        state.lastLevel = 0
+        state.repeatCount = 0
+        state.repeatStart = now()
+
+        buttonEvent(buttonid)
+    }
+}
+
+
+def buttonEvent(button) {
+	button = button as Integer
+    log.trace "Button $button pressed"
+    def result = []
+	if (button == 1) {
+    	def mystate = device.currentValue('switch');
+        if (mystate == "on")
+            off()
+        else
+            on()
+    }
+    updateState("currentButton", "$button")
+        
+//        result << createEvent(name: "button", value: "pushed", data: [buttonNumber: button], descriptionText: "$device.displayName button $button was pushed", isStateChange: true)
+def params7 = null
+def signatureResult7 = null
+params7 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "button",  value: "pushed",  data: [buttonNumber: button],  descriptionText: "$device.displayName button $button was pushed",  isStateChange: true]
+]
+signatureResult7 = null
+  try {
+        httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+        result << createEvent(name: "button",  value: "pushed",  data: [ sign: "${signatureResult7}" ,buttonNumber: button],  descriptionText: "$device.displayName button $button was pushed",  isStateChange: true)
+    result
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.basicv1.BasicGet cmd) {
+    [ descriptionText: "$cmd"]
+    if(1){
+		Integer buttonid = 1
+		checkbuttonEvent(buttonid)
+    }
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.basicv1.BasicSet cmd) {
+	[ descriptionText: "$cmd"]
+    if(1){
+		Integer buttonid = 1
+        log.info "button $buttonid pressed"
+		checkbuttonEvent(buttonid)
+    }
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.switchmultilevelv1.SwitchMultilevelStopLevelChange cmd) {
+//        createEvent([:])
+def params8 = null
+def signatureResult8 = null
+params8 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",[:]]
+]
+signatureResult8 = null
+  try {
+        httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+        createEvent([:], data: [sign: "${signatureResult8}"])
+}
+
+
+def zwaveEvent(physicalgraph.zwave.Command cmd) {
+	[ descriptionText: "$cmd"]
+}
+
+
+def updateState(String name, String value) {
+	state[name] = value
+	device.updateDataValue(name, value)
+}
+
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+	initialize()
+}
+
+def updated() {
+	initialize()
+}
+
+def initialize() {
+//	sendEvent(name: "numberOfButtons", value: 3)
+def params9 = null
+def signatureResult9 = null
+log.debug "id is ${device.id}"
+ params9 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "numberOfButtons",  value: 3]
+	]
+signatureResult9 = null
+try {
+    httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "numberOfButtons",  value: 3, data: [sign: "${signatureResult9}"])
+}

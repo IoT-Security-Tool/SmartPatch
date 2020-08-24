@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"installed","linenumber":60}
+{"type":"sendEvent","linenumber":76,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":98,"arguments":["descriptionText: description"," displayed: true"]}
+{"type":"createEvent","linenumber":139,"arguments":["map"]}
+{"type":"createEvent","linenumber":156,"arguments":["map"]}
+{"type":"createEvent","linenumber":162,"arguments":["descriptionText: \"$device.displayName woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":183,"arguments":["name: \"motion\""," value: \"active\""," descriptionText: \"$device.displayName detected motion\""]}
+{"type":"createEvent","linenumber":185,"arguments":["name: \"motion\""," value: \"inactive\""," descriptionText: \"$device.displayName motion has stopped\""]}

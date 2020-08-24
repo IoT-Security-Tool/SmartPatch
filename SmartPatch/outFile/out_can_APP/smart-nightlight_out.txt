@@ -1,0 +1,627 @@
+import java.util.UUID
+//begin - 1
+import groovy.time.TimeCategory
+import java.text.SimpleDateFormat
+//end - 1
+/**
+ *  Copyright 2015 SmartThings
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ *  Smart Nightlight
+ *
+ *  Author: SmartThings
+ *
+ */
+definition(
+    name: "Smart Nightlight",
+    namespace: "smartthings",
+    author: "SmartThings",
+    description: "Turns on lights when it's dark and motion is detected. Turns lights off when it becomes light or some time after motion ceases.",
+    category: "Convenience",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Meta/light_motion-outlet-luminance.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Meta/light_motion-outlet-luminance@2x.png"
+)
+
+preferences {
+	section("Control these lights..."){
+		input "lights", "capability.switch", multiple: true
+	}
+	section("Turning on when it's dark and there's movement..."){
+		input "motionSensor", "capability.motionSensor", title: "Where?"
+	}
+	section("And then off when it's light or there's been no movement for..."){
+		input "delayMinutes", "number", title: "Minutes?"
+	}
+	section("Using either on this light sensor (optional) or the local sunrise and sunset"){
+		input "lightSensor", "capability.illuminanceMeasurement", required: false
+	}
+	section ("Sunrise offset (optional)...") {
+		input "sunriseOffsetValue", "text", title: "HH:MM", required: false
+		input "sunriseOffsetDir", "enum", title: "Before or After", required: false, options: ["Before","After"]
+	}
+	section ("Sunset offset (optional)...") {
+		input "sunsetOffsetValue", "text", title: "HH:MM", required: false
+		input "sunsetOffsetDir", "enum", title: "Before or After", required: false, options: ["Before","After"]
+	}
+	section ("Zip code (optional, defaults to location coordinates when location services are enabled)...") {
+		input "zipCode", "text", title: "Zip code", required: false
+	}
+}
+
+def installed() {
+	initialize()
+}
+
+def updated() {
+	unsubscribe()
+	unschedule()
+	initialize()
+}
+
+def initialize() {
+	subscribe(motionSensor, "motion", motionHandler)
+	if (lightSensor) {
+		subscribe(lightSensor, "illuminance", illuminanceHandler, [filterEvents: false])
+	}
+	else {
+		subscribe(location, "position", locationPositionChange)
+		subscribe(location, "sunriseTime", sunriseSunsetTimeHandler)
+		subscribe(location, "sunsetTime", sunriseSunsetTimeHandler)
+		astroCheck()
+	}
+}
+
+def locationPositionChange(evt) {
+//begin
+//check the evt.displayName whether it equals to the location name
+//spoofed position event always has a displayName of "position"
+//real    position event always has a displayName of "$location.name"
+//if (evt.displayName == "position")
+if (evt.displayName != location.name){
+    log.trace "evt.displayName is $evt.displayName, it shoudl be ${location.name}"
+    return
+}
+//end
+
+	log.trace "locationChange()"
+	astroCheck()
+}
+
+def sunriseSunsetTimeHandler(evt) {
+//log.trace "evt.descriptionText is $evt.descriptionText"
+// added codes begin - 3
+
+//does the sunriseTime or sunsetTime occurs twice at a short time
+if(isTwice(evt.name,evt.date.toString()))
+    return
+
+
+//does the sunriseTime or sunsetTime occurs at the correct time
+//resonable delay after sunrise/sunset/position event
+if (!sunsetoriseTimeCheck(evt.name,evt.date.toString())){
+    //log.debug "no position, sunrise or sunset event happens recently before $evt.name event hanppens"
+    return
+}
+
+//
+//the time of event passes verification
+//now, let see whether the value is correct
+if(!valueCheck(evt.name, evt.value)){
+    return
+}
+
+//pass all check, record the time
+
+switch(evt.name){
+    case "sunsetTime":
+        state.LastsunsetTime = evt.date.toString()
+        break
+    case "sunriseTime":
+        state.LastsunriseTime = evt.date.toString()
+        break
+    default:
+        log.trace "event name is not recognized in setting the time of last event: $evt.name, this probably never happens"
+        return
+}
+
+// added codes end - 3
+
+	state.lastSunriseSunsetEvent = now()
+	log.debug "SmartNightlight.sunriseSunsetTimeHandler($app.id)"
+	astroCheck()
+}
+
+def motionHandler(evt) {
+    //collect the evt.name evt.value evt.deviceId, evt.id, ID_h, signature, ID_e, and send to external web server for verificaiton
+    //also remember to put  func: "verify", into the query parameter
+
+    //get signature from evt.data
+    def startIndex = evt.data.indexOf("-sign-")
+    def endIndex = evt.data.indexOf("+sign+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No signatrue in event"
+        return
+    }
+    def signString = evt.data.substring(startIndex + "-sign-".length(),endIndex)
+
+    //get ID_e from evt.data
+    startIndex = evt.data.indexOf("-IDe-")
+    endIndex = evt.data.indexOf("+IDe+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No IDe in event"
+        return
+    }
+    def ID_e = evt.data.substring(startIndex + "-IDe-".length(),endIndex)
+
+    log.debug "evt.data: $evt.data \n sing is: $signString \n IDe is $ID_e \n"
+    def params = [
+            uri: state.URL,
+            path: state.PATH,
+            query: [func: "verify", name: "$evt.name", value: "$evt.value", deviceID: "$evt.deviceId", ID_e: ID_e, ID_h: state.ID_handler, sign: signString]
+    ]
+    def verify = null
+    //get the verify result from the external web server
+    try {
+        httpGet(params) { resp ->
+            verify = resp.data
+            log.debug "response data: ${resp.data}"
+        }
+    } catch (e) {
+        log.error "something went wrong: $e"
+    }
+    if("$verify".contentEquals('false\n')){
+        log.trace "event verification failed..."
+        return
+    }
+
+	log.debug "$evt.name: $evt.value"
+	if (evt.value == "active") {
+		if (enabled()) {
+			log.debug "turning on lights due to motion"
+			lights.on()
+			state.lastStatus = "on"
+		}
+		state.motionStopTime = null
+	}
+	else {
+		state.motionStopTime = now()
+		if(delayMinutes) {
+			runIn(delayMinutes*60, turnOffMotionAfterDelay, [overwrite: true])
+		} else {
+			turnOffMotionAfterDelay()
+		}
+	}
+}
+
+def illuminanceHandler(evt) {
+    //collect the evt.name evt.value evt.deviceId, evt.id, ID_h, signature, ID_e, and send to external web server for verificaiton
+    //also remember to put  func: "verify", into the query parameter
+
+    //get signature from evt.data
+    def startIndex = evt.data.indexOf("-sign-")
+    def endIndex = evt.data.indexOf("+sign+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No signatrue in event"
+        return
+    }
+    def signString = evt.data.substring(startIndex + "-sign-".length(),endIndex)
+
+    //get ID_e from evt.data
+    startIndex = evt.data.indexOf("-IDe-")
+    endIndex = evt.data.indexOf("+IDe+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No IDe in event"
+        return
+    }
+    def ID_e = evt.data.substring(startIndex + "-IDe-".length(),endIndex)
+
+    log.debug "evt.data: $evt.data \n sing is: $signString \n IDe is $ID_e \n"
+    def params = [
+            uri: state.URL,
+            path: state.PATH,
+            query: [func: "verify", name: "$evt.name", value: "$evt.value", deviceID: "$evt.deviceId", ID_e: ID_e, ID_h: state.ID_handler, sign: signString]
+    ]
+    def verify = null
+    //get the verify result from the external web server
+    try {
+        httpGet(params) { resp ->
+            verify = resp.data
+            log.debug "response data: ${resp.data}"
+        }
+    } catch (e) {
+        log.error "something went wrong: $e"
+    }
+    if("$verify".contentEquals('false\n')){
+        log.trace "event verification failed..."
+        return
+    }
+
+	log.debug "$evt.name: $evt.value, lastStatus: $state.lastStatus, motionStopTime: $state.motionStopTime"
+	def lastStatus = state.lastStatus
+	if (lastStatus != "off" && evt.integerValue > 50) {
+		lights.off()
+		state.lastStatus = "off"
+	}
+	else if (state.motionStopTime) {
+		if (lastStatus != "off") {
+			def elapsed = now() - state.motionStopTime
+			if (elapsed >= ((delayMinutes ?: 0) * 60000L) - 2000) {
+				lights.off()
+				state.lastStatus = "off"
+			}
+		}
+	}
+	else if (lastStatus != "on" && evt.integerValue < 30){
+		lights.on()
+		state.lastStatus = "on"
+	}
+}
+
+def turnOffMotionAfterDelay() {
+	log.trace "In turnOffMotionAfterDelay, state.motionStopTime = $state.motionStopTime, state.lastStatus = $state.lastStatus"
+	if (state.motionStopTime && state.lastStatus != "off") {
+		def elapsed = now() - state.motionStopTime
+        log.trace "elapsed = $elapsed"
+		if (elapsed >= ((delayMinutes ?: 0) * 60000L) - 2000) {
+        	log.debug "Turning off lights"
+			lights.off()
+			state.lastStatus = "off"
+		}
+	}
+}
+
+def scheduleCheck() {
+	log.debug "In scheduleCheck - skipping"
+	//turnOffMotionAfterDelay()
+}
+
+def astroCheck() {
+	def s = getSunriseAndSunset(zipCode: zipCode, sunriseOffset: sunriseOffset, sunsetOffset: sunsetOffset)
+	state.riseTime = s.sunrise.time
+	state.setTime = s.sunset.time
+	log.debug "rise: ${new Date(state.riseTime)}($state.riseTime), set: ${new Date(state.setTime)}($state.setTime)"
+}
+
+private enabled() {
+	def result
+	if (lightSensor) {
+		result = lightSensor.currentIlluminance?.toInteger() < 30
+	}
+	else {
+		def t = now()
+		result = t < state.riseTime || t > state.setTime
+	}
+	result
+}
+
+private getSunriseOffset() {
+	sunriseOffsetValue ? (sunriseOffsetDir == "Before" ? "-$sunriseOffsetValue" : sunriseOffsetValue) : null
+}
+
+private getSunsetOffset() {
+	sunsetOffsetValue ? (sunsetOffsetDir == "Before" ? "-$sunsetOffsetValue" : sunsetOffsetValue) : null
+}
+
+// added codes begin - 2
+def handlerAdded(evt){
+    switch(evt.name){
+        case "sunset":
+            if(passSunsetCheck(evt)){
+                state.PriorsunsetTime = evt.date.toString()
+            }
+            break
+        case "sunrise":
+            if(passSunriseCheck(evt)){
+                state.PriorsunriseTime = evt.date.toString()
+            }
+            break
+        case "position":
+            if(passPositionCheck(evt.displayName)){
+                state.PriorsunsetTime = evt.date.toString()
+                state.PriorsunriseTime = evt.date.toString()
+            }
+            break
+    }
+}
+
+
+def passSunsetCheck(evt){
+    //return true
+
+    //check whether sunset event happens twice in a short period of time
+    if (null != state.lastsunset){ //if null, this is the first sunset since the SmartAPP is installed, go ahead and check the event time
+        def timePeriod = state.timePeriod
+        def allowHappenTime = null
+        use( TimeCategory ) {
+            allowHappenTime = Date.parseToStringDate("$state.lastsunset") + timePeriod.minutes
+        }
+        if (Date.parseToStringDate("$evt.date") < allowHappenTime){
+            log.trace "evt.date is $evt.date, last sunset time is $state.lastsunset, less than $timePeriod minutes"
+            return false
+        }
+    }
+
+    //check the evt.date whether it is near to getSunriseandSunset
+
+    def correctTime = getSunriseAndSunset().sunset
+
+    correctTime = correctTime.toString()
+
+
+    def offsetPositive = 5
+    def offsetNegative = 0 - offsetPositive
+
+    def correctTimewithoffsetPositive = null
+    use( TimeCategory ) {
+        correctTimewithoffsetPositive =  Date.parseToStringDate("$correctTime") + offsetPositive.minutes
+    }
+
+    def correctTimewithoffsetNegative = null
+    use( TimeCategory ) {
+        correctTimewithoffsetNegative = Date.parseToStringDate("$correctTime") + offsetNegative.minutes
+    }
+
+
+
+    if (evt.date > correctTimewithoffsetPositive || evt.date < correctTimewithoffsetNegative){
+        log.trace "evt.date is $evt.date, the sunset event should happen near $correctTime (from $correctTimewithoffsetNegative to $correctTimewithoffsetPositive)"
+        return false
+    }
+
+
+    //check OK, record the latest sunset event time
+    state.lastsunset = evt.date.toString()
+    retrun true
+}
+
+def passSunriseCheck(evt){
+    //return true
+
+    //check whether sunrise event happens twice in a short period of time
+    if (null != state.lastsunrise){ //if null, this is the first sunrise since the SmartAPP is installed, go ahead and check the event time
+        def timePeriod = state.timePeriod
+        def allowHappenTime = null
+        use( TimeCategory ) {
+            allowHappenTime = Date.parseToStringDate("$state.lastsunrise") + timePeriod.minutes
+        }
+        if (Date.parseToStringDate("$evt.date") < allowHappenTime){
+            log.trace "evt.date is $evt.date, last sunrise time is $state.lastsunrise, less than $timePeriod minutes"
+            return false
+        }
+    }
+
+    //check the evt.date whether it is near to getSunriseandSunset
+
+    def correctTime = getSunriseAndSunset().sunrise
+
+    correctTime = correctTime.toString()
+
+
+    def offsetPositive = 5
+    def offsetNegative = 0 - offsetPositive
+
+    def correctTimewithoffsetPositive = null
+    use( TimeCategory ) {
+        correctTimewithoffsetPositive =  Date.parseToStringDate("$correctTime") + offsetPositive.minutes
+    }
+
+    def correctTimewithoffsetNegative = null
+    use( TimeCategory ) {
+        correctTimewithoffsetNegative = Date.parseToStringDate("$correctTime") + offsetNegative.minutes
+    }
+
+
+
+    if (evt.date > correctTimewithoffsetPositive || evt.date < correctTimewithoffsetNegative){
+        log.trace "evt.date is $evt.date, the sunrise event should happen near $correctTime (from $correctTimewithoffsetNegative to $correctTimewithoffsetPositive)"
+        return false
+    }
+
+
+    //check OK, record the latest sunrise event time
+    state.lastsunrise = evt.date.toString()
+    retrun true
+}
+
+def passPositionCheck(displayName){
+    //return true
+    if (displayName != location.name){
+        log.trace "Position check fail: evt.displayName is displayName, it shoudl be ${location.name}"
+        return false
+    }
+    return true
+}
+
+def sunsetoriseTimeCheck(name,date){
+    //check ok, return true; otherwise returns false
+    switch(name){
+        case "sunsetTime":
+            return isnearTime(date,state.PriorsunsetTime,name)
+        case "sunriseTime":
+            return isnearTime(date,state.PriorsunriseTime,name)
+        default:
+            log.trace "event name is not recognized in sunsetoriseTimeCheck: $name, this probably never happens"
+            return false
+    }
+}
+
+def isnearTime(currentTime, PriorTime,name){
+    if(!PriorTime){
+        log.trace "$name event fails: prior time is null"
+        return false
+    }
+    //time of the prior event (postion, sunrise or sunset) should be less than timePast (set to 10) minutes before the current event
+
+    def timePast = 10
+    def PriorTimeADDtimePast = null
+    use( TimeCategory ) {
+        PriorTimeADDtimePast = Date.parseToStringDate("$PriorTime") + timePast.minutes
+    }
+
+    //log.debug "PriorTimeADDtimePast: $PriorTimeADDtimePast"
+    //PriorTimeADDtimePast is the time of the moment which is timePast minutes after the prior event hapoens
+    //if PriorTimeADDtimePast is still smaller than currentTime, then the sunriseTime/sunsetTime is probably spoofed
+
+    //for example:
+
+
+    // PriorTimeADDtimePast < currentTime, false
+    //     PriorTime     timePast (10 minutes by default)  PriorTimeADDtimePast     currentTime
+    //        |                                                    |                     |
+    //sunrise event occured <------------------------------------->         sunriseTime event occurs
+    //It has been too long, the the sunriseTime event is probably spoofed
+
+    // PriorTimeADDtimePast >= currentTime, true
+    //     PriorTime     timePast (10 minutes by default)   PriorTimeADDtimePast
+    //        |                                                    |
+    //sunrise event occured <------------------------------------->
+    //                                     |
+    //                                currentTime
+    //                          sunriseTime event occurs
+    //sunriseTime event occurs after the sunrise event with a reasonable delay, the sunriseTime event should be real
+
+
+    if(PriorTimeADDtimePast < Date.parseToStringDate("$currentTime")){
+        log.trace "it has been too long since last event (postion, sunrise or sunset)"
+        return false
+    }
+    else{
+        return true
+    }
+}
+
+def valueCheck(name,value){
+    def currentLocationSunriseandSunset = getSunriseAndSunset()
+    def correctTime = null
+    switch(name){
+        case "sunsetTime":
+            correctTime = currentLocationSunriseandSunset.sunset
+            break
+        case "sunriseTime":
+            correctTime = currentLocationSunriseandSunset.sunrise
+            break
+        default:
+            log.trace "event name is not recognized in valueCheck: $name, this probably never happens"
+            return false
+    }
+
+    def correctTimeString = correctTime.toString()
+
+    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    SimpleDateFormat outputFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy")
+    Date date = inputFormat.parse("$value")
+    String eventValueString = outputFormat.format(date)
+
+    //sunset sunrise time changes everyday
+    //use offsetNegative and offsetPositive to cope with this
+    //sunsetTime sunriseTime, the value is the next sunset sunrise, sometimes they are one day later
+    //use offsetNegative+oneday offsetPositive+oneday to cope with this
+
+    def offsetPositive = 10
+    def offsetNegative = 0 - offsetPositive
+    def oneday = 1
+
+    def correctTimewithoffsetPositive = null
+    use( TimeCategory ) {
+        correctTimewithoffsetPositive = Date.parseToStringDate("$correctTimeString") + offsetPositive.minutes
+    }
+
+    def correctTimewithoffsetNegative = null
+    use( TimeCategory ) {
+        correctTimewithoffsetNegative = Date.parseToStringDate("$correctTimeString") + offsetNegative.minutes
+    }
+
+    def NextcorrectTimewithoffsetPositive = null
+    use( TimeCategory ) {
+        NextcorrectTimewithoffsetPositive = Date.parseToStringDate("$correctTimeString") + offsetPositive.minutes + oneday.days
+    }
+
+    def NextcorrectTimewithoffsetNegative = null
+    use( TimeCategory ) {
+        NextcorrectTimewithoffsetNegative = Date.parseToStringDate("$correctTimeString") + offsetNegative.minutes + oneday.days
+    }
+
+    log.trace "\n eventValueString: $eventValueString \n correctTimeString: $correctTimeString \n correctTimewithoffsetPositive: $correctTimewithoffsetPositive \n correctTimewithoffsetNegative: $correctTimewithoffsetNegative \n NextcorrectTimewithoffsetPositive: $NextcorrectTimewithoffsetPositive \n NextcorrectTimewithoffsetNegative: $NextcorrectTimewithoffsetNegative"
+
+    def condition1_1 = correctTimewithoffsetNegative < Date.parseToStringDate("$eventValueString")
+    def condition1_2 = Date.parseToStringDate("$eventValueString") < correctTimewithoffsetPositive
+    def condition2_1 = NextcorrectTimewithoffsetNegative < Date.parseToStringDate("$eventValueString")
+    def condition2_2 = Date.parseToStringDate("$eventValueString") < NextcorrectTimewithoffsetPositive
+
+    if((condition1_1 && condition1_2) || (condition2_1 && condition2_2))
+        return true
+    else{
+        log.trace "event value is wrong"
+        return false
+    }
+}
+
+def isTwice(name, currentTime){
+    switch(name){
+        case "sunsetTime":
+            return issunsetTimeTwice(currentTime)
+            break
+        case "sunriseTime":
+            return issunriseTimeTwice(currentTime)
+            break
+        default:
+            log.trace "event name is not recognized in isTwice: $name"
+            return true
+    }
+}
+
+def issunsetTimeTwice(currentTime){
+    if(!state.LastsunsetTime) //null, this is the first event, is not twice
+        return false
+
+    def timePeriod = state.timePeriod
+    def allowHappenTime = null
+    use( TimeCategory ) {
+        allowHappenTime = Date.parseToStringDate("$state.LastsunsetTime") + timePeriod.minutes
+    }
+    if (Date.parseToStringDate(currentTime) < allowHappenTime){
+        log.trace "evt.date is $currentTime, last sunrise time is $state.LastsunsetTime, less than $timePeriod minutes"
+        return true
+    }
+    return false
+}
+
+
+
+def issunriseTimeTwice(currentTime){
+    if(!state.LastsunriseTime) //null, this is the first event, is not twice
+        return false
+
+    def timePeriod = state.timePeriod
+    def allowHappenTime = null
+    use( TimeCategory ) {
+        allowHappenTime = Date.parseToStringDate("$state.LastsunriseTime") + timePeriod.minutes
+    }
+    if (Date.parseToStringDate(currentTime) < allowHappenTime){
+        log.trace "evt.date is $currentTime, last sunrise time is $state.LastsunriseTime, less than $timePeriod minutes"
+        return true
+    }
+    return false
+}
+
+
+
+// added codes end - 2
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+}
+def initialize() {
+subscribe(location, "position", handlerAdded)
+subscribe(location, "sunset", handlerAdded)
+subscribe(location, "sunrise", handlerAdded)
+}

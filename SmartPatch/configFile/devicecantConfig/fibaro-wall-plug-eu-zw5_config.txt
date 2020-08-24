@@ -1,0 +1,9 @@
+{"type":"MethodNode","name":"installed","linenumber":95}
+{"type":"sendEvent","linenumber":96,"arguments":["name: \"checkInterval\""," value: 1920"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":114,"arguments":["name: \"switch\""," value: \"off\""," displayed: \"true\""]}
+{"type":"sendEvent","linenumber":186,"arguments":["name: \"multiStatus\""," value: statusValue"," descriptionText: statusValue"," displayed: display"]}
+{"type":"sendEvent","linenumber":215,"arguments":["[name: \"switch\""," value: (cmd.value == 0 ) ? \"off\": \"on\"]"]}
+{"type":"sendEvent","linenumber":221,"arguments":["[name: \"power\""," value: cmd.scaledSensorValue"," unit: \"W\"]"]}
+{"type":"sendEvent","linenumber":230,"arguments":["[name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kWh\"]); break"]}
+{"type":"sendEvent","linenumber":231,"arguments":["[name: \"power\""," value: cmd.scaledMeterValue"," unit: \"W\"]); break"]}
+{"type":"createEvent","linenumber":242,"arguments":["\t\t\t\tdescriptionText: \"Failed to complete the network security key exchange. If you are unable to receive data from it"," you must remove it from your network and add it again.\"","\t\t\t\teventType: \"ALERT\"","\t\t\t\tname: \"secureInclusion\"","\t\t\t\tvalue: \"failed\"","\t\t\t\tdisplayed: true","\t\t"]}

@@ -1,0 +1,17 @@
+{"type":"MethodNode","name":"installed","linenumber":86}
+{"type":"sendEvent","linenumber":89,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," isStateChanged: true"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":99,"arguments":["name: \"tamper\""," value: \"clear\""]}
+{"type":"sendEvent","linenumber":100,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," isStateChanged: true"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"MethodNode","name":"initialize","linenumber":105}
+{"type":"MethodNode","name":"initialize","linenumber":111}
+{"type":"sendEvent","linenumber":136,"arguments":["name: \"battery\""," value: 100"," unit: \"%\""]}
+{"type":"createEvent","linenumber":322,"arguments":["descriptionText: description"," displayed: false"]}
+{"type":"createEvent","linenumber":324,"arguments":["\t\t\t\t\tdescriptionText: \"This device failed to complete the network security key exchange. If you are unable to control it via SmartThings"," you must remove it from your network and add it again.\"","\t\t\t\t\teventType: \"ALERT\"","\t\t\t\t\tname: \"secureInclusion\"","\t\t\t\t\tvalue: \"failed\"","\t\t\t\t\tdisplayed: true","\t\t\t"]}
+{"type":"createEvent","linenumber":400,"arguments":["[name: \"switch\""," value: switchValue"," displayed: true]"]}
+{"type":"createEvent","linenumber":401,"arguments":["[name: \"alarm\""," value: alarmValue"," displayed: true]"]}
+{"type":"createEvent","linenumber":421,"arguments":["map"]}
+{"type":"createEvent","linenumber":436,"arguments":["[name: \"switch\""," value: isActive ? \"on\" : \"off\""," displayed: true]"]}
+{"type":"createEvent","linenumber":437,"arguments":["[name: \"alarm\""," value: isActive ? \"both\" : \"off\""," displayed: true]"]}
+{"type":"createEvent","linenumber":441,"arguments":["[name: \"tamper\""," value: \"clear\"]"]}
+{"type":"createEvent","linenumber":444,"arguments":["[name: \"tamper\""," value: \"detected\"]"]}
+{"type":"createEvent","linenumber":445,"arguments":["[name: \"alarm\""," value: \"both\"]"]}

@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"parse","linenumber":119,"lastlinenumber":129,"arg":["description"]}
+{"type":"sendEvent","linenumber":123,"arguments":"(event)"}
+{"type":"MethodNode","name":"off","linenumber":131,"lastlinenumber":133}
+{"type":"MethodNode","name":"on","linenumber":135,"lastlinenumber":137}
+{"type":"MethodNode","name":"ping","linenumber":142,"lastlinenumber":144}
+{"type":"MethodNode","name":"refresh","linenumber":146,"lastlinenumber":148}
+{"type":"MethodNode","name":"configure","linenumber":150,"lastlinenumber":155}
+{"type":"sendEvent","linenumber":152,"arguments":"(name: \"checkInterval\", value: 2 * 10 * 60 + 2 * 60, displayed: false, data: [protocol: \"zigbee\", hubHardwareId: device.hub.hardwareID])"}

@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"updated","linenumber":53,"lastlinenumber":56}
+{"type":"sendEvent","linenumber":55,"arguments":"(name: \"checkInterval\", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: \"zigbee\", hubHardwareId: device.hub.hardwareID])"}
+{"type":"MethodNode","name":"parse","linenumber":59,"lastlinenumber":82,"arg":["description"]}
+{"type":"createEvent","linenumber":78,"arguments":"(map)"}
+{"type":"MethodNode","name":"parseDescriptionAsMap","linenumber":84,"lastlinenumber":89,"arg":["description"]}
+{"type":"MethodNode","name":"calculateHumidity","linenumber":91,"lastlinenumber":98,"arg":["value"]}
+{"type":"MethodNode","name":"calculateBattery","linenumber":100,"lastlinenumber":106,"arg":["value"]}
+{"type":"MethodNode","name":"hex","linenumber":108,"lastlinenumber":110,"arg":["value"]}

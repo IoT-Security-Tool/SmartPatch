@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":45,"lastlinenumber":47}
+{"type":"subscribe","linenumber":46,"arguments":["temperatureSensor1","temperature","temperatureHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":49,"lastlinenumber":52}
+{"type":"subscribe","linenumber":51,"arguments":["temperatureSensor1","temperature","temperatureHandler"]}
+{"type":"MethodNode","name":"temperatureHandler","linenumber":54,"lastlinenumber":81,"arg":["evt"]}
+{"type":"MethodNode","name":"send","linenumber":83,"lastlinenumber":101,"arg":["msg"]}

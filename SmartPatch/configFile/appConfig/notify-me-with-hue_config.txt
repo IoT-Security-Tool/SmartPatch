@@ -1,0 +1,25 @@
+{"type":"MethodNode","name":"installed","linenumber":63,"lastlinenumber":66}
+{"type":"MethodNode","name":"updated","linenumber":68,"lastlinenumber":73}
+{"type":"MethodNode","name":"subscribeToEvents","linenumber":75,"lastlinenumber":98}
+{"type":"subscribe","linenumber":76,"arguments":["app","appTouchHandler"]}
+{"type":"subscribe","linenumber":77,"arguments":["contact","contact.open","eventHandler"]}
+{"type":"subscribe","linenumber":78,"arguments":["contactClosed","contact.closed","eventHandler"]}
+{"type":"subscribe","linenumber":79,"arguments":["acceleration","acceleration.active","eventHandler"]}
+{"type":"subscribe","linenumber":80,"arguments":["motion","motion.active","eventHandler"]}
+{"type":"subscribe","linenumber":81,"arguments":["mySwitch","switch.on","eventHandler"]}
+{"type":"subscribe","linenumber":82,"arguments":["mySwitchOff","switch.off","eventHandler"]}
+{"type":"subscribe","linenumber":83,"arguments":["arrivalPresence","presence.present","eventHandler"]}
+{"type":"subscribe","linenumber":84,"arguments":["departurePresence","presence.not present","eventHandler"]}
+{"type":"subscribe","linenumber":85,"arguments":["smoke","smoke.detected","eventHandler"]}
+{"type":"subscribe","linenumber":86,"arguments":["smoke","smoke.tested","eventHandler"]}
+{"type":"subscribe","linenumber":87,"arguments":["smoke","carbonMonoxide.detected","eventHandler"]}
+{"type":"subscribe","linenumber":88,"arguments":["water","water.wet","eventHandler"]}
+{"type":"subscribe","linenumber":89,"arguments":["button1","button.pushed","eventHandler"]}
+{"type":"subscribe","linenumber":92,"arguments":["location","modeChangeHandler"]}
+{"type":"MethodNode","name":"eventHandler","linenumber":100,"lastlinenumber":110,"arg":["evt"]}
+{"type":"MethodNode","name":"modeChangeHandler","linenumber":112,"lastlinenumber":117,"arg":["evt"]}
+{"type":"MethodNode","name":"scheduledTimeHandler","linenumber":119,"lastlinenumber":121}
+{"type":"MethodNode","name":"appTouchHandler","linenumber":123,"lastlinenumber":125,"arg":["evt"]}
+{"type":"MethodNode","name":"takeAction","linenumber":127,"lastlinenumber":167,"arg":["evt"]}
+{"type":"MethodNode","name":"setTimer","linenumber":169,"lastlinenumber":190}
+{"type":"MethodNode","name":"resetHue","linenumber":193,"lastlinenumber":198}

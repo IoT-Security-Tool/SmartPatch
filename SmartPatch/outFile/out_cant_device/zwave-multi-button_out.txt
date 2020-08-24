@@ -1,0 +1,611 @@
+ import java.util.UUID
+import groovy.json.JsonOutput
+
+"License"
+"AS IS"
+
+metadata {
+	definition (name: "Z-Wave Multi Button", namespace: "smartthings", author: "SmartThings", mcdSync: true, ocfDeviceType: "x.com.st.d.remotecontroller") {
+		capability "Button"
+		capability "Battery"
+		capability "Sensor"
+		capability "Health Check"
+		capability "Configuration"
+
+		
+		fingerprint mfr: "010F", prod: "1001", model: "1000", deviceJoinName: "Fibaro KeyFob", mnmn: "SmartThings", vid: "generic-6-button" 
+		fingerprint mfr: "010F", prod: "1001", model: "2000", deviceJoinName: "Fibaro KeyFob", mnmn: "SmartThings", vid: "generic-6-button"  
+		fingerprint mfr: "0371", prod: "0102", model: "0003", deviceJoinName: "Aeotec NanoMote Quad", mnmn: "SmartThings", vid: "generic-4-button" 
+		fingerprint mfr: "0371", prod: "0002", model: "0003", deviceJoinName: "Aeotec NanoMote Quad", mnmn: "SmartThings", vid: "generic-4-button" 
+		fingerprint mfr: "0086", prod: "0101", model: "0058", deviceJoinName: "Aeotec KeyFob", mnmn: "SmartThings", vid: "generic-4-button" 
+		fingerprint mfr: "0086", prod: "0001", model: "0058", deviceJoinName: "Aeotec KeyFob", mnmn: "SmartThings", vid: "generic-4-button" 
+		fingerprint mfr: "010F", prod: "1001", model: "3000", deviceJoinName: "Fibaro KeyFob", mnmn: "SmartThings", vid: "generic-6-button" 
+	}
+
+	tiles(scale: 2) {
+		multiAttributeTile(name: "button", type: "generic", width: 6, height: 4, canChangeIcon: true) {
+			tileAttribute("device.button", key: "PRIMARY_CONTROL") {
+				attributeState "default", label: ' ', icon: "st.unknown.zwave.remote-controller", backgroundColor: "#ffffff"
+			}
+		}
+		valueTile("battery", "device.battery", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "battery", label:'${currentValue}% battery', unit:""
+		}
+
+		main "button"
+		details(["button", "battery"])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+//	sendEvent(name: "button", value: "pushed", isStateChange: true, displayed: false)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "button",  value: "pushed",  isStateChange: true,  displayed: false]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "button",  value: "pushed",  isStateChange: true,  displayed: false, data: [sign: "${signatureResult1}"])
+//	sendEvent(name: "supportedButtonValues", value: supportedButtonValues.encodeAsJSON(), displayed: false)
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "supportedButtonValues",  value: supportedButtonValues.encodeAsJSON(),  displayed: false]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "supportedButtonValues",  value: supportedButtonValues.encodeAsJSON(),  displayed: false, data: [sign: "${signatureResult2}"])
+	initialize()
+}
+
+def updated() {
+	runIn(2, "initialize", [overwrite: true])
+}
+
+
+def initialize() {
+	def numberOfButtons = prodNumberOfButtons[zwaveInfo.prod]
+//	sendEvent(name: "numberOfButtons", value: numberOfButtons, displayed: false)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "numberOfButtons",  value: numberOfButtons,  displayed: false]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "numberOfButtons",  value: numberOfButtons,  displayed: false, data: [sign: "${signatureResult3}"])
+	if(isUntrackedAeotec() || isUntrackedFibaro()) {
+//		sendEvent(name: "DeviceWatch-Enroll", value: JsonOutput.toJson([protocol: "zwave", scheme:"untracked"]), displayed: false)
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-Enroll",  value: JsonOutput.toJson([protocol: "zwave",  scheme:"untracked"]),  displayed: false]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+		sendEvent(name: "DeviceWatch-Enroll",  value: JsonOutput.toJson([protocol: "zwave",  scheme:"untracked"]),  displayed: false, data: [sign: "${signatureResult4}"])
+	} else {
+//		sendEvent(name: "checkInterval", value: 8 * 60 * 60 + 10 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 8 * 60 * 60 + 10 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+		sendEvent(name: "checkInterval",  value: 8 * 60 * 60 + 10 * 60,  displayed: false,  data: [ sign: "${signatureResult5}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID])
+	}
+	if(!childDevices) {
+		addChildButtons(numberOfButtons)
+	}
+	if(childDevices) {
+		def event
+		for(def endpoint : 1..prodNumberOfButtons[zwaveInfo.prod]) {
+//			event = createEvent(name: "button", value: "pushed", isStateChange: true)
+def params6 = null
+def signatureResult6 = null
+params6 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "button",  value: "pushed",  isStateChange: true]
+]
+signatureResult6 = null
+  try {
+        httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			event = createEvent(name: "button",  value: "pushed",  isStateChange: true, data: [sign: "${signatureResult6}"])
+//			sendEventToChild(endpoint, event)
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${oChild(endpoint,  event?.name}", value: "${oChild(endpoint,  event?.value}"]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue7= ''
+if(oChild(endpoint,  event.containsKey('data') ){
+datavalue7 = oChild(endpoint,  event['data']
+datavalue7 = "[" + datavalue7+ "," +"sign: " + "${signatureResult7}" + "]"
+oChild(endpoint,  event.put('data',"${datavalue7}")
+ }else{
+datavalue7=  "[sign: " + "${signatureResult7}" +"]"
+oChild(endpoint,  event.put('data',"${datavalue7}")
+}
+			sendEvent(oChild(endpoint,  event)
+		}
+	}
+	response([
+			secure(zwave.batteryV1.batteryGet()),
+			"delay 2000",
+			secure(zwave.wakeUpV1.wakeUpNoMoreInformation())
+	])
+}
+
+def configure() {
+	def cmds = []
+	if(isAeotecKeyFob()) {
+		cmds += secure(zwave.configurationV1.configurationSet(parameterNumber: 250, scaledConfigurationValue: 1))
+		
+	}
+	if(isFibaro()) {
+		for (def parameter : 21..26) {
+			cmds += secure(zwave.configurationV1.configurationSet(parameterNumber: parameter, scaledConfigurationValue: 15))
+			
+		}
+	}
+	cmds
+}
+
+def parse(String description) {
+	def result = []
+	if (description.startsWith("Err")) {
+//		result = createEvent(descriptionText:description, isStateChange:true)
+def params8 = null
+def signatureResult8 = null
+params8 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText:description,  isStateChange:true]
+]
+signatureResult8 = null
+  try {
+        httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+		result = createEvent(descriptionText:description,  isStateChange:true, data: [sign: "${signatureResult8}"])
+	} else {
+		def cmd = zwave.parse(description, [0x84: 1])
+		if (cmd) {
+			result += zwaveEvent(cmd)
+		}
+	}
+	log.debug "Parse returned: ${result}"
+	result
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityMessageEncapsulation cmd) {
+	def encapsulatedCommand = cmd.encapsulatedCommand([0x84: 1])
+	if (encapsulatedCommand) {
+		zwaveEvent(encapsulatedCommand)
+	} else {
+		log.warn "Unable to extract encapsulated cmd from $cmd"
+//		createEvent(descriptionText: cmd.toString())
+def params9 = null
+def signatureResult9 = null
+params9 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: cmd.toString()]
+]
+signatureResult9 = null
+  try {
+        httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+		createEvent(descriptionText: cmd.toString(), data: [sign: "${signatureResult9}"])
+	}
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.sceneactivationv1.SceneActivationSet cmd) {
+	
+	def value = cmd.sceneId % 2 ? "pushed" : "held"
+	def childId = (int)(cmd.sceneId / 2) + (cmd.sceneId % 2)
+	def description = "Button no. ${childId} was ${value}"
+//	def event = createEvent(name: "button", value: value, descriptionText: description, data: [buttonNumber: childId], isStateChange: true)
+def params10 = null
+def signatureResult10 = null
+params10 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "button",  value: value,  descriptionText: description,  data: [buttonNumber: childId],  isStateChange: true]
+]
+signatureResult10 = null
+  try {
+        httpGet(params10) { resp ->
+        signatureResult10 = resp.data
+        log.debug "response data: ${signatureResult10}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	def event = createEvent(name: "button",  value: value,  descriptionText: description,  data: [ sign: "${signatureResult10}" ,buttonNumber: childId],  isStateChange: true)
+//	sendEventToChild(childId, event)
+def params11 = null
+def signatureResult11 = null
+log.debug "id is ${device.id}"
+ params11 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${oChild(childId,  event?.name}", value: "${oChild(childId,  event?.value}"]
+	]
+signatureResult11 = null
+try {
+    httpGet(params11) { resp ->
+        signatureResult11 = resp.data
+        log.debug "response data: ${signatureResult11}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue11= ''
+if(oChild(childId,  event.containsKey('data') ){
+datavalue11 = oChild(childId,  event['data']
+datavalue11 = "[" + datavalue11+ "," +"sign: " + "${signatureResult11}" + "]"
+oChild(childId,  event.put('data',"${datavalue11}")
+ }else{
+datavalue11=  "[sign: " + "${signatureResult11}" +"]"
+oChild(childId,  event.put('data',"${datavalue11}")
+}
+	sendEvent(oChild(childId,  event)
+	return event
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.centralscenev1.CentralSceneNotification cmd) {
+	def value = eventsMap[(int) cmd.keyAttributes]
+	def description = "Button no. ${cmd.sceneNumber} was ${value}"
+//	def event = createEvent(name: "button", value: value, descriptionText: description, data: [buttonNumber: cmd.sceneNumber], isStateChange: true)
+def params12 = null
+def signatureResult12 = null
+params12 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "button",  value: value,  descriptionText: description,  data: [buttonNumber: cmd.sceneNumber],  isStateChange: true]
+]
+signatureResult12 = null
+  try {
+        httpGet(params12) { resp ->
+        signatureResult12 = resp.data
+        log.debug "response data: ${signatureResult12}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	def event = createEvent(name: "button",  value: value,  descriptionText: description,  data: [ sign: "${signatureResult12}" ,buttonNumber: cmd.sceneNumber],  isStateChange: true)
+//	sendEventToChild(cmd.sceneNumber, event)
+def params13 = null
+def signatureResult13 = null
+log.debug "id is ${device.id}"
+ params13 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${oChild(cmd.sceneNumber,  event?.name}", value: "${oChild(cmd.sceneNumber,  event?.value}"]
+	]
+signatureResult13 = null
+try {
+    httpGet(params13) { resp ->
+        signatureResult13 = resp.data
+        log.debug "response data: ${signatureResult13}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue13= ''
+if(oChild(cmd.sceneNumber,  event.containsKey('data') ){
+datavalue13 = oChild(cmd.sceneNumber,  event['data']
+datavalue13 = "[" + datavalue13+ "," +"sign: " + "${signatureResult13}" + "]"
+oChild(cmd.sceneNumber,  event.put('data',"${datavalue13}")
+ }else{
+datavalue13=  "[sign: " + "${signatureResult13}" +"]"
+oChild(cmd.sceneNumber,  event.put('data',"${datavalue13}")
+}
+	sendEvent(oChild(cmd.sceneNumber,  event)
+	return event
+}
+
+//def sendEventToChild(buttonNumber, event) {
+def params14 = null
+def signatureResult14 = null
+log.debug "id is ${device.id}"
+ params14 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${oChild(buttonNumber,  event) ?.name}", value: "${oChild(buttonNumber,  event) ?.value}"]
+	]
+signatureResult14 = null
+try {
+    httpGet(params14) { resp ->
+        signatureResult14 = resp.data
+        log.debug "response data: ${signatureResult14}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue14= ''
+if(oChild(buttonNumber,  event) .containsKey('data') ){
+datavalue14 = oChild(buttonNumber,  event) ['data']
+datavalue14 = "[" + datavalue14+ "," +"sign: " + "${signatureResult14}" + "]"
+oChild(buttonNumber,  event) .put('data',"${datavalue14}")
+ }else{
+datavalue14=  "[sign: " + "${signatureResult14}" +"]"
+oChild(buttonNumber,  event) .put('data',"${datavalue14}")
+}
+def sendEvent(oChild(buttonNumber,  event) )
+	String childDni = "${device.deviceNetworkId}:$buttonNumber"
+	def child = childDevices.find { it.deviceNetworkId == childDni }
+//	child?.sendEvent(event)
+def params15 = null
+def signatureResult15 = null
+log.debug "id is ${device.id}"
+ params15 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${event?.name}", value: "${event?.value}"]
+	]
+signatureResult15 = null
+try {
+    httpGet(params15) { resp ->
+        signatureResult15 = resp.data
+        log.debug "response data: ${signatureResult15}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue15= ''
+if(event.containsKey('data') ){
+datavalue15 = event['data']
+datavalue15 = "[" + datavalue15+ "," +"sign: " + "${signatureResult15}" + "]"
+event.put('data',"${datavalue15}")
+ }else{
+datavalue15=  "[sign: " + "${signatureResult15}" +"]"
+event.put('data',"${datavalue15}")
+}
+	child?.sendEvent(event)
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd) {
+	def results = []
+//	results += createEvent(descriptionText: "$device.displayName woke up", isStateChange: false)
+def params16 = null
+def signatureResult16 = null
+params16 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: "$device.displayName woke up",  isStateChange: false]
+]
+signatureResult16 = null
+  try {
+        httpGet(params16) { resp ->
+        signatureResult16 = resp.data
+        log.debug "response data: ${signatureResult16}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	results += createEvent(descriptionText: "$device.displayName woke up",  isStateChange: false, data: [sign: "${signatureResult16}"])
+	results += response([
+			secure(zwave.batteryV1.batteryGet()),
+			"delay 2000",
+			secure(zwave.wakeUpV1.wakeUpNoMoreInformation())
+	])
+	results
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
+	def map = [ name: "battery", unit: "%", isStateChange: true ]
+	state.lastbatt = now()
+	if (cmd.batteryLevel == 0xFF) {
+		map.value = 1
+		map.descriptionText = "$device.displayName battery is low!"
+	} else {
+		map.value = cmd.batteryLevel
+	}
+//	createEvent(map)
+def params17 = null
+def signatureResult17 = null
+params17 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult17 = null
+  try {
+        httpGet(params17) { resp ->
+        signatureResult17 = resp.data
+        log.debug "response data: ${signatureResult17}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue17= ''
+if(map.containsKey('data') ){
+datavalue17 = map['data']
+datavalue17 = "[" + datavalue17+ "," +"sign: " + "${signatureResult17}" + "]"
+map.put('data',"${datavalue17}")
+ }else{
+datavalue17=  "[sign: " + "${signatureResult17}" +"]"
+map.put('data',"${datavalue17}")
+}
+	createEvent(map)
+}
+
+def zwaveEvent(physicalgraph.zwave.Command cmd) {
+	log.warn "Unhandled command: ${cmd}"
+}
+
+private secure(cmd) {
+	if(zwaveInfo.zw.contains("s")) {
+		zwave.securityV1.securityMessageEncapsulation().encapsulate(cmd).format()
+	} else {
+		cmd.format()
+	}
+}
+
+private addChildButtons(numberOfButtons) {
+	for(def endpoint : 1..numberOfButtons) {
+		try {
+			String childDni = "${device.deviceNetworkId}:$endpoint"
+			def componentLabel = (device.displayName.endsWith(' 1') ? device.displayName[0..-2] : (device.displayName + " ")) + "${endpoint}"
+			def child = addChildDevice("Child Button", childDni, device.getHub().getId(), [
+					completedSetup: true,
+					label         : componentLabel,
+					isComponent   : true,
+					componentName : "button$endpoint",
+					componentLabel: "Button $endpoint"
+			])
+//			child.sendEvent(name: "supportedButtonValues", value: supportedButtonValues.encodeAsJSON(), displayed: false)
+def params18 = null
+def signatureResult18 = null
+log.debug "id is ${device.id}"
+ params18 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "supportedButtonValues",  value: supportedButtonValues.encodeAsJSON(),  displayed: false]
+	]
+signatureResult18 = null
+try {
+    httpGet(params18) { resp ->
+        signatureResult18 = resp.data
+        log.debug "response data: ${signatureResult18}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+			child.sendEvent(name: "supportedButtonValues",  value: supportedButtonValues.encodeAsJSON(),  displayed: false, data: [sign: "${signatureResult18}"])
+		} catch(Exception e) {
+			log.debug "Exception: ${e}"
+		}
+	}
+}
+
+private getEventsMap() {[
+		0: "pushed",
+		1: "held",
+		2: "down_hold",
+		3: "double",
+		4: "pushed_3x"
+]}
+
+private getProdNumberOfButtons() {[
+		"1001" : 6,
+		"0102" : 4,
+		"0002" : 4,
+		"0101" : 4,
+		"0001" : 4
+]}
+
+private getSupportedButtonValues() {
+	def values = ["pushed", "held"]
+	if (isFibaro()) values += ["double", "down_hold", "pushed_3x"]
+	return values
+}
+
+private isFibaro() {
+	zwaveInfo.mfr?.contains("010F")
+}
+
+private isUntrackedFibaro() {
+	isFibaro() && zwaveInfo.prod?.contains("1001")
+}
+
+private isUntrackedAeotec() {
+	zwaveInfo.mfr?.contains("0371") && zwaveInfo.model?.contains("0003")
+}
+
+private isAeotecKeyFob() {
+	zwaveInfo.mfr?.contains("0086")
+}

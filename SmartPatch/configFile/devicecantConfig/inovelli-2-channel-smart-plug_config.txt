@@ -1,0 +1,13 @@
+{"type":"sendEvent","linenumber":59,"arguments":["name: \"switch\""," value: cmd.value ? \"on\" : \"off\""]}
+{"type":"createEvent","linenumber":63,"arguments":["[name: \"switch\""," value: \"on\"])"]}
+{"type":"createEvent","linenumber":71,"arguments":["[name: \"switch\""," value: \"off\"])"]}
+{"type":"createEvent","linenumber":73,"arguments":["[name: \"switch\""," value: \"on\"])"]}
+{"type":"createEvent","linenumber":81,"arguments":["name: \"switch\""," value: cmd.value ? \"on\" : \"off\""," type: \"digital\""]}
+{"type":"sendEvent","linenumber":94,"arguments":["name: \"switch\""," value: cmd.value ? \"on\" : \"off\""]}
+{"type":"createEvent","linenumber":96,"arguments":["[name: \"switch\""," value: \"on\"])"]}
+{"type":"createEvent","linenumber":104,"arguments":["[name: \"switch\""," value: \"off\"])"]}
+{"type":"createEvent","linenumber":106,"arguments":["[name: \"switch\""," value: \"on\"])"]}
+{"type":"createEvent","linenumber":111,"arguments":["name: \"switch\""," value: cmd.value ? \"on\" : \"off\""," type: \"digital\""]}
+{"type":"MethodNode","name":"installed","linenumber":198}
+{"type":"sendEvent","linenumber":216,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":217,"arguments":["name: \"needUpdate\""," value: device.currentValue(\"needUpdate\")"," displayed: false"," isStateChange: true"]}

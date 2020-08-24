@@ -1,0 +1,17 @@
+{"type":"MethodNode","name":"installed","linenumber":60,"lastlinenumber":62}
+{"type":"MethodNode","name":"updated","linenumber":64,"lastlinenumber":68}
+{"type":"MethodNode","name":"initialize","linenumber":70,"lastlinenumber":78}
+{"type":"subscribe","linenumber":71,"arguments":["location","position","locationPositionChange"]}
+{"type":"subscribe","linenumber":72,"arguments":["location","sunriseTime","sunriseTimeHandler"]}
+{"type":"subscribe","linenumber":73,"arguments":["location","sunsetTime","sunsetTimeHandler"]}
+{"type":"MethodNode","name":"locationPositionChange","linenumber":80,"lastlinenumber":83,"arg":["evt"]}
+{"type":"MethodNode","name":"sunsetTimeHandler","linenumber":85,"lastlinenumber":88,"arg":["evt"]}
+{"type":"MethodNode","name":"sunriseTimeHandler","linenumber":90,"lastlinenumber":93,"arg":["evt"]}
+{"type":"MethodNode","name":"scheduleWithOffset","linenumber":95,"lastlinenumber":101,"arg":["nextSunriseSunsetTime","offset","offsetDir","handlerName"]}
+{"type":"MethodNode","name":"sunriseHandler","linenumber":103,"lastlinenumber":112}
+{"type":"MethodNode","name":"sunsetHandler","linenumber":114,"lastlinenumber":123}
+{"type":"MethodNode","name":"changeMode","linenumber":125,"lastlinenumber":135,"arg":["newMode"]}
+{"type":"MethodNode","name":"send","linenumber":137,"lastlinenumber":155,"arg":["msg"]}
+{"type":"MethodNode","name":"getLabel","linenumber":157,"lastlinenumber":159}
+{"type":"MethodNode","name":"getOffset","linenumber":161,"lastlinenumber":167,"arg":["offsetValue","offsetDir"]}
+{"type":"MethodNode","name":"calculateTimeOffsetMillis","linenumber":169,"lastlinenumber":192,"arg":["offset"]}

@@ -1,0 +1,7 @@
+{"type":"MethodNode","name":"installed","linenumber":64,"lastlinenumber":67}
+{"type":"MethodNode","name":"updated","linenumber":69,"lastlinenumber":73}
+{"type":"MethodNode","name":"getHueColors","linenumber":76,"lastlinenumber":78}
+{"type":"MethodNode","name":"getSaturation","linenumber":81,"lastlinenumber":83}
+{"type":"MethodNode","name":"getMaxLevel","linenumber":86,"lastlinenumber":88}
+{"type":"MethodNode","name":"initialize","linenumber":90,"lastlinenumber":101}
+{"type":"MethodNode","name":"checkServer","linenumber":103,"lastlinenumber":132}

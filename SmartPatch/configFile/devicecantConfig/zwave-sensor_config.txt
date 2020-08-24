@@ -1,0 +1,21 @@
+{"type":"createEvent","linenumber":50,"arguments":["descriptionText:description"," displayed:true"]}
+{"type":"createEvent","linenumber":63,"arguments":["[ name: \"sensor\""," value: \"inactive\" ]"]}
+{"type":"createEvent","linenumber":65,"arguments":["[ name: \"sensor\""," value: \"active\" ]"]}
+{"type":"createEvent","linenumber":67,"arguments":["[ name: \"sensor\""," value: \"active\" ])"]}
+{"type":"createEvent","linenumber":68,"arguments":["[ name: \"level\""," value: value ]) "]}
+{"type":"createEvent","linenumber":153,"arguments":["map"]}
+{"type":"createEvent","linenumber":175,"arguments":["map"]}
+{"type":"createEvent","linenumber":179,"arguments":["[ name: \"sensor\""," value: value"," descriptionText: description"," isStateChange: true ]"]}
+{"type":"createEvent","linenumber":192,"arguments":["name: \"smoke\""," value: \"clear\""]}
+{"type":"createEvent","linenumber":197,"arguments":["name: \"smoke\""," value: \"detected\""]}
+{"type":"createEvent","linenumber":201,"arguments":["name: \"smoke\""," value: \"tested\""]}
+{"type":"createEvent","linenumber":209,"arguments":["name: \"water\""," value: \"dry\""]}
+{"type":"createEvent","linenumber":216,"arguments":["name: \"water\""," value: \"wet\""]}
+{"type":"createEvent","linenumber":245,"arguments":["name: \"contact\""," value: \"open\""]}
+{"type":"createEvent","linenumber":250,"arguments":["name: \"contact\""," value: \"closed\""]}
+{"type":"createEvent","linenumber":265,"arguments":["name: \"motion\""," value: \"active\""," descriptionText:\"$device.displayName detected motion\""]}
+{"type":"createEvent","linenumber":269,"arguments":["name: \"notification$cmd.notificationType\""," value: \"$cmd.event\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":272,"arguments":["name: \"alarm $cmd.v1AlarmType\""," value: value"," displayed: false"]}
+{"type":"createEvent","linenumber":281,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":293,"arguments":["map"]}
+{"type":"createEvent","linenumber":341,"arguments":["descriptionText: \"$device.displayName: $cmd\""," displayed: false"]}

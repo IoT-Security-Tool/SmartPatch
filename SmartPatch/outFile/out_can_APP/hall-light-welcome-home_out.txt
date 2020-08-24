@@ -1,0 +1,169 @@
+import java.util.UUID
+/**
+ *  Hall Light: Welcome Home
+ *
+ *  Author: brian@bevey.org
+ *  Date: 9/25/13
+ *
+ *  Turn on the hall light if someone comes home (presence) and the door opens.
+ */
+
+definition(
+  name: "Hall Light: Welcome Home",
+  namespace: "imbrianj",
+  author: "brian@bevey.org",
+  description: "Turn on the hall light if someone comes home (presence) and the door opens.",
+  category: "Convenience",
+  iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+  iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience%402x.png"
+)
+
+preferences {
+  section("People to watch for?") {
+    input "people", "capability.presenceSensor", multiple: true
+  }
+
+  section("Front Door?") {
+    input "sensors", "capability.contactSensor", multiple: true
+  }
+
+  section("Hall Light?") {
+    input "lights", "capability.switch", title: "Switch Turned On", multilple: true
+  }
+
+  section("Presence Delay (defaults to 30s)?") {
+    input name: "presenceDelay", type: "number", title: "How Long?", required: false
+  }
+
+  section("Door Contact Delay (defaults to 10s)?") {
+    input name: "contactDelay", type: "number", title: "How Long?", required: false
+  }
+}
+
+def installed() {
+  init()
+}
+
+def updated() {
+  unsubscribe()
+  init()
+}
+
+def init() {
+  state.lastClosed = now()
+  subscribe(people, "presence.present", presence)
+  subscribe(sensors, "contact.open", doorOpened)
+}
+
+def presence(evt) {
+    //collect the evt.name evt.value evt.deviceId, evt.id, ID_h, signature, ID_e, and send to external web server for verificaiton
+    //also remember to put  func: "verify", into the query parameter
+
+    //get signature from evt.data
+    def startIndex = evt.data.indexOf("-sign-")
+    def endIndex = evt.data.indexOf("+sign+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No signatrue in event"
+        return
+    }
+    def signString = evt.data.substring(startIndex + "-sign-".length(),endIndex)
+
+    //get ID_e from evt.data
+    startIndex = evt.data.indexOf("-IDe-")
+    endIndex = evt.data.indexOf("+IDe+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No IDe in event"
+        return
+    }
+    def ID_e = evt.data.substring(startIndex + "-IDe-".length(),endIndex)
+
+    log.debug "evt.data: $evt.data \n sing is: $signString \n IDe is $ID_e \n"
+    def params = [
+            uri: state.URL,
+            path: state.PATH,
+            query: [func: "verify", name: "$evt.name", value: "$evt.value", deviceID: "$evt.deviceId", ID_e: ID_e, ID_h: state.ID_handler, sign: signString]
+    ]
+    def verify = null
+    //get the verify result from the external web server
+    try {
+        httpGet(params) { resp ->
+            verify = resp.data
+            log.debug "response data: ${resp.data}"
+        }
+    } catch (e) {
+        log.error "something went wrong: $e"
+    }
+    if("$verify".contentEquals('false\n')){
+        log.trace "event verification failed..."
+        return
+    }
+
+  def delay = contactDelay ?: 10
+
+  state.lastPresence = now()
+
+  if(now() - (delay * 1000) < state.lastContact) {
+    log.info('Presence was delayed, but you probably still want the light on.')
+    lights?.on()
+  }
+}
+
+def doorOpened(evt) {
+    //collect the evt.name evt.value evt.deviceId, evt.id, ID_h, signature, ID_e, and send to external web server for verificaiton
+    //also remember to put  func: "verify", into the query parameter
+
+    //get signature from evt.data
+    def startIndex = evt.data.indexOf("-sign-")
+    def endIndex = evt.data.indexOf("+sign+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No signatrue in event"
+        return
+    }
+    def signString = evt.data.substring(startIndex + "-sign-".length(),endIndex)
+
+    //get ID_e from evt.data
+    startIndex = evt.data.indexOf("-IDe-")
+    endIndex = evt.data.indexOf("+IDe+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No IDe in event"
+        return
+    }
+    def ID_e = evt.data.substring(startIndex + "-IDe-".length(),endIndex)
+
+    log.debug "evt.data: $evt.data \n sing is: $signString \n IDe is $ID_e \n"
+    def params = [
+            uri: state.URL,
+            path: state.PATH,
+            query: [func: "verify", name: "$evt.name", value: "$evt.value", deviceID: "$evt.deviceId", ID_e: ID_e, ID_h: state.ID_handler, sign: signString]
+    ]
+    def verify = null
+    //get the verify result from the external web server
+    try {
+        httpGet(params) { resp ->
+            verify = resp.data
+            log.debug "response data: ${resp.data}"
+        }
+    } catch (e) {
+        log.error "something went wrong: $e"
+    }
+    if("$verify".contentEquals('false\n')){
+        log.trace "event verification failed..."
+        return
+    }
+
+  def delay = presenceDelay ?: 30
+
+  state.lastContact = now()
+
+  if(now() - (delay * 1000) < state.lastPresence) {
+    log.info('Welcome home!  Let me get that light for you.')
+    lights?.on()
+  }
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+}
+def initialize() {
+}

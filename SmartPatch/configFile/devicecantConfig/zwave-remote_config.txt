@@ -1,0 +1,2 @@
+{"type":"MethodNode","name":"installed","linenumber":23}
+{"type":"createEvent","linenumber":40,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: true"]}

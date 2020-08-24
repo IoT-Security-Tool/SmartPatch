@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"pageTwo","linenumber":43,"lastlinenumber":66}
+{"type":"MethodNode","name":"installed","linenumber":68,"lastlinenumber":72}
+{"type":"MethodNode","name":"updated","linenumber":74,"lastlinenumber":79}
+{"type":"MethodNode","name":"initialize","linenumber":81,"lastlinenumber":84}
+{"type":"subscribe","linenumber":82,"arguments":["tag","nfcTouch","touchHandler"]}
+{"type":"subscribe","linenumber":83,"arguments":["app","touchHandler"]}
+{"type":"MethodNode","name":"currentStatus","linenumber":86,"lastlinenumber":104,"arg":["devices","master","attribute"]}
+{"type":"MethodNode","name":"touchHandler","linenumber":106,"lastlinenumber":143,"arg":["evt"]}

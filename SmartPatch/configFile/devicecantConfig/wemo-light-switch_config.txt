@@ -1,0 +1,32 @@
+{"type":"subscribe","linenumber":17,"arguments":["command subscribe"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":18,"arguments":["command resubscribe"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":19,"arguments":["command unsubscribe"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"createEvent","linenumber":86,"arguments":["name: \"switch\""," value: value"," descriptionText: \"Switch is ${value}\""]}
+{"type":"createEvent","linenumber":93,"arguments":["name: \"switch\""," value: value"," descriptionText: \"Switch is ${value}\""," displayed: dispaux"]}
+{"type":"subscribe","linenumber":167,"arguments":["log.debug Executing WeMo Light Switch 'subscribe'"," then 'timeSyncResponse'"," then 'poll'"]}
+{"type":"MethodNode","name":" then 'poll'","linenumber":0}
+{"type":"subscribe","linenumber":168,"arguments":[")"," timeSyncResponse()"," poll()"]}
+{"type":"MethodNode","name":" poll()","linenumber":0}
+{"type":"subscribe","linenumber":172,"arguments":["hostAddress) "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":173,"arguments":[")'"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":186,"arguments":[") "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":187,"arguments":["getHostAddress()"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":190,"arguments":["ip"," port) "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"sendEvent","linenumber":197,"arguments":["name: \"currentIP\""," value: ipvalue"," descriptionText: \"IP changed to ${ipvalue}\""]}
+{"type":"subscribe","linenumber":204,"arguments":["${ip}:${port}"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":208,"arguments":[") "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":209,"arguments":[")'"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":224,"arguments":[") "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"sendEvent","linenumber":281,"arguments":["name: \"switch\""," value: \"offline\""," descriptionText: \"The device is offline\""]}

@@ -1,0 +1,2 @@
+{"type":"MethodNode","name":"installed","linenumber":32,"lastlinenumber":34}
+{"type":"sendEvent","linenumber":33,"arguments":"(name: \"numberOfButtons\", value: 1)"}

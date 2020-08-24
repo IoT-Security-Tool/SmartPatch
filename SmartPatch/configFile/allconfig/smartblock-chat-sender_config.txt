@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":43,"lastlinenumber":47}
+{"type":"MethodNode","name":"updated","linenumber":49,"lastlinenumber":54}
+{"type":"MethodNode","name":"initialize","linenumber":56,"lastlinenumber":58}
+{"type":"subscribe","linenumber":57,"arguments":["location","modeChangeHandler"]}
+{"type":"MethodNode","name":"modeChangeHandler","linenumber":60,"lastlinenumber":68,"arg":["evt"]}
+{"type":"MethodNode","name":"chatMessageToMC","linenumber":70,"lastlinenumber":87,"arg":["message"]}

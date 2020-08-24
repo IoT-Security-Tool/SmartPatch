@@ -1,0 +1,95 @@
+{"type":"MethodNode","name":"installed","linenumber":425}
+{"type":"MethodNode","name":"initialize","linenumber":437}
+{"type":"sendEvent","linenumber":460,"arguments":["name:\"temperature\""," value: 0"," unit: location.temperatureScale","\t\t\t\t\tdescriptionText: \"temperature is unknown\""," displayed: true"]}
+{"type":"sendEvent","linenumber":462,"arguments":["name:\"motion\""," value: \"inactive\""]}
+{"type":"sendEvent","linenumber":474,"arguments":["name:\"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":695,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":696,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":731,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":790,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":858,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":859,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":861,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":908,"arguments":["name:\"temperature\""," value: temperature"," unit: location.temperatureScale","\t\t\t\t\t\t\t\tdescriptionText: \"temperature is \" + (temperature ? \"${temperature}\u00b0${location.temperatureScale}\" : \"unknown\")"," displayed: true"]}
+{"type":"sendEvent","linenumber":910,"arguments":["name:\"motion\""," value: occupancy"]}
+{"type":"sendEvent","linenumber":911,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":918,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1301,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1303,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":1304,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"MethodNode","name":"installed","linenumber":425}
+{"type":"MethodNode","name":"initialize","linenumber":437}
+{"type":"sendEvent","linenumber":460,"arguments":["name:\"temperature\""," value: 0"," unit: location.temperatureScale","\t\t\t\t\tdescriptionText: \"temperature is unknown\""," displayed: true"]}
+{"type":"sendEvent","linenumber":462,"arguments":["name:\"motion\""," value: \"inactive\""]}
+{"type":"sendEvent","linenumber":474,"arguments":["name:\"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":695,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":696,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":731,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":790,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":858,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":859,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":861,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":908,"arguments":["name:\"temperature\""," value: temperature"," unit: location.temperatureScale","\t\t\t\t\t\t\t\tdescriptionText: \"temperature is \" + (temperature ? \"${temperature}\u00b0${location.temperatureScale}\" : \"unknown\")"," displayed: true"]}
+{"type":"sendEvent","linenumber":910,"arguments":["name:\"motion\""," value: occupancy"]}
+{"type":"sendEvent","linenumber":911,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":918,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1301,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1303,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":1304,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"MethodNode","name":"installed","linenumber":425}
+{"type":"MethodNode","name":"initialize","linenumber":437}
+{"type":"sendEvent","linenumber":460,"arguments":["name:\"temperature\""," value: 0"," unit: location.temperatureScale","\t\t\t\t\tdescriptionText: \"temperature is unknown\""," displayed: true"]}
+{"type":"sendEvent","linenumber":462,"arguments":["name:\"motion\""," value: \"inactive\""]}
+{"type":"sendEvent","linenumber":474,"arguments":["name:\"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":695,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":696,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":731,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":790,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":858,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":859,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":861,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":908,"arguments":["name:\"temperature\""," value: temperature"," unit: location.temperatureScale","\t\t\t\t\t\t\t\tdescriptionText: \"temperature is \" + (temperature ? \"${temperature}\u00b0${location.temperatureScale}\" : \"unknown\")"," displayed: true"]}
+{"type":"sendEvent","linenumber":910,"arguments":["name:\"motion\""," value: occupancy"]}
+{"type":"sendEvent","linenumber":911,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":918,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1301,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1303,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":1304,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"MethodNode","name":"installed","linenumber":425}
+{"type":"MethodNode","name":"initialize","linenumber":437}
+{"type":"sendEvent","linenumber":460,"arguments":["name:\"temperature\""," value: 0"," unit: location.temperatureScale","\t\t\t\t\tdescriptionText: \"temperature is unknown\""," displayed: true"]}
+{"type":"sendEvent","linenumber":462,"arguments":["name:\"motion\""," value: \"inactive\""]}
+{"type":"sendEvent","linenumber":474,"arguments":["name:\"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":695,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":696,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":731,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":790,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":858,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":859,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":861,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":908,"arguments":["name:\"temperature\""," value: temperature"," unit: location.temperatureScale","\t\t\t\t\t\t\t\tdescriptionText: \"temperature is \" + (temperature ? \"${temperature}\u00b0${location.temperatureScale}\" : \"unknown\")"," displayed: true"]}
+{"type":"sendEvent","linenumber":910,"arguments":["name:\"motion\""," value: occupancy"]}
+{"type":"sendEvent","linenumber":911,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":918,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1301,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1303,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":1304,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"MethodNode","name":"installed","linenumber":425}
+{"type":"MethodNode","name":"initialize","linenumber":437}
+{"type":"sendEvent","linenumber":460,"arguments":["name:\"temperature\""," value: 0"," unit: location.temperatureScale","\t\t\t\t\tdescriptionText: \"temperature is unknown\""," displayed: true"]}
+{"type":"sendEvent","linenumber":462,"arguments":["name:\"motion\""," value: \"inactive\""]}
+{"type":"sendEvent","linenumber":474,"arguments":["name:\"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":695,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":696,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":731,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":790,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":858,"arguments":["name:\"switch\""," value: switchState"]}
+{"type":"sendEvent","linenumber":859,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":861,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":908,"arguments":["name:\"temperature\""," value: temperature"," unit: location.temperatureScale","\t\t\t\t\t\t\t\tdescriptionText: \"temperature is \" + (temperature ? \"${temperature}\u00b0${location.temperatureScale}\" : \"unknown\")"," displayed: true"]}
+{"type":"sendEvent","linenumber":910,"arguments":["name:\"motion\""," value: occupancy"]}
+{"type":"sendEvent","linenumber":911,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":918,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1301,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":1303,"arguments":["\"name\":\"thermostat\""," \"value\":\"Offline\""]}
+{"type":"sendEvent","linenumber":1304,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}

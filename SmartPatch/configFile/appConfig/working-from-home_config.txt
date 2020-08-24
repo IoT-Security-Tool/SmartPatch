@@ -1,0 +1,9 @@
+{"type":"MethodNode","name":"configActions","linenumber":32,"lastlinenumber":61}
+{"type":"MethodNode","name":"installed","linenumber":63,"lastlinenumber":65}
+{"type":"MethodNode","name":"updated","linenumber":67,"lastlinenumber":70}
+{"type":"MethodNode","name":"initialize","linenumber":72,"lastlinenumber":77}
+{"type":"MethodNode","name":"checkPresence","linenumber":79,"lastlinenumber":88}
+{"type":"MethodNode","name":"send","linenumber":90,"lastlinenumber":100,"arg":["msg"]}
+{"type":"MethodNode","name":"getModeOk","linenumber":102,"lastlinenumber":105}
+{"type":"MethodNode","name":"getDaysOk","linenumber":107,"lastlinenumber":121}
+{"type":"MethodNode","name":"hideOptions","linenumber":123,"lastlinenumber":125}

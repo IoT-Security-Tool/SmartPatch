@@ -1,0 +1,28 @@
+{"type":"MethodNode","name":"parse","linenumber":114,"lastlinenumber":128,"arg":["description"]}
+{"type":"createEvent","linenumber":125,"arguments":"(name: name, value: pair[1]?.trim())"}
+{"type":"MethodNode","name":"installed","linenumber":130,"lastlinenumber":133}
+{"type":"MethodNode","name":"updated","linenumber":135,"lastlinenumber":139}
+{"type":"MethodNode","name":"markDeviceOnline","linenumber":141,"lastlinenumber":143}
+{"type":"MethodNode","name":"markDeviceOffline","linenumber":145,"lastlinenumber":147}
+{"type":"MethodNode","name":"setDeviceHealth","linenumber":149,"lastlinenumber":157,"arg":["healthState"]}
+{"type":"sendEvent","linenumber":155,"arguments":"(name: \"DeviceWatch-DeviceStatus\", value: healthState)"}
+{"type":"sendEvent","linenumber":156,"arguments":"(name: \"healthStatus\", value: healthState)"}
+{"type":"MethodNode","name":"initialize","linenumber":159,"lastlinenumber":162}
+{"type":"MethodNode","name":"processPreferences","linenumber":164,"lastlinenumber":184}
+{"type":"MethodNode","name":"refresh","linenumber":186,"lastlinenumber":190}
+{"type":"sendEvent","linenumber":188,"arguments":"(name: \"lock\", value: device.currentValue(\"lock\") ?: \"locked\")"}
+{"type":"sendEvent","linenumber":189,"arguments":"(name: \"battery\", value: device.currentValue(\"battery\") ?: 94)"}
+{"type":"MethodNode","name":"configure","linenumber":192,"lastlinenumber":202}
+{"type":"sendEvent","linenumber":197,"arguments":"(name: \"DeviceWatch-Enroll\", value: [protocol: \"cloud\", scheme:\"untracked\"].encodeAsJson(), displayed: false)"}
+{"type":"MethodNode","name":"lock","linenumber":204,"lastlinenumber":211}
+{"type":"sendEvent","linenumber":209,"arguments":"(name: \"lock\", value: \"locked\")"}
+{"type":"MethodNode","name":"unlock","linenumber":213,"lastlinenumber":220}
+{"type":"sendEvent","linenumber":218,"arguments":"(name: \"lock\", value: \"unlocked\")"}
+{"type":"MethodNode","name":"jam","linenumber":222,"lastlinenumber":228}
+{"type":"sendEvent","linenumber":224,"arguments":"(name: \"lock\", value: \"unknown\")"}
+{"type":"MethodNode","name":"setJamNextOperation","linenumber":230,"lastlinenumber":233}
+{"type":"sendEvent","linenumber":232,"arguments":"(name: \"doesNextOperationJam\", value: \"true\")"}
+{"type":"MethodNode","name":"clearJamNextOperation","linenumber":235,"lastlinenumber":238}
+{"type":"sendEvent","linenumber":237,"arguments":"(name: \"doesNextOperationJam\", value: \"false\")"}
+{"type":"MethodNode","name":"setBatteryLevel","linenumber":240,"lastlinenumber":243,"arg":["lvl"]}
+{"type":"sendEvent","linenumber":242,"arguments":"(name: \"battery\", value: lvl)"}

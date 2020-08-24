@@ -1,0 +1,12 @@
+{"type":"MethodNode","name":"parse","linenumber":52,"lastlinenumber":54,"arg":["description"]}
+{"type":"MethodNode","name":"installed","linenumber":56,"lastlinenumber":61}
+{"type":"sendEvent","linenumber":57,"arguments":"(name: \"presence\", value: \"not present\")"}
+{"type":"sendEvent","linenumber":60,"arguments":"(name:\"inRange\", value:json.toString())"}
+{"type":"MethodNode","name":"setPresence","linenumber":63,"lastlinenumber":66,"arg":["status"]}
+{"type":"sendEvent","linenumber":65,"arguments":"(name:\"presence\", value:status)"}
+{"type":"MethodNode","name":"arrived","linenumber":68,"lastlinenumber":87,"arg":["id"]}
+{"type":"sendEvent","linenumber":78,"arguments":"(name:\"inRange\", value:json.toString())"}
+{"type":"sendEvent","linenumber":82,"arguments":"(name:\"inRangeFriendly\", value:friendlyList)"}
+{"type":"MethodNode","name":"left","linenumber":89,"lastlinenumber":107,"arg":["id"]}
+{"type":"sendEvent","linenumber":96,"arguments":"(name:\"inRange\", value:json.toString())"}
+{"type":"sendEvent","linenumber":106,"arguments":"(name:\"inRangeFriendly\", value:friendlyList)"}

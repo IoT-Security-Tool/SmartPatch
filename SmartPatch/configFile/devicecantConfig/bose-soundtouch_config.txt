@@ -1,0 +1,23 @@
+{"type":"MethodNode","name":"installed","linenumber":187}
+{"type":"sendEvent","linenumber":189,"arguments":["name: \"checkInterval\""," value: 12 * 60"," data: [protocol: \"lan\""," hubHardwareId: device.hub.hardwareID]"," displayed: false"]}
+{"type":"sendEvent","linenumber":234,"arguments":["name:\"everywhere\""," value:\"unavailable\""]}
+{"type":"sendEvent","linenumber":290,"arguments":["name:\"everywhere\""," value:\"leave\""]}
+{"type":"sendEvent","linenumber":305,"arguments":["name:\"everywhere\""," value:\"join\""]}
+{"type":"sendEvent","linenumber":332,"arguments":["name:\"volume\""," value:xmlData.actualvolume.text()"]}
+{"type":"sendEvent","linenumber":333,"arguments":["name:\"mute\""," value:(Boolean.toBoolean(xmlData.muteenabled.text()) ? \"unmuted\" : \"muted\")"]}
+{"type":"sendEvent","linenumber":355,"arguments":["name:\"station${id}\""," value:name"]}
+{"type":"sendEvent","linenumber":364,"arguments":["name:\"station${id}\""," value:\"Preset $id\\n\\nNot set\""]}
+{"type":"sendEvent","linenumber":382,"arguments":["name:\"playpause\""," value:\"play\""]}
+{"type":"sendEvent","linenumber":386,"arguments":["name:\"playpause\""," value:\"pause\""]}
+{"type":"sendEvent","linenumber":435,"arguments":["name:\"switch\""," value:\"off\""]}
+{"type":"sendEvent","linenumber":437,"arguments":["name:\"switch\""," value:\"on\""]}
+{"type":"sendEvent","linenumber":444,"arguments":["name:\"everywhere\""," value:\"unavailable\""]}
+{"type":"sendEvent","linenumber":446,"arguments":["name:\"everywhere\""," value:\"unavailable\""]}
+{"type":"sendEvent","linenumber":449,"arguments":["name:\"everywhere\""," value:\"leave\""]}
+{"type":"sendEvent","linenumber":451,"arguments":["name:\"everywhere\""," value:\"join\""]}
+{"type":"sendEvent","linenumber":453,"arguments":["name:\"nowplaying\""," value:nowplaying"]}
+{"type":"sendEvent","linenumber":501,"arguments":["name:\"trackDescription\""," value:trackDesc"," descriptionText:trackText"]}
+{"type":"sendEvent","linenumber":528,"arguments":["name:\"volume\""," value:\"${vol}\""]}
+{"type":"sendEvent","linenumber":548,"arguments":["name:\"muteunmute\""," value:((mute == \"MUTE\") ? \"unmute\" : \"mute\")"]}
+{"type":"sendEvent","linenumber":726,"arguments":["name:\"everywhere\""," value:\"leave\""]}
+{"type":"sendEvent","linenumber":728,"arguments":["name:\"everywhere\""," value:\"join\""]}

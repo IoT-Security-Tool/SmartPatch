@@ -1,0 +1,22 @@
+{"type":"MethodNode","name":"installed","linenumber":123}
+{"type":"sendEvent","linenumber":125,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":127,"arguments":["name: \"tamper\""," value: \"clear\""," displayed: false"]}
+{"type":"sendEvent","linenumber":134,"arguments":["name: \"batteryStatus\""," value: \"${device.latestValue(\"battery\")}% battery\""," displayed: false"]}
+{"type":"createEvent","linenumber":154,"arguments":["name: \"secureInclusion\""," value: \"failed\""," isStateChange: true","\t\t\tdescriptionText: \"This sensor failed to complete the network security key exchange. If you are unable to control it via SmartThings"," you must remove it from your network and add it again.\""]}
+{"type":"createEvent","linenumber":170,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false)"]}
+{"type":"createEvent","linenumber":198,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":212,"arguments":["name: \"secureInclusion\""," value: \"success\""," descriptionText: \"Secure inclusion was successful\""," isStateChange: true)"]}
+{"type":"createEvent","linenumber":237,"arguments":["map"]}
+{"type":"createEvent","linenumber":239,"arguments":["name: \"batteryStatus\""," value: \"${map.value}% battery\""," displayed: false"]}
+{"type":"createEvent","linenumber":270,"arguments":["map"]}
+{"type":"createEvent","linenumber":282,"arguments":["map"]}
+{"type":"sendEvent","linenumber":294,"arguments":["name: \"tamper\""," value: \"clear\""]}
+{"type":"createEvent","linenumber":303,"arguments":["name: \"tamper\""," value: \"clear\""]}
+{"type":"createEvent","linenumber":306,"arguments":["name: \"tamper\""," value: \"detected\""," descriptionText: \"$device.displayName was tampered\""]}
+{"type":"createEvent","linenumber":317,"arguments":["descriptionText: cmd.toString()"," isStateChange: false"]}
+{"type":"createEvent","linenumber":333,"arguments":["name: \"batteryStatus\""," value: \"USB Cable\""," displayed: false"]}
+{"type":"createEvent","linenumber":334,"arguments":["name: \"powerSource\""," value: value"," displayed: false"]}
+{"type":"createEvent","linenumber":336,"arguments":["name: \"powerSource\""," value: \"battery\""," displayed: false"]}
+{"type":"createEvent","linenumber":337,"arguments":["name: \"batteryStatus\""," value: \"${device.latestValue(\"battery\")}% battery\""," displayed: false"]}
+{"type":"createEvent","linenumber":351,"arguments":["descriptionText: cmd.toString()"," isStateChange: false"]}
+{"type":"sendEvent","linenumber":428,"arguments":["name: \"checkInterval\""," value: checkInterval"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}

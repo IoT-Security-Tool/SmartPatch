@@ -1,0 +1,9 @@
+{"type":"sendEvent","linenumber":54,"arguments":["name: \"alarm\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":55,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":61,"arguments":["name: \"alarm\""," value: \"siren\""]}
+{"type":"sendEvent","linenumber":63,"arguments":["name: \"alarm\""," value: \"strobe\""]}
+{"type":"sendEvent","linenumber":65,"arguments":["name: \"alarm\""," value: \"both\""]}
+{"type":"sendEvent","linenumber":67,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"MethodNode","name":"installed","linenumber":70}
+{"type":"createEvent","linenumber":110,"arguments":["map) : nul"]}
+{"type":"sendEvent","linenumber":116,"arguments":["name: \"checkInterval\""," value: 30 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}

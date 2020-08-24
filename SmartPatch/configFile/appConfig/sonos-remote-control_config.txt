@@ -1,0 +1,9 @@
+{"type":"MethodNode","name":"installed","linenumber":57,"lastlinenumber":61}
+{"type":"MethodNode","name":"updated","linenumber":63,"lastlinenumber":68}
+{"type":"MethodNode","name":"initialize","linenumber":70,"lastlinenumber":72}
+{"type":"subscribe","linenumber":71,"arguments":["buttonDevice","button","buttonEvent"]}
+{"type":"MethodNode","name":"buttonEvent","linenumber":74,"lastlinenumber":88,"arg":["evt"]}
+{"type":"MethodNode","name":"extractButtonNumber","linenumber":90,"lastlinenumber":108,"arg":["data"]}
+{"type":"MethodNode","name":"handleButton","linenumber":110,"lastlinenumber":144,"arg":["buttonNumber","value"]}
+{"type":"MethodNode","name":"togglePlayPause","linenumber":146,"lastlinenumber":154}
+{"type":"MethodNode","name":"adjustVolume","linenumber":156,"lastlinenumber":165,"arg":["up","doubleAmount"]}

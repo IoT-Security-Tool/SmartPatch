@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"installed","linenumber":50,"lastlinenumber":54}
+{"type":"MethodNode","name":"updated","linenumber":56,"lastlinenumber":61}
+{"type":"MethodNode","name":"initialize","linenumber":63,"lastlinenumber":70}
+{"type":"subscribe","linenumber":66,"arguments":["outTemp","temperature","checkThings"]}
+{"type":"subscribe","linenumber":67,"arguments":["inTemp","temperature","checkThings"]}
+{"type":"subscribe","linenumber":68,"arguments":["thermostat","thermostatMode","checkThings"]}
+{"type":"subscribe","linenumber":69,"arguments":["contacts","contact","checkThings"]}
+{"type":"MethodNode","name":"checkThings","linenumber":72,"lastlinenumber":109,"arg":["evt"]}

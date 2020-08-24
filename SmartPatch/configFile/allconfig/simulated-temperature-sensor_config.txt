@@ -1,0 +1,14 @@
+{"type":"MethodNode","name":"parse","linenumber":54,"lastlinenumber":57,"arg":["description"]}
+{"type":"createEvent","linenumber":56,"arguments":"(name: pair[0].trim(), value: pair[1].trim(), unit:\"F\")"}
+{"type":"MethodNode","name":"installed","linenumber":59,"lastlinenumber":61}
+{"type":"MethodNode","name":"updated","linenumber":63,"lastlinenumber":65}
+{"type":"MethodNode","name":"initialize","linenumber":67,"lastlinenumber":74}
+{"type":"sendEvent","linenumber":68,"arguments":"(name: \"DeviceWatch-DeviceStatus\", value: \"online\")"}
+{"type":"sendEvent","linenumber":69,"arguments":"(name: \"healthStatus\", value: \"online\")"}
+{"type":"sendEvent","linenumber":70,"arguments":"(name: \"DeviceWatch-Enroll\", value: [protocol: \"cloud\", scheme:\"untracked\"].encodeAsJson(), displayed: false)"}
+{"type":"MethodNode","name":"setLevel","linenumber":76,"lastlinenumber":78,"arg":["value","rate"]}
+{"type":"MethodNode","name":"up","linenumber":80,"lastlinenumber":82}
+{"type":"MethodNode","name":"down","linenumber":84,"lastlinenumber":86}
+{"type":"MethodNode","name":"setTemperature","linenumber":88,"lastlinenumber":90,"arg":["value"]}
+{"type":"sendEvent","linenumber":89,"arguments":"(name:\"temperature\", value: value)"}
+{"type":"MethodNode","name":"getTemperature","linenumber":92,"lastlinenumber":96}

@@ -1,0 +1,10 @@
+{"type":"MethodNode","name":"installed","linenumber":62}
+{"type":"sendEvent","linenumber":64,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":70,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"createEvent","linenumber":116,"arguments":["name: \"switch\""," value: value)"]}
+{"type":"createEvent","linenumber":118,"arguments":["name: \"level\""," value: cmd.value == 99 ? 100 : cmd.value"," unit: \"%\""]}
+{"type":"createEvent","linenumber":131,"arguments":["[descriptionText: \"$device.displayName MSR: $msr\""," isStateChange: false]"]}
+{"type":"createEvent","linenumber":135,"arguments":["name: \"switch\""," value: \"on\")"," response(zwave.switchMultilevelV1.switchMultilevelGet().format())"]}
+{"type":"sendEvent","linenumber":172,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"sendEvent","linenumber":174,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":176,"arguments":["name: \"level\""," value: level"," unit: \"%\""]}

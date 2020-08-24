@@ -1,0 +1,30 @@
+{"type":"MethodNode","name":"installed","linenumber":219}
+{"type":"MethodNode","name":"initialize","linenumber":303}
+{"type":"sendEvent","linenumber":343,"arguments":["linkText:count.toString()"," descriptionText: app.label","              eventType:\"SOLUTION_SUMMARY\"","              name: \"summary\"","              value: text","              data: [[\"icon\":\"indicator-dot-gray\"","\"iconColor\":\"#878787\"","\"value\":text]]","              displayed: false"]}
+{"type":"sendEvent","linenumber":962,"arguments":["name: \"view\""," value : \"${kWhMonth}\""]}
+{"type":"sendEvent","linenumber":965,"arguments":["name: \"month\""," value : \"${thisMonthTitle} \\n ${kWhMonth} \\n kWh\""]}
+{"type":"sendEvent","linenumber":968,"arguments":["name: \"month\""," value : \"\\n ${state.languageString.\"${atomicState.language}\".message4.header} \\n\\n \" +                 \t\t\t\t\t\t\t\t\t\"${state.languageString.\"${atomicState.language}\".message4.body1} \\n \" +               \t\t\t\t\t\t\t\t\t\t\"${state.languageString.\"${atomicState.language}\".message4.body2} \\n \" +                                                    \"${state.languageString.\"${atomicState.language}\".message4.body3}\""]}
+{"type":"sendEvent","linenumber":974,"arguments":["name: \"real\""," value : \"${realTimeInfo}w \\n\\n ${realtimeTitle}\""]}
+{"type":"sendEvent","linenumber":975,"arguments":["name: \"tier\""," value : \"${tier} \\n\\n ${tierTitle}\""]}
+{"type":"sendEvent","linenumber":976,"arguments":["name: \"plan\""," value : \"${planUsed}% \\n\\n ${planTitle}\""]}
+{"type":"sendEvent","linenumber":1220,"arguments":["name: \"month\""," value : \"\\n ${state.languageString.\"${atomicState.language}\".message3.header} \\n\\n ${state.languageString.\"${atomicState.language}\".message3.body1} \\n ${state.languageString.\"${atomicState.language}\".message3.body2}\""]}
+{"type":"MethodNode","name":"installed","linenumber":219}
+{"type":"MethodNode","name":"initialize","linenumber":303}
+{"type":"sendEvent","linenumber":343,"arguments":["linkText:count.toString()"," descriptionText: app.label","              eventType:\"SOLUTION_SUMMARY\"","              name: \"summary\"","              value: text","              data: [[\"icon\":\"indicator-dot-gray\"","\"iconColor\":\"#878787\"","\"value\":text]]","              displayed: false"]}
+{"type":"sendEvent","linenumber":962,"arguments":["name: \"view\""," value : \"${kWhMonth}\""]}
+{"type":"sendEvent","linenumber":965,"arguments":["name: \"month\""," value : \"${thisMonthTitle} \\n ${kWhMonth} \\n kWh\""]}
+{"type":"sendEvent","linenumber":968,"arguments":["name: \"month\""," value : \"\\n ${state.languageString.\"${atomicState.language}\".message4.header} \\n\\n \" +                 \t\t\t\t\t\t\t\t\t\"${state.languageString.\"${atomicState.language}\".message4.body1} \\n \" +               \t\t\t\t\t\t\t\t\t\t\"${state.languageString.\"${atomicState.language}\".message4.body2} \\n \" +                                                    \"${state.languageString.\"${atomicState.language}\".message4.body3}\""]}
+{"type":"sendEvent","linenumber":974,"arguments":["name: \"real\""," value : \"${realTimeInfo}w \\n\\n ${realtimeTitle}\""]}
+{"type":"sendEvent","linenumber":975,"arguments":["name: \"tier\""," value : \"${tier} \\n\\n ${tierTitle}\""]}
+{"type":"sendEvent","linenumber":976,"arguments":["name: \"plan\""," value : \"${planUsed}% \\n\\n ${planTitle}\""]}
+{"type":"sendEvent","linenumber":1220,"arguments":["name: \"month\""," value : \"\\n ${state.languageString.\"${atomicState.language}\".message3.header} \\n\\n ${state.languageString.\"${atomicState.language}\".message3.body1} \\n ${state.languageString.\"${atomicState.language}\".message3.body2}\""]}
+{"type":"MethodNode","name":"installed","linenumber":219}
+{"type":"MethodNode","name":"initialize","linenumber":303}
+{"type":"sendEvent","linenumber":343,"arguments":["linkText:count.toString()"," descriptionText: app.label","              eventType:\"SOLUTION_SUMMARY\"","              name: \"summary\"","              value: text","              data: [[\"icon\":\"indicator-dot-gray\"","\"iconColor\":\"#878787\"","\"value\":text]]","              displayed: false"]}
+{"type":"sendEvent","linenumber":962,"arguments":["name: \"view\""," value : \"${kWhMonth}\""]}
+{"type":"sendEvent","linenumber":965,"arguments":["name: \"month\""," value : \"${thisMonthTitle} \\n ${kWhMonth} \\n kWh\""]}
+{"type":"sendEvent","linenumber":968,"arguments":["name: \"month\""," value : \"\\n ${state.languageString.\"${atomicState.language}\".message4.header} \\n\\n \" +                 \t\t\t\t\t\t\t\t\t\"${state.languageString.\"${atomicState.language}\".message4.body1} \\n \" +               \t\t\t\t\t\t\t\t\t\t\"${state.languageString.\"${atomicState.language}\".message4.body2} \\n \" +                                                    \"${state.languageString.\"${atomicState.language}\".message4.body3}\""]}
+{"type":"sendEvent","linenumber":974,"arguments":["name: \"real\""," value : \"${realTimeInfo}w \\n\\n ${realtimeTitle}\""]}
+{"type":"sendEvent","linenumber":975,"arguments":["name: \"tier\""," value : \"${tier} \\n\\n ${tierTitle}\""]}
+{"type":"sendEvent","linenumber":976,"arguments":["name: \"plan\""," value : \"${planUsed}% \\n\\n ${planTitle}\""]}
+{"type":"sendEvent","linenumber":1220,"arguments":["name: \"month\""," value : \"\\n ${state.languageString.\"${atomicState.language}\".message3.header} \\n\\n ${state.languageString.\"${atomicState.language}\".message3.body1} \\n ${state.languageString.\"${atomicState.language}\".message3.body2}\""]}

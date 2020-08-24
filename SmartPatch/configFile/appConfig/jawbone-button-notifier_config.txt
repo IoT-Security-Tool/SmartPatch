@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":48,"lastlinenumber":51}
+{"type":"MethodNode","name":"updated","linenumber":53,"lastlinenumber":58}
+{"type":"MethodNode","name":"initialize","linenumber":60,"lastlinenumber":62}
+{"type":"subscribe","linenumber":61,"arguments":["jawbone","sleeping","sendit"]}
+{"type":"MethodNode","name":"sendit","linenumber":64,"lastlinenumber":67,"arg":["evt"]}
+{"type":"MethodNode","name":"sendMessage","linenumber":69,"lastlinenumber":85}

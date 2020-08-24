@@ -1,0 +1,13 @@
+{"type":"createEvent","linenumber":41,"arguments":["descriptionText:description"," displayed:true"]}
+{"type":"createEvent","linenumber":51,"arguments":["descriptionText: \"$device.displayName woke up\""," isStateChange: false)"]}
+{"type":"sendEvent","linenumber":67,"arguments":["name: \"button\""," value: \"held\""," data: [buttonNumber: 1]"," descriptionText: \"$child.displayName was held\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":68,"arguments":["name: \"button\""," value: \"held\""," data: [buttonNumber: button]"," descriptionText: \"$device.displayName button $button was held\""," isStateChange: true"]}
+{"type":"sendEvent","linenumber":70,"arguments":["name: \"button\""," value: \"pushed\""," data: [buttonNumber: 1]"," descriptionText: \"$child.displayName was pushed\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":71,"arguments":["name: \"button\""," value: \"pushed\""," data: [buttonNumber: button]"," descriptionText: \"$device.displayName button $button was pushed\""," isStateChange: true"]}
+{"type":"MethodNode","name":"installed","linenumber":110}
+{"type":"sendEvent","linenumber":130,"arguments":["name: \"supportedButtonValues\""," value: [\"pushed\"","\"held\"].encodeAsJson()"," displayed: false"]}
+{"type":"MethodNode","name":"initialize","linenumber":135}
+{"type":"sendEvent","linenumber":136,"arguments":["name: \"numberOfButtons\""," value: 4"]}
+{"type":"sendEvent","linenumber":137,"arguments":["name: \"DeviceWatch-Enroll\""," value: JsonOutput.toJson([protocol: \"zwave\""," scheme:\"untracked\"])"," displayed: false"]}
+{"type":"sendEvent","linenumber":138,"arguments":["name: \"supportedButtonValues\""," value: [\"pushed\"","\"held\"].encodeAsJson()"," displayed: false"]}
+{"type":"sendEvent","linenumber":147,"arguments":["name: \"supportedButtonValues\""," value: [\"pushed\"","\"held\"].encodeAsJson()"," displayed: false"]}

@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":41,"lastlinenumber":45}
+{"type":"MethodNode","name":"updated","linenumber":47,"lastlinenumber":52}
+{"type":"MethodNode","name":"initialize","linenumber":54,"lastlinenumber":56}
+{"type":"subscribe","linenumber":55,"arguments":["motionToggler","motion","toggleSwitches"]}
+{"type":"MethodNode","name":"toggleSwitches","linenumber":59,"lastlinenumber":76,"arg":["evt"]}

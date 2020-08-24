@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":40,"lastlinenumber":44}
+{"type":"MethodNode","name":"updated","linenumber":46,"lastlinenumber":59}
+{"type":"MethodNode","name":"initialize","linenumber":61,"lastlinenumber":69}
+{"type":"MethodNode","name":"convertIPtoHex","linenumber":71,"lastlinenumber":75,"arg":["ipAddress"]}
+{"type":"MethodNode","name":"convertPortToHex","linenumber":77,"lastlinenumber":80,"arg":["port"]}

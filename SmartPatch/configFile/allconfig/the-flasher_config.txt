@@ -1,0 +1,16 @@
+{"type":"MethodNode","name":"installed","linenumber":46,"lastlinenumber":50}
+{"type":"subscribe","linenumber":49,"arguments":[]}
+{"type":"MethodNode","name":"updated","linenumber":52,"lastlinenumber":57}
+{"type":"subscribe","linenumber":56,"arguments":[]}
+{"type":"MethodNode","name":"subscribe","linenumber":59,"lastlinenumber":75}
+{"type":"subscribe","linenumber":61,"arguments":["contact","contact.open","contactOpenHandler"]}
+{"type":"subscribe","linenumber":64,"arguments":["acceleration","acceleration.active","accelerationActiveHandler"]}
+{"type":"subscribe","linenumber":67,"arguments":["motion","motion.active","motionActiveHandler"]}
+{"type":"subscribe","linenumber":70,"arguments":["mySwitch","switch.on","switchOnHandler"]}
+{"type":"subscribe","linenumber":73,"arguments":["myPresence","presence","presenceHandler"]}
+{"type":"MethodNode","name":"motionActiveHandler","linenumber":77,"lastlinenumber":80,"arg":["evt"]}
+{"type":"MethodNode","name":"contactOpenHandler","linenumber":82,"lastlinenumber":85,"arg":["evt"]}
+{"type":"MethodNode","name":"accelerationActiveHandler","linenumber":87,"lastlinenumber":90,"arg":["evt"]}
+{"type":"MethodNode","name":"switchOnHandler","linenumber":92,"lastlinenumber":95,"arg":["evt"]}
+{"type":"MethodNode","name":"presenceHandler","linenumber":97,"lastlinenumber":104,"arg":["evt"]}
+{"type":"MethodNode","name":"flashLights","linenumber":106,"lastlinenumber":149}

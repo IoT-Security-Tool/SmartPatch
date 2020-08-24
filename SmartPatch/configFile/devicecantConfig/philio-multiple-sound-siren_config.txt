@@ -1,0 +1,14 @@
+{"type":"sendEvent","linenumber":109,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"MethodNode","name":"installed","linenumber":112}
+{"type":"createEvent","linenumber":161,"arguments":["descriptionText:description"," displayed:false"]}
+{"type":"createEvent","linenumber":163,"arguments":["\t\t\t\t\tdescriptionText: \"This device failed to complete the network security key exchange. If you are unable to control it via SmartThings"," you must remove it from your network and add it again.\"","\t\t\t\t\teventType: \"ALERT\"","\t\t\t\t\tname: \"secureInclusion\"","\t\t\t\t\tvalue: \"failed\"","\t\t\t\t\tdisplayed: true","\t\t\t"]}
+{"type":"createEvent","linenumber":199,"arguments":["name: \"tamper\""," value: \"detected\""]}
+{"type":"createEvent","linenumber":213,"arguments":["name: \"tamper\""," value: \"detected\""]}
+{"type":"createEvent","linenumber":217,"arguments":["descriptionText: cmd.toString()"," isStateChange: false"]}
+{"type":"createEvent","linenumber":224,"arguments":["displayed: false"," descriptionText: \"$device.displayName: $cmd\""]}
+{"type":"createEvent","linenumber":230,"arguments":["[name: \"switch\""," value: value == 0xFF ? \"on\" : \"off\""," displayed: false])"]}
+{"type":"createEvent","linenumber":231,"arguments":["[name: \"alarm\""," value: value == 0xFF ? \"both\" : \"off\"]"]}
+{"type":"createEvent","linenumber":237,"arguments":["[name: \"chime\""," value: \"off\"]"]}
+{"type":"createEvent","linenumber":238,"arguments":["[name: \"tamper\""," value: \"clear\"]"]}
+{"type":"sendEvent","linenumber":253,"arguments":["name: \"chime\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":271,"arguments":["name: \"chime\""," value: \"chime\""]}

@@ -1,0 +1,1196 @@
+ import java.util.UUID
+"License"
+"AS IS""0"
+
+metadata {
+	definition (name: 'Spruce Controller', namespace: 'plaidsystems', author: 'Plaid Systems') {
+		capability 'Switch'
+        capability 'Configuration'
+        capability 'Refresh'
+        capability 'Actuator'
+        capability 'Valve'        
+		
+        attribute 'switch', 'string'
+        attribute 'switch1', 'string'
+		attribute 'switch2', 'string'
+		attribute 'switch8', 'string'
+		attribute 'switch5', 'string'
+		attribute 'switch3', 'string'
+		attribute 'switch4', 'string'
+		attribute 'switch6', 'string'
+		attribute 'switch7', 'string'
+        attribute 'switch9', 'string'
+		attribute 'switch10', 'string'
+		attribute 'switch11', 'string'
+		attribute 'switch12', 'string'
+		attribute 'switch13', 'string'
+		attribute 'switch14', 'string'
+		attribute 'switch15', 'string'
+        attribute 'switch16', 'string'
+		attribute 'rainsensor', 'string'
+        attribute 'status', 'string'
+        attribute 'tileMessage', 'string'
+        attribute 'minutes', 'string'
+        attribute 'VALUE_UP', 'string'
+        attribute 'VALUE_DOWN', 'string'        
+        
+        command 'levelUp'
+        command 'levelDown'
+        command 'programOn'
+        command 'programOff'
+        command 'programWait'
+        command 'programEnd'
+        
+        command 'on'
+        command 'off'
+        command 'zon'
+        command 'zoff'
+        command 'z1on'
+		command 'z1off'
+		command 'z2on'
+		command 'z2off'        
+		command 'z3on'
+		command 'z3off'
+		command 'z4on'
+		command 'z4off'
+		command 'z5on'
+		command 'z5off'
+		command 'z6on'
+		command 'z6off'
+		command 'z7on'
+		command 'z7off'
+		command 'z8on'
+		command 'z8off'
+        command 'z9on'
+        command 'z9off'
+		command 'z10on'
+		command 'z10off'
+		command 'z11on'
+		command 'z11off'
+		command 'z12on'
+		command 'z12off'
+		command 'z13on'
+		command 'z13off'
+		command 'z14on'
+		command 'z14off'
+		command 'z15on'
+		command 'z15off'
+		command 'z16on'
+		command 'z16off'
+        
+        command 'config'
+        command 'refresh'        
+        command 'rain'
+        command 'manual'
+        command 'manualTime'
+        command 'settingsMap'
+        command 'writeTime'
+        command 'writeType'        
+        command 'notify'
+        command 'updated'      
+        
+		
+		
+		
+        fingerprint endpointId: "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18", profileId: "0104", deviceId: "0002", deviceVersion: "00", inClusters: "0000,0003,0004,0005,0006,0009,000A,000F", outClusters: "0003, 0019", manufacturer: "PLAID SYSTEMS", model: "PS-SPRZ16-01", deviceJoinName: "Spruce Irrigation"
+		
+	}
+
+	
+	simulator {
+		
+		
+		
+	}
+    
+    preferences {
+    input description: 'If you have a rain sensor wired to the rain sensor input on the Spruce controller, turn it on here.', displayDuringSetup: true, type: 'paragraph', element: 'paragraph', title: 'Rain Sensor'
+    input description: 'The SYNC SETTINGS button must be pressed after making a change to the Rain sensor:', displayDuringSetup: false, type: 'paragraph', element: 'paragraph', title: ''     
+    input 'RainEnable', 'bool', title: 'Rain Sensor Attached?', required: false, displayDuringSetup: true
+    input description: 'Adjust manual water time with arrows on main tile.  The time indicated in the first small tile indicates the time the zone will water when manually switched on.', displayDuringSetup: false, type: 'paragraph', element: 'paragraph', title: ''
+    }
+
+	
+	tiles {
+    
+    	multiAttributeTile(name:"switchall", type:"generic", width:6, height:4) {        
+            tileAttribute('device.status', key: 'PRIMARY_CONTROL') {
+            attributeState 'schedule', label: 'Ready', icon: 'http:
+            attributeState 'finished', label: 'Finished', icon: 'st.Outdoor.outdoor5', backgroundColor: '#46c2e8'
+            attributeState 'raintoday', label: 'Rain Today', icon: 'http:
+            attributeState 'rainy', label: 'Rain', icon: 'http:
+            attributeState 'raintom', label: 'Rain Tomorrow', icon: 'http:
+            attributeState 'donewweek', label: 'Finished', icon: 'st.Outdoor.outdoor5', backgroundColor: '#00A0DC'
+            attributeState 'skipping', label: 'Skip', icon: 'st.Outdoor.outdoor20', backgroundColor: '#46c2e8'
+            attributeState 'moisture', label: 'Ready', icon: 'st.Weather.weather2', backgroundColor: '#46c2e8'
+            attributeState 'pause', label: 'PAUSE', icon: 'st.contact.contact.open', backgroundColor: '#e86d13'
+			attributeState 'delayed', label: 'Delayed', icon: 'st.contact.contact.open', backgroundColor: '#e86d13'
+            attributeState 'active', label: 'Active', icon: 'st.Outdoor.outdoor12', backgroundColor: '#3DC72E'
+            attributeState 'season', label: 'Adjust', icon: 'st.Outdoor.outdoor17', backgroundColor: '#ffb900'
+            attributeState 'disable', label: 'Off', icon: 'st.secondary.off', backgroundColor: '#cccccc'
+            attributeState 'warning', label: 'Warning', icon: 'http:
+            attributeState 'alarm', label: 'Alarm', icon: 'http:
+            }
+            
+            tileAttribute("device.minutes", key: "VALUE_CONTROL") {
+                attributeState "VALUE_UP", action: "levelUp"
+                attributeState "VALUE_DOWN", action: "levelDown"
+            }
+            
+            tileAttribute("device.tileMessage", key: "SECONDARY_CONTROL") {
+                attributeState "tileMessage", label: '${currentValue}'     
+            }            
+            
+        }
+        valueTile('minutes', 'device.minutes'){
+        	state 'minutes', label: '${currentValue} min'
+        }
+        valueTile('dummy', 'device.minutes'){
+        	state 'minutes', label: ''
+        }
+		standardTile('switch', 'device.switch', width:2, height:2) {
+            state 'off', label: 'Start', action: 'programOn', icon: 'st.Outdoor.outdoor12', backgroundColor: '#a9a9a9'
+            state 'programOn', label: 'Wait', action: 'programOff', icon: 'st.contact.contact.open', backgroundColor: '#f6e10e'
+            state 'programWait', label: 'Wait', action: 'programEnd', icon: 'st.contact.contact.open', backgroundColor: '#f6e10e'
+            state 'on', label: 'Running', action: 'programEnd', icon: 'st.Outdoor.outdoor12', backgroundColor: '#3DC72E'
+		}        
+        standardTile("rainsensor", "device.rainsensor", decoration: 'flat') {			
+			state "rainSensoroff", label: 'sensor', icon: 'http:
+            state "rainSensoron", label: 'sensor', icon: 'http:
+            state "disable", label: 'sensor', icon: 'http:
+            state "enable", label: 'sensor', icon: 'http:
+		}
+        standardTile('switch1', 'device.switch1', inactiveLabel: false) {			
+			state 'z1off', label: '1', action: 'z1on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z1on', label: '1', action: 'z1off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+        standardTile('switch2', 'device.switch2', inactiveLabel: false) {            
+            state 'z2off', label: '2', action: 'z2on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z2on', label: '2', action: 'z2off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}        
+        standardTile('switch3', 'device.switch3', inactiveLabel: false) {			
+			state 'z3off', label: '3', action: 'z3on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z3on', label: '3', action: 'z3off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+        standardTile('switch4', 'device.switch4', inactiveLabel: false) {            
+            state 'z4off', label: '4', action: 'z4on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z4on', label: '4', action: 'z4off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+        standardTile('switch5', 'device.switch5', inactiveLabel: false) {            
+            state 'z5off', label: '5', action: 'z5on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z5on', label: '5', action: 'z5off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+		standardTile('switch6', 'device.switch6', inactiveLabel: false) {            
+            state 'z6off', label: '6', action: 'z6on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z6on', label: '6', action: 'z6off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+        standardTile('switch7', 'device.switch7', inactiveLabel: false) {            
+            state 'z7off', label: '7', action: 'z7on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z7on', label: '7', action: 'z7off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+		standardTile('switch8', 'device.switch8', inactiveLabel: false) {            
+            state 'z8off', label: '8', action: 'z8on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z8on', label: '8', action: 'z8off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+        standardTile('switch9', 'device.switch9', inactiveLabel: false) {			
+			state 'z9off', label: '9', action: 'z9on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z9on', label: '9', action: 'z9off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+        standardTile('switch10', 'device.switch10', inactiveLabel: false) {            
+            state 'z10off', label: '10', action: 'z10on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z10on', label: '10', action: 'z10off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}        
+        standardTile('switch11', 'device.switch11', inactiveLabel: false) {			
+			state 'z11off', label: '11', action: 'z11on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z11on', label: '11', action: 'z11off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+        standardTile('switch12', 'device.switch12', inactiveLabel: false) {            
+            state 'z12off', label: '12', action: 'z12on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z12on', label: '12', action: 'z12off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+        standardTile('switch13', 'device.switch13', inactiveLabel: false) {            
+            state 'z13off', label: '13', action: 'z13on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z13on', label: '13', action: 'z13off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+		standardTile('switch14', 'device.switch14', inactiveLabel: false) {            
+            state 'z14off', label: '14', action: 'z14on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z14on', label: '14', action: 'z14off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}
+        standardTile('switch15', 'device.switch15', inactiveLabel: false) {            
+            state 'z15off', label: '15', action: 'z15on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z15on', label: '15', action: 'z15off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}		
+        standardTile('switch16', 'device.switch16', inactiveLabel: false) {            
+            state 'z16off',  label: '16', action: 'z16on', icon: 'st.valves.water.closed', backgroundColor: '#ffffff'
+            state 'z16on',  label: '16', action: 'z16off', icon: 'st.valves.water.open', backgroundColor: '#00A0DC'
+		}        
+        standardTile('refresh', 'device.switch', inactiveLabel: false, decoration: 'flat') {
+			state 'default', action: 'refresh', icon:'st.secondary.refresh'
+		}
+        standardTile('configure', 'device.configure', inactiveLabel: false, decoration: 'flat') {
+			state 'configure', label:'', action:'configuration.configure', icon:'http:
+		}        
+		
+        main (['switchall'])        
+        details(['switchall','minutes','rainsensor','switch1','switch2','switch3','switch4','switch','switch5','switch6','switch7','switch8','switch9','switch10','switch11','switch12','refresh','configure','switch13','switch14','switch15','switch16'])		
+    }       
+}
+
+
+def programOn(){
+//    sendEvent(name: 'switch', value: 'programOn', descriptionText: 'Program turned on')    
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'switch',  value: 'programOn',  descriptionText: 'Program turned on']
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'switch',  value: 'programOn',  descriptionText: 'Program turned on', data: [sign: "${signatureResult1}"])
+    }
+
+def programWait(){    
+//    sendEvent(name: 'switch', value: 'programWait', descriptionText: "Initializing Schedule")
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'switch',  value: 'programWait',  descriptionText: "Initializing Schedule"]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'switch',  value: 'programWait',  descriptionText: "Initializing Schedule", data: [sign: "${signatureResult2}"])
+    }
+
+def programEnd(){
+	
+//    sendEvent(name: 'switch', value: 'off', descriptionText: 'Program manually turned off')
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'switch',  value: 'off',  descriptionText: 'Program manually turned off']
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'switch',  value: 'off',  descriptionText: 'Program manually turned off', data: [sign: "${signatureResult3}"])
+    zoff() 
+    }
+    
+def programOff(){    
+//    sendEvent(name: 'switch', value: 'off', descriptionText: 'Program turned off')
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'switch',  value: 'off',  descriptionText: 'Program turned off']
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'switch',  value: 'off',  descriptionText: 'Program turned off', data: [sign: "${signatureResult4}"])
+    off()
+    }
+
+
+def levelUp(){
+	def newvalue = 1
+    if (device.latestValue('minutes') != null) newvalue = device.latestValue('minutes').toInteger()+1
+    if (newvalue >= 60) newvalue = 60
+    def value = newvalue.toString()    
+    log.debug value
+//	sendEvent(name: 'minutes', value: "${value}", descriptionText: "Manual Time set to ${value}", display: false)    
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'minutes',  value: "${value}",  descriptionText: "Manual Time set to ${value}",  display: false]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: 'minutes',  value: "${value}",  descriptionText: "Manual Time set to ${value}",  display: false, data: [sign: "${signatureResult5}"])
+}
+
+def levelDown(){
+	def newvalue = device.latestValue('minutes').toInteger()-1
+    if (newvalue <= 0) newvalue = 1
+    def value = newvalue.toString()    
+    log.debug value
+//	sendEvent(name: 'minutes', value: "${value}", descriptionText: "Manual Time set to ${value}", display: false)
+def params6 = null
+def signatureResult6 = null
+log.debug "id is ${device.id}"
+ params6 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'minutes',  value: "${value}",  descriptionText: "Manual Time set to ${value}",  display: false]
+	]
+signatureResult6 = null
+try {
+    httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: 'minutes',  value: "${value}",  descriptionText: "Manual Time set to ${value}",  display: false, data: [sign: "${signatureResult6}"])
+}
+
+
+def parse(String description) {	
+	log.debug "Parse description ${description}"
+    def result = null
+    def map = [:]
+	if (description?.startsWith('read attr -')) {
+		def descMap = parseDescriptionAsMap(description)
+		
+        
+		if (descMap.cluster == '000F' && descMap.attrId == '0055') {
+			log.debug 'Zone'
+            map = getZone(descMap)            
+		}
+        else if (descMap.cluster == '0009' && descMap.attrId == '0000') {
+			log.debug 'Alarm'
+            map = getAlarm(descMap)
+            }
+	}
+    else if (description?.startsWith('catchall: 0104 0009')){
+    	log.debug 'Sync settings to controller complete'
+        if (device.latestValue('status') != 'alarm'){
+//        	def configEvt = createEvent(name: 'status', value: 'schedule', descriptionText: "Sync settings to controller complete")
+def params7 = null
+def signatureResult7 = null
+params7 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'status',  value: 'schedule',  descriptionText: "Sync settings to controller complete"]
+]
+signatureResult7 = null
+  try {
+        httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+        	def configEvt = createEvent(name: 'status',  value: 'schedule',  descriptionText: "Sync settings to controller complete", data: [sign: "${signatureResult7}"])
+//            def configMsg = createEvent(name: 'tileMessage', value: 'Sync settings to controller complete', descriptionText: "Sync settings to controller complete", displayed: false)
+def params8 = null
+def signatureResult8 = null
+params8 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'tileMessage',  value: 'Sync settings to controller complete',  descriptionText: "Sync settings to controller complete",  displayed: false]
+]
+signatureResult8 = null
+  try {
+        httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+            def configMsg = createEvent(name: 'tileMessage',  value: 'Sync settings to controller complete',  descriptionText: "Sync settings to controller complete",  displayed: false, data: [sign: "${signatureResult8}"])
+        	result = [configEvt, configMsg]
+            }
+        return result
+    }
+  
+    if (map) {
+//    	result = createEvent(map)
+def params9 = null
+def signatureResult9 = null
+params9 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult9 = null
+  try {
+        httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue9= ''
+if(map.containsKey('data') ){
+datavalue9 = map['data']
+datavalue9 = "[" + datavalue9+ "," +"sign: " + "${signatureResult9}" + "]"
+map.put('data',"${datavalue9}")
+ }else{
+datavalue9=  "[sign: " + "${signatureResult9}" +"]"
+map.put('data',"${datavalue9}")
+}
+    	result = createEvent(map)
+    	
+        if (map.value == 'warning' || map.value == 'alarm'){
+            def cmds = config()       
+//            def alarmEvt = createEvent(name: 'tileMessage', value: map.descriptionText, descriptionText: "${map.descriptionText}", displayed: false)
+def params10 = null
+def signatureResult10 = null
+params10 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'tileMessage',  value: map.descriptionText,  descriptionText: "${map.descriptionText}",  displayed: false]
+]
+signatureResult10 = null
+  try {
+        httpGet(params10) { resp ->
+        signatureResult10 = resp.data
+        log.debug "response data: ${signatureResult10}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+            def alarmEvt = createEvent(name: 'tileMessage',  value: map.descriptionText,  descriptionText: "${map.descriptionText}",  displayed: false, data: [sign: "${signatureResult10}"])
+//            result = cmds?.collect { new physicalgraph.device.HubAction(it) } + createEvent(map) + alarmEvt           
+def params11 = null
+def signatureResult11 = null
+params11 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map) + alarmEv?.name}", value: "${map) + alarmEv?.value}"]
+]
+signatureResult11 = null
+  try {
+        httpGet(params11) { resp ->
+        signatureResult11 = resp.data
+        log.debug "response data: ${signatureResult11}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue11= ''
+if(map) + alarmEv.containsKey('data') ){
+datavalue11 = map) + alarmEv['data']
+datavalue11 = "[" + datavalue11+ "," +"sign: " + "${signatureResult11}" + "]"
+map) + alarmEv.put('data',"${datavalue11}")
+ }else{
+datavalue11=  "[sign: " + "${signatureResult11}" +"]"
+map) + alarmEv.put('data',"${datavalue11}")
+}
+            result = cmds?.collect { new physicalgraph.device.HubAction(it) } + createEvent(map) + alarmEv) + alarmEvt           
+			return result
+		}
+        else if (map.name == 'rainsensor'){
+//        	def rainEvt = createEvent(name: 'tileMessage', value: map.descriptionText, descriptionText: "${map.descriptionText}", displayed: false)
+def params12 = null
+def signatureResult12 = null
+params12 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'tileMessage',  value: map.descriptionText,  descriptionText: "${map.descriptionText}",  displayed: false]
+]
+signatureResult12 = null
+  try {
+        httpGet(params12) { resp ->
+        signatureResult12 = resp.data
+        log.debug "response data: ${signatureResult12}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+        	def rainEvt = createEvent(name: 'tileMessage',  value: map.descriptionText,  descriptionText: "${map.descriptionText}",  displayed: false, data: [sign: "${signatureResult12}"])
+//        	result = [createEvent(map), rainEvt]
+def params13 = null
+def signatureResult13 = null
+params13 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map),  rainEvt?.name}", value: "${map),  rainEvt?.value}"]
+]
+signatureResult13 = null
+  try {
+        httpGet(params13) { resp ->
+        signatureResult13 = resp.data
+        log.debug "response data: ${signatureResult13}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue13= ''
+if(map),  rainEvt.containsKey('data') ){
+datavalue13 = map),  rainEvt['data']
+datavalue13 = "[" + datavalue13+ "," +"sign: " + "${signatureResult13}" + "]"
+map),  rainEvt.put('data',"${datavalue13}")
+ }else{
+datavalue13=  "[sign: " + "${signatureResult13}" +"]"
+map),  rainEvt.put('data',"${datavalue13}")
+}
+        	result = [createEvent(map),  rainEvt), rainEvt]
+            return result
+        }
+	}
+	if (map) log.debug "Parse returned ${map} ${result}"
+	return result
+}
+
+def parseDescriptionAsMap(description) {
+	(description - 'read attr - ').split(',').inject([:]) { map, param ->
+		def nameAndValue = param.split(':')
+		map += [(nameAndValue[0].trim()):nameAndValue[1].trim()]
+	}
+}
+
+def getZone(descMap){
+	def map = [:]
+    
+    def EP = Integer.parseInt(descMap.endpoint.trim(), 16)
+    
+    String onoff
+    if(descMap.value == '00'){
+    	onoff = 'off'        
+    }    
+    else onoff = 'on'
+            
+    if (EP == 1){
+    	map.name = 'switch'
+        map.value = onoff
+        map.descriptionText = "${device.displayName} turned sprinkler program ${onoff}"
+        }
+        
+    else if (EP == 18) {
+        map.name = 'rainsensor'
+    	log.debug "Rain enable: ${RainEnable}, sensor: ${onoff}"
+        map.value = 'rainSensor' + onoff
+        map.descriptionText = "${device.displayName} rain sensor is ${onoff}"
+        }
+   	else {
+        EP -= 1
+        map.name = 'switch' + EP
+    	map.value = 'z' + EP + onoff
+    	map.descriptionText = "${device.displayName} turned Zone $EP ${onoff}"
+    	}
+        
+    map.isStateChange = true 
+    map.displayed = true    
+    return map
+}
+
+def getAlarm(descMap){
+	def map = [:]
+    map.name = 'status'
+    def alarmID = Integer.parseInt(descMap.value.trim(), 16)
+    log.debug "${alarmID}"
+    map.value = 'alarm'
+    map.displayed = true
+    map.isStateChange = true
+    if(alarmID <= 0){
+    	map.descriptionText = "${device.displayName} reboot, no other alarms"
+        map.value = 'warning'
+        
+        }
+    else map.descriptionText = "${device.displayName} reboot, reported zone ${alarmID - 1} error, please check zone is working correctly, press SYNC SETTINGS button to clear"
+       
+    return map        
+}
+
+
+def notify(String val, String txt){
+//	sendEvent(name: 'status', value: val, descriptionText: txt, isStateChange: true, display: false)
+def params14 = null
+def signatureResult14 = null
+log.debug "id is ${device.id}"
+ params14 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'status',  value: val,  descriptionText: txt,  isStateChange: true,  display: false]
+	]
+signatureResult14 = null
+try {
+    httpGet(params14) { resp ->
+        signatureResult14 = resp.data
+        log.debug "response data: ${signatureResult14}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: 'status',  value: val,  descriptionText: txt,  isStateChange: true,  display: false, data: [sign: "${signatureResult14}"])
+    
+    
+//    sendEvent(name: 'tileMessage', value: txt, descriptionText: "", isStateChange: true, display: false)
+def params15 = null
+def signatureResult15 = null
+log.debug "id is ${device.id}"
+ params15 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'tileMessage',  value: txt,  descriptionText: "",  isStateChange: true,  display: false]
+	]
+signatureResult15 = null
+try {
+    httpGet(params15) { resp ->
+        signatureResult15 = resp.data
+        log.debug "response data: ${signatureResult15}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'tileMessage',  value: txt,  descriptionText: "",  isStateChange: true,  display: false, data: [sign: "${signatureResult15}"])
+}
+
+def updated(){
+	log.debug "updated"
+    
+}
+
+
+def rain() {
+    log.debug "Rain sensor: ${RainEnable}"
+//    if (RainEnable) sendEvent(name: 'rainsensor', value: 'enable', descriptionText: "${device.displayName} rain sensor is enabled", isStateChange: true)
+def params16 = null
+def signatureResult16 = null
+log.debug "id is ${device.id}"
+ params16 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'rainsensor',  value: 'enable',  descriptionText: "${device.displayName} rain sensor is enabled",  isStateChange: true]
+	]
+signatureResult16 = null
+try {
+    httpGet(params16) { resp ->
+        signatureResult16 = resp.data
+        log.debug "response data: ${signatureResult16}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    if (RainEnable) sendEvent(name: 'rainsensor',  value: 'enable',  descriptionText: "${device.displayName} rain sensor is enabled",  isStateChange: true, data: [sign: "${signatureResult16}"])
+//    else sendEvent(name: 'rainsensor', value: 'disable', descriptionText: "${device.displayName} rain sensor is disabled", isStateChange: true)
+def params17 = null
+def signatureResult17 = null
+log.debug "id is ${device.id}"
+ params17 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'rainsensor',  value: 'disable',  descriptionText: "${device.displayName} rain sensor is disabled",  isStateChange: true]
+	]
+signatureResult17 = null
+try {
+    httpGet(params17) { resp ->
+        signatureResult17 = resp.data
+        log.debug "response data: ${signatureResult17}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    else sendEvent(name: 'rainsensor',  value: 'disable',  descriptionText: "${device.displayName} rain sensor is disabled",  isStateChange: true, data: [sign: "${signatureResult17}"])
+    
+    if (RainEnable) "st wattr 0x${device.deviceNetworkId} 18 0x0F 0x51 0x10 {01}"
+    else "st wattr 0x${device.deviceNetworkId} 18 0x0F 0x51 0x10 {00}"
+}
+
+def manualTime(value){	
+//	sendEvent(name: 'minutes', value: "${value}", descriptionText: "Manual Time set to ${value}", display: false)
+def params18 = null
+def signatureResult18 = null
+log.debug "id is ${device.id}"
+ params18 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'minutes',  value: "${value}",  descriptionText: "Manual Time set to ${value}",  display: false]
+	]
+signatureResult18 = null
+try {
+    httpGet(params18) { resp ->
+        signatureResult18 = resp.data
+        log.debug "response data: ${signatureResult18}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: 'minutes',  value: "${value}",  descriptionText: "Manual Time set to ${value}",  display: false, data: [sign: "${signatureResult18}"])
+}
+
+def manual(){    
+    def newManaul = 10    
+    if (device.latestValue('minutes')) newManaul = device.latestValue('minutes').toInteger()    
+    log.debug "Manual Zone runtime ${newManaul} mins"    
+    def manualTime = hex(newManaul)  
+    
+    def sendCmds = []
+    sendCmds.push("st wattr 0x${device.deviceNetworkId} 1 6 0x4002 0x21 {00${manualTime}}")
+    return sendCmds
+}
+
+
+def settingsMap(WriteTimes, attrType){
+	log.debug WriteTimes    
+	
+    def i = 1
+    def runTime
+    def sendCmds = []
+    while(i <= 17){
+    	  
+    	if (WriteTimes."${i}"){        	
+        	runTime = hex(Integer.parseInt(WriteTimes."${i}"))
+        	log.debug "${i} : $runTime"
+		
+        	if (attrType == 4001) sendCmds.push("st wattr 0x${device.deviceNetworkId} ${i} 0x06 0x4001 0x21 {00${runTime}}")
+        	else sendCmds.push("st wattr 0x${device.deviceNetworkId} ${i} 0x06 0x4002 0x21 {00${runTime}}")
+            sendCmds.push("delay 500")
+        }
+        i++
+    }    
+    return sendCmds
+}
+
+
+def writeType(wEP, cycle){
+	log.debug "wt ${wEP} ${cycle}"
+    "st wattr 0x${device.deviceNetworkId} ${wEP} 0x06 0x4001 0x21 {00" + hex(cycle) + "}"
+    }
+
+def writeTime(wEP, runTime){    
+    "st wattr 0x${device.deviceNetworkId} ${wEP} 0x06 0x4002 0x21 {00" + hex(runTime) + "}"
+    }
+
+
+def configure() {
+	
+//    sendEvent(name: 'status', value: 'schedule', descriptionText: "Syncing settings to controller")
+def params19 = null
+def signatureResult19 = null
+log.debug "id is ${device.id}"
+ params19 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'status',  value: 'schedule',  descriptionText: "Syncing settings to controller"]
+	]
+signatureResult19 = null
+try {
+    httpGet(params19) { resp ->
+        signatureResult19 = resp.data
+        log.debug "response data: ${signatureResult19}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'status',  value: 'schedule',  descriptionText: "Syncing settings to controller", data: [sign: "${signatureResult19}"])
+//    sendEvent(name: 'minutes', value: "10", descriptionText: "Manual Time set to 10 mins", display: false)
+def params20 = null
+def signatureResult20 = null
+log.debug "id is ${device.id}"
+ params20 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'minutes',  value: "10",  descriptionText: "Manual Time set to 10 mins",  display: false]
+	]
+signatureResult20 = null
+try {
+    httpGet(params20) { resp ->
+        signatureResult20 = resp.data
+        log.debug "response data: ${signatureResult20}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'minutes',  value: "10",  descriptionText: "Manual Time set to 10 mins",  display: false, data: [sign: "${signatureResult20}"])
+//    sendEvent(name: 'tileMessage', value: 'Syncing settings to controller', descriptionText: 'Syncing settings to controller')
+def params21 = null
+def signatureResult21 = null
+log.debug "id is ${device.id}"
+ params21 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'tileMessage',  value: 'Syncing settings to controller',  descriptionText: 'Syncing settings to controller']
+	]
+signatureResult21 = null
+try {
+    httpGet(params21) { resp ->
+        signatureResult21 = resp.data
+        log.debug "response data: ${signatureResult21}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'tileMessage',  value: 'Syncing settings to controller',  descriptionText: 'Syncing settings to controller', data: [sign: "${signatureResult21}"])
+    config()    
+}
+
+def config(){
+
+	String zigbeeId = swapEndianHex(device.hub.zigbeeId)
+	log.debug "Configuring Reporting and Bindings ${device.deviceNetworkId} ${device.zigbeeId}"
+    
+    def configCmds = [	
+        
+        "zdo bind 0x${device.deviceNetworkId} 1 1 6 {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 1 1 0x09 {${device.zigbeeId}} {}", "delay 1000",        
+        "zdo bind 0x${device.deviceNetworkId} 1 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        
+        "zdo bind 0x${device.deviceNetworkId} 2 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 3 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+		"zdo bind 0x${device.deviceNetworkId} 4 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 5 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 6 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 7 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 8 1 0x0F {${device.zigbeeId}} {}", "delay 1000",        
+        "zdo bind 0x${device.deviceNetworkId} 9 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        
+        "zdo bind 0x${device.deviceNetworkId} 10 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 11 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+		"zdo bind 0x${device.deviceNetworkId} 12 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 13 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 14 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 15 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        "zdo bind 0x${device.deviceNetworkId} 16 1 0x0F {${device.zigbeeId}} {}", "delay 1000",        
+        "zdo bind 0x${device.deviceNetworkId} 17 1 0x0F {${device.zigbeeId}} {}", "delay 1000",
+        
+        "zdo bind 0x${device.deviceNetworkId} 18 1 0x0F {${device.zigbeeId}} {}",
+        
+        "zcl global send-me-a-report 6 0 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 1", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 1", "delay 500",
+       
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 2", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 3", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 4", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 5", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 6", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 7", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 8", "delay 500",      
+        
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 9", "delay 500",
+       
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 10", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 11", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 12", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 13", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 14", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 15", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 16", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 17", "delay 500",
+        
+        "zcl global send-me-a-report 0x0F 0x55 0x10 1 0 {01}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 18", "delay 500",
+        
+        "zcl global send-me-a-report 0x09 0x00 0x21 1 0 {00}", "delay 500",
+        "send 0x${device.deviceNetworkId} 1 1", "delay 500"
+	]
+    return configCmds + rain()
+}
+
+def refresh() {
+
+	log.debug "refresh pressed"
+//    sendEvent(name: 'tileMessage', value: 'Refresh', descriptionText: 'Refresh')
+def params22 = null
+def signatureResult22 = null
+log.debug "id is ${device.id}"
+ params22 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'tileMessage',  value: 'Refresh',  descriptionText: 'Refresh']
+	]
+signatureResult22 = null
+try {
+    httpGet(params22) { resp ->
+        signatureResult22 = resp.data
+        log.debug "response data: ${signatureResult22}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'tileMessage',  value: 'Refresh',  descriptionText: 'Refresh', data: [sign: "${signatureResult22}"])
+        
+    def refreshCmds = [	    
+        
+        "st rattr 0x${device.deviceNetworkId} 1 0x0F 0x55", "delay 500",
+        
+        "st rattr 0x${device.deviceNetworkId} 2 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 3 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 4 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 5 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 6 0x0F 0x55", "delay 500",        
+        "st rattr 0x${device.deviceNetworkId} 7 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 8 0x0F 0x55", "delay 500",        
+        "st rattr 0x${device.deviceNetworkId} 9 0x0F 0x55", "delay 500",
+        
+        "st rattr 0x${device.deviceNetworkId} 10 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 11 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 12 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 13 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 14 0x0F 0x55", "delay 500",        
+        "st rattr 0x${device.deviceNetworkId} 15 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 16 0x0F 0x55", "delay 500",
+        "st rattr 0x${device.deviceNetworkId} 17 0x0F 0x55", "delay 500",
+        
+        "st rattr 0x${device.deviceNetworkId} 18 0x0F 0x51","delay 500",
+ 	
+    ]
+    
+    return refreshCmds
+}
+
+private hex(value) {
+	new BigInteger(Math.round(value).toString()).toString(16)
+}
+
+private String swapEndianHex(String hex) {
+    reverseArray(hex.decodeHex()).encodeHex()
+}
+
+private byte[] reverseArray(byte[] array) {
+    int i = 0;
+    int j = array.length - 1;
+    byte tmp;
+    while (j > i) {
+        tmp = array[j];
+        array[j] = array[i];
+        array[i] = tmp;
+        j--;
+        i++;
+    }
+    return array
+}
+
+
+def on() {    
+    log.debug 'Alexa on'
+    
+//    sendEvent(name: 'switch', value: 'programOn', descriptionText: 'Alexa turned program on')           
+def params23 = null
+def signatureResult23 = null
+log.debug "id is ${device.id}"
+ params23 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'switch',  value: 'programOn',  descriptionText: 'Alexa turned program on']
+	]
+signatureResult23 = null
+try {
+    httpGet(params23) { resp ->
+        signatureResult23 = resp.data
+        log.debug "response data: ${signatureResult23}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'switch',  value: 'programOn',  descriptionText: 'Alexa turned program on', data: [sign: "${signatureResult23}"])
+}
+def off() {
+	log.debug 'Alexa off'
+//    sendEvent(name: 'switch', value: 'off', descriptionText: 'Alexa turned program off')
+def params24 = null
+def signatureResult24 = null
+log.debug "id is ${device.id}"
+ params24 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'switch',  value: 'off',  descriptionText: 'Alexa turned program off']
+	]
+signatureResult24 = null
+try {
+    httpGet(params24) { resp ->
+        signatureResult24 = resp.data
+        log.debug "response data: ${signatureResult24}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'switch',  value: 'off',  descriptionText: 'Alexa turned program off', data: [sign: "${signatureResult24}"])
+    zoff()        
+}
+
+
+
+def zon() {
+	"st cmd 0x${device.deviceNetworkId} 1 6 1 {}"
+}
+def zoff() {
+	"st cmd 0x${device.deviceNetworkId} 1 6 0 {}" 
+}
+def z1on() {	
+    return manual() + "st cmd 0x${device.deviceNetworkId} 2 6 1 {}"    
+}
+def z1off() {    
+    "st cmd 0x${device.deviceNetworkId} 2 6 0 {}"
+}
+def z2on() {	
+    return manual() + "st cmd 0x${device.deviceNetworkId} 3 6 1 {}"    
+}
+def z2off() {    
+    "st cmd 0x${device.deviceNetworkId} 3 6 0 {}"    
+}
+def z3on() {        
+    return manual() + "st cmd 0x${device.deviceNetworkId} 4 6 1 {}"    
+}
+def z3off() {	
+    "st cmd 0x${device.deviceNetworkId} 4 6 0 {}"    
+}
+def z4on() {	
+    return manual() + "st cmd 0x${device.deviceNetworkId} 5 6 1 {}"    
+}
+def z4off() {    
+    "st cmd 0x${device.deviceNetworkId} 5 6 0 {}"    
+}
+def z5on() {	
+	return manual() + "st cmd 0x${device.deviceNetworkId} 6 6 1 {}"   
+}
+def z5off() {
+	"st cmd 0x${device.deviceNetworkId} 6 6 0 {}"    
+}
+def z6on() {
+	return manual() + "st cmd 0x${device.deviceNetworkId} 7 6 1 {}"
+}
+def z6off() {
+    "st cmd 0x${device.deviceNetworkId} 7 6 0 {}"
+}
+def z7on() {
+	return manual() + "st cmd 0x${device.deviceNetworkId} 8 6 1 {}"  
+}
+def z7off() {
+	"st cmd 0x${device.deviceNetworkId} 8 6 0 {}"    
+}
+def z8on() {
+	return manual() + "st cmd 0x${device.deviceNetworkId} 9 6 1 {}"    
+}
+def z8off() {
+	"st cmd 0x${device.deviceNetworkId} 9 6 0 {}"    
+}
+
+
+def z9on() {	
+    return manual() + "st cmd 0x${device.deviceNetworkId} 10 6 1 {}"    
+}
+def z9off() {	    
+    "st cmd 0x${device.deviceNetworkId} 10 6 0 {}"   
+}
+def z10on() {	
+    return manual() + "st cmd 0x${device.deviceNetworkId} 11 6 1 {}"    
+}
+def z10off() {    
+    "st cmd 0x${device.deviceNetworkId} 11 6 0 {}"    
+}
+def z11on() {        
+    return manual() + "st cmd 0x${device.deviceNetworkId} 12 6 1 {}"    
+}
+def z11off() {	
+    "st cmd 0x${device.deviceNetworkId} 12 6 0 {}"    
+}
+def z12on() {	
+    return manual() + "st cmd 0x${device.deviceNetworkId} 13 6 1 {}"    
+}
+def z12off() {    
+    "st cmd 0x${device.deviceNetworkId} 13 6 0 {}"    
+}
+def z13on() {	
+	return manual() + "st cmd 0x${device.deviceNetworkId} 14 6 1 {}"   
+}
+def z13off() {
+	"st cmd 0x${device.deviceNetworkId} 14 6 0 {}"    
+}
+def z14on() {
+	return manual() + "st cmd 0x${device.deviceNetworkId} 15 6 1 {}"
+}
+def z14off() {
+    "st cmd 0x${device.deviceNetworkId} 15 6 0 {}"
+}
+def z15on() {
+	return manual() + "st cmd 0x${device.deviceNetworkId} 16 6 1 {}"  
+}
+def z15off() {
+	"st cmd 0x${device.deviceNetworkId} 16 6 0 {}"    
+}
+def z16on() {
+	return manual() + "st cmd 0x${device.deviceNetworkId} 17 6 1 {}"    
+}
+def z16off() {
+	"st cmd 0x${device.deviceNetworkId} 17 6 0 {}"    
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+}

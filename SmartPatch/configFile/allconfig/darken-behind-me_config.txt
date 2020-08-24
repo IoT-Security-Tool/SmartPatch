@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":36,"lastlinenumber":39}
+{"type":"subscribe","linenumber":38,"arguments":["motion1","motion.inactive","motionInactiveHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":41,"lastlinenumber":45}
+{"type":"subscribe","linenumber":44,"arguments":["motion1","motion.inactive","motionInactiveHandler"]}
+{"type":"MethodNode","name":"motionInactiveHandler","linenumber":47,"lastlinenumber":49,"arg":["evt"]}

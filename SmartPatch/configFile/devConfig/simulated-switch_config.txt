@@ -1,0 +1,19 @@
+{"type":"MethodNode","name":"installed","linenumber":52,"lastlinenumber":57}
+{"type":"MethodNode","name":"updated","linenumber":59,"lastlinenumber":62}
+{"type":"MethodNode","name":"markDeviceOnline","linenumber":64,"lastlinenumber":66}
+{"type":"MethodNode","name":"markDeviceOffline","linenumber":68,"lastlinenumber":70}
+{"type":"MethodNode","name":"setDeviceHealth","linenumber":72,"lastlinenumber":80,"arg":["healthState"]}
+{"type":"sendEvent","linenumber":78,"arguments":"(name: \"DeviceWatch-DeviceStatus\", value: healthState)"}
+{"type":"sendEvent","linenumber":79,"arguments":"(name: \"healthStatus\", value: healthState)"}
+{"type":"MethodNode","name":"initialize","linenumber":82,"lastlinenumber":85}
+{"type":"sendEvent","linenumber":84,"arguments":"(name: \"DeviceWatch-Enroll\", value: [protocol: \"cloud\", scheme:\"untracked\"].encodeAsJson(), displayed: false)"}
+{"type":"MethodNode","name":"parse","linenumber":87,"lastlinenumber":88,"arg":["description"]}
+{"type":"MethodNode","name":"on","linenumber":90,"lastlinenumber":93}
+{"type":"sendEvent","linenumber":92,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"MethodNode","name":"off","linenumber":95,"lastlinenumber":98}
+{"type":"sendEvent","linenumber":97,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"MethodNode","name":"onPhysical","linenumber":100,"lastlinenumber":103}
+{"type":"sendEvent","linenumber":102,"arguments":"(name: \"switch\", value: \"on\", type: \"physical\")"}
+{"type":"MethodNode","name":"offPhysical","linenumber":105,"lastlinenumber":108}
+{"type":"sendEvent","linenumber":107,"arguments":"(name: \"switch\", value: \"off\", type: \"physical\")"}
+{"type":"MethodNode","name":"getVersion","linenumber":110,"lastlinenumber":112}

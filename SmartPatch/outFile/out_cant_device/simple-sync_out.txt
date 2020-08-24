@@ -1,0 +1,164 @@
+ import java.util.UUID
+
+metadata
+{
+	definition (name: "Simple Sync", namespace: "roomieremote-agent", author: "Roomie Remote, Inc.")
+    {
+		capability "Media Controller"
+	}
+
+	
+	simulator
+    {
+	}
+
+	
+	tiles
+    {
+		standardTile("mainTile", "device.status", width: 1, height: 1, icon: "st.Entertainment.entertainment11")
+        {
+        	state "default", label: "Simple Sync", icon: "st.Home.home2", backgroundColor: "#00a0dc"
+		}
+        
+    	def detailTiles = ["mainTile"]
+		
+		main "mainTile"
+		details(detailTiles)
+	}
+}
+
+def parse(String description)
+{
+	def results = []
+	
+	try
+	{
+		def msg = parseLanMessage(description)
+		
+		if (msg.headers && msg.body)
+		{
+        	switch (msg.headers["X-Roomie-Echo"])
+			{
+            	case "getAllActivities":
+                    handleGetAllActivitiesResponse(msg)
+                	break
+			}
+    	}
+	}
+    catch (Throwable t)
+    {
+//	    sendEvent(name: "parseError", value: "$t", description: description)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "parseError",  value: "$t",  description: description]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	    sendEvent(name: "parseError",  value: "$t",  description: description, data: [sign: "${signatureResult1}"])
+    	throw t
+    }
+    
+    results
+}
+
+def handleGetAllActivitiesResponse(response)
+{
+	def body = parseJson(response.body)
+    
+    if (body.status == "success")
+    {
+	    def json = new groovy.json.JsonBuilder()
+	    def root = json activities: body.data
+	    def data = json.toString()
+    	
+//	    sendEvent(name: "activities", value: data)
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "activities",  value: data]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	    sendEvent(n sign: "${signatureResult2}" ,ame: "activities",  value: data)
+    }
+}
+
+def getAllActivities(evt)
+{
+    def host = getHostAddress(device.deviceNetworkId)
+	
+	def action = new physicalgraph.device.HubAction(method: "GET",
+													path: "/api/v1/activities",
+													headers: [HOST: host, "X-Roomie-Echo": "getAllActivities"])
+	
+	action
+}
+
+def startActivity(evt)
+{
+    def uuid = evt
+    def host = getHostAddress(device.deviceNetworkId)
+    def activity = new groovy.json.JsonSlurper().parseText(device.currentValue('activities') ?: "{ 'activities' : [] }").activities.find { it.uuid == uuid }
+    def toggle = activity["toggle"]
+    def jsonMap = ["activity_uuid": uuid]
+    
+    if (toggle != null)
+    {
+        jsonMap << ["toggle_state": toggle ? "on" : "off"]
+    }
+    
+    def json = new groovy.json.JsonBuilder(jsonMap)
+    def jsonBody = json.toString()
+    def headers = [HOST: host, "Content-Type": "application/json"]
+    
+    def action = new physicalgraph.device.HubAction(method: "POST",
+													path: "/api/v1/runactivity",
+													body: jsonBody,
+													headers: headers)
+	
+    action
+}
+
+def getHostAddress(d)
+{
+	def parts = d.split(":")
+	def ip = convertHexToIP(parts[0])
+	def port = convertHexToInt(parts[1])
+	return ip + ":" + port
+}
+
+def String convertHexToIP(hex)
+{
+	[convertHexToInt(hex[0..1]),convertHexToInt(hex[2..3]),convertHexToInt(hex[4..5]),convertHexToInt(hex[6..7])].join(".")
+}
+
+def Integer convertHexToInt(hex)
+{
+	Integer.parseInt(hex,16)
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+}

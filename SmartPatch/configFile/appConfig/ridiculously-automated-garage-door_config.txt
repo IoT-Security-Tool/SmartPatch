@@ -1,0 +1,17 @@
+{"type":"MethodNode","name":"installed","linenumber":58,"lastlinenumber":61}
+{"type":"subscribe","linenumber":60,"arguments":[]}
+{"type":"MethodNode","name":"updated","linenumber":63,"lastlinenumber":67}
+{"type":"subscribe","linenumber":66,"arguments":[]}
+{"type":"MethodNode","name":"subscribe","linenumber":69,"lastlinenumber":79}
+{"type":"subscribe","linenumber":71,"arguments":["doorSensor","contact","garageDoorContact"]}
+{"type":"subscribe","linenumber":73,"arguments":["cars","presence","carPresence"]}
+{"type":"subscribe","linenumber":74,"arguments":["carDoorSensors","acceleration","accelerationActive"]}
+{"type":"subscribe","linenumber":77,"arguments":["interiorDoorSensor","contact.closed","interiorDoorClosed"]}
+{"type":"MethodNode","name":"doorOpenCheck","linenumber":81,"lastlinenumber":109}
+{"type":"MethodNode","name":"carPresence","linenumber":111,"lastlinenumber":151,"arg":["evt"]}
+{"type":"MethodNode","name":"garageDoorContact","linenumber":153,"lastlinenumber":162,"arg":["evt"]}
+{"type":"MethodNode","name":"interiorDoorClosed","linenumber":165,"lastlinenumber":178,"arg":["evt"]}
+{"type":"MethodNode","name":"accelerationActive","linenumber":180,"lastlinenumber":188,"arg":["evt"]}
+{"type":"MethodNode","name":"openDoor","linenumber":190,"lastlinenumber":196}
+{"type":"MethodNode","name":"closeDoor","linenumber":198,"lastlinenumber":204}
+{"type":"MethodNode","name":"getCar","linenumber":206,"lastlinenumber":209,"arg":["evt"]}

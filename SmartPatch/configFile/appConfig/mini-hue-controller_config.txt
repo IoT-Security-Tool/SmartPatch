@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"installed","linenumber":36,"lastlinenumber":40}
+{"type":"MethodNode","name":"updated","linenumber":42,"lastlinenumber":46}
+{"type":"MethodNode","name":"initialize","linenumber":48,"lastlinenumber":50}
+{"type":"subscribe","linenumber":49,"arguments":["controller","button","buttonHandler"]}
+{"type":"MethodNode","name":"buttonHandler","linenumber":52,"lastlinenumber":86,"arg":["evt"]}
+{"type":"MethodNode","name":"toggleState","linenumber":88,"lastlinenumber":97}
+{"type":"MethodNode","name":"levelUp","linenumber":99,"lastlinenumber":103}
+{"type":"MethodNode","name":"levelDown","linenumber":105,"lastlinenumber":109}
+{"type":"MethodNode","name":"changeColor","linenumber":111,"lastlinenumber":138}
+{"type":"MethodNode","name":"getCurrentSwitchState","linenumber":140,"lastlinenumber":152}
+{"type":"MethodNode","name":"getCurrentSwitchLevel","linenumber":154,"lastlinenumber":160}

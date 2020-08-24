@@ -1,0 +1,148 @@
+ import java.util.UUID
+"License"
+"AS IS"
+
+metadata {
+    definition (name: "Cree Bulb", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "oic.d.light", runLocally: true, executeCommandsLocally: true, minHubCoreVersion: "000.022.0004") {
+
+        capability "Actuator"
+        capability "Configuration"
+        capability "Refresh"
+        capability "Switch"
+        capability "Switch Level"
+        capability "Health Check"
+        capability "Light"
+
+        fingerprint manufacturer: "CREE", model: "Connected A-19 60W Equivalent" , deviceJoinName: "Cree Light"
+    }
+
+    
+    simulator {
+        
+        status "on": "on/off: 1"
+        status "off": "on/off: 0"
+
+        
+        reply "zcl on-off on": "on/off: 1"
+        reply "zcl on-off off": "on/off: 0"
+    }
+
+    
+    tiles(scale: 2) {
+        multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true){
+            tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
+                attributeState "on", label:'${name}', action:"switch.off", icon:"st.switches.light.on", backgroundColor:"#00A0DC", nextState:"turningOff"
+                attributeState "off", label:'${name}', action:"switch.on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.light.on", backgroundColor:"#00A0DC", nextState:"turningOff"
+                attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+            }
+            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
+                attributeState "level", action:"switch level.setLevel"
+            }
+        }
+        standardTile("refresh", "device.switch", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh"
+        }
+        main "switch"
+        details(["switch", "refresh"])
+    }
+}
+
+
+def parse(String description) {
+    log.debug "description is $description"
+
+    def resultMap = zigbee.getEvent(description)
+    if (resultMap) {
+//        sendEvent(resultMap)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${resultMap?.name}", value: "${resultMap?.value}"]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue1= ''
+if(resultMap.containsKey('data') ){
+datavalue1 = resultMap['data']
+datavalue1 = "[" + datavalue1+ "," +"sign: " + "${signatureResult1}" + "]"
+resultMap.put('data',"${datavalue1}")
+ }else{
+datavalue1=  "[sign: " + "${signatureResult1}" +"]"
+resultMap.put('data',"${datavalue1}")
+}
+        sendEvent(resultMap)
+    }
+    else {
+        log.debug "DID NOT PARSE MESSAGE for description : $description"
+        log.debug zigbee.parseDescriptionAsMap(description)
+    }
+}
+
+def off() {
+    zigbee.off()
+}
+
+def on() {
+    zigbee.on()
+}
+
+def setLevel(value, rate = null) {
+    zigbee.setLevel(value) + zigbee.onOffRefresh() + zigbee.levelRefresh()       
+}
+
+
+def ping() {
+    return zigbee.levelRefresh()
+}
+
+def refresh() {
+    zigbee.onOffRefresh() + zigbee.levelRefresh()
+}
+
+def healthPoll() {
+    log.debug "healthPoll()"
+    def cmds = zigbee.onOffRefresh() + zigbee.levelRefresh()
+    cmds.each{ sendHubCommand(new physicalgraph.device.HubAction(it))}
+}
+
+def configure() {
+    unschedule()
+    runEvery5Minutes("healthPoll")
+    
+//    sendEvent(name: "checkInterval", value: 60 * 12, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID])
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 60 * 12,  displayed: false,  data: [protocol: "zigbee",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "checkInterval",  value: 60 * 12,  displayed: false,  data: [ sign: "${signatureResult2}" ,protocol: "zigbee",  hubHardwareId: device.hub.hardwareID])
+    zigbee.onOffRefresh() + zigbee.levelRefresh()
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+}

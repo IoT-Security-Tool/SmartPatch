@@ -1,0 +1,59 @@
+{"type":"MethodNode","name":"getCLUSTER_BASIC","linenumber":96,"lastlinenumber":96}
+{"type":"MethodNode","name":"getBASIC_ATTR_SWBUILDID","linenumber":97,"lastlinenumber":97}
+{"type":"MethodNode","name":"getCLUSTER_POWER","linenumber":99,"lastlinenumber":99}
+{"type":"MethodNode","name":"getPOWER_ATTR_BATTERY","linenumber":100,"lastlinenumber":100}
+{"type":"MethodNode","name":"getCLUSTER_ONOFF","linenumber":102,"lastlinenumber":102}
+{"type":"MethodNode","name":"getONOFF_ATTR_ONOFFSTATE","linenumber":103,"lastlinenumber":103}
+{"type":"MethodNode","name":"getCLUSTER_LEVEL","linenumber":105,"lastlinenumber":105}
+{"type":"MethodNode","name":"getLEVEL_ATTR_LEVEL","linenumber":106,"lastlinenumber":106}
+{"type":"MethodNode","name":"getLEVEL_CMD_STOP","linenumber":107,"lastlinenumber":107}
+{"type":"MethodNode","name":"getCLUSTER_WINDOWCOVERING","linenumber":109,"lastlinenumber":109}
+{"type":"MethodNode","name":"getWINDOWCOVERING_ATTR_LIFTPERCENTAGE","linenumber":110,"lastlinenumber":110}
+{"type":"MethodNode","name":"getWINDOWCOVERING_CMD_OPEN","linenumber":111,"lastlinenumber":111}
+{"type":"MethodNode","name":"getWINDOWCOVERING_CMD_CLOSE","linenumber":112,"lastlinenumber":112}
+{"type":"MethodNode","name":"getWINDOWCOVERING_CMD_STOP","linenumber":113,"lastlinenumber":113}
+{"type":"MethodNode","name":"getWINDOWCOVERING_CMD_GOTOLIFTPERCENTAGE","linenumber":114,"lastlinenumber":114}
+{"type":"MethodNode","name":"getMIN_WINDOW_COVERING_VERSION","linenumber":116,"lastlinenumber":116}
+{"type":"MethodNode","name":"ShadesUp","linenumber":119,"lastlinenumber":131}
+{"type":"MethodNode","name":"ShadesDown","linenumber":134,"lastlinenumber":146}
+{"type":"MethodNode","name":"stop","linenumber":148,"lastlinenumber":170}
+{"type":"sendEvent","linenumber":153,"arguments":"(name: \"windowShade\", value: \"stopping\")"}
+{"type":"sendEvent","linenumber":157,"arguments":"(name: \"windowShade\", value: \"stoppingNS\")"}
+{"type":"sendEvent","linenumber":166,"arguments":"(name: \"windowShade\", value: \"stoppingNS\")"}
+{"type":"MethodNode","name":"pause","linenumber":172,"lastlinenumber":174}
+{"type":"MethodNode","name":"on","linenumber":177,"lastlinenumber":188}
+{"type":"sendEvent","linenumber":179,"arguments":"(name: \"windowShade\", value: \"opening\")"}
+{"type":"sendEvent","linenumber":180,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"MethodNode","name":"off","linenumber":191,"lastlinenumber":197}
+{"type":"sendEvent","linenumber":193,"arguments":"(name: \"windowShade\", value: \"closing\")"}
+{"type":"sendEvent","linenumber":194,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"MethodNode","name":"setLevel","linenumber":200,"lastlinenumber":229,"arg":["value","rate"]}
+{"type":"sendEvent","linenumber":206,"arguments":"(name:\"level\", value: value, displayed:true)"}
+{"type":"sendEvent","linenumber":209,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"sendEvent","linenumber":212,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"sendEvent","linenumber":216,"arguments":"(name: \"windowShade\", value: \"opening\")"}
+{"type":"sendEvent","linenumber":219,"arguments":"(name: \"windowShade\", value: \"closing\")"}
+{"type":"MethodNode","name":"open","linenumber":232,"lastlinenumber":241}
+{"type":"sendEvent","linenumber":234,"arguments":"(name: \"windowShade\", value: \"opening\")"}
+{"type":"MethodNode","name":"close","linenumber":243,"lastlinenumber":252}
+{"type":"sendEvent","linenumber":245,"arguments":"(name: \"windowShade\", value: \"closing\")"}
+{"type":"MethodNode","name":"presetPosition","linenumber":254,"lastlinenumber":257}
+{"type":"MethodNode","name":"ping","linenumber":260,"lastlinenumber":263}
+{"type":"MethodNode","name":"setWindowShade","linenumber":266,"lastlinenumber":276,"arg":["value"]}
+{"type":"sendEvent","linenumber":268,"arguments":"(name: \"windowShade\", value: \"partially open\", displayed:true)"}
+{"type":"sendEvent","linenumber":271,"arguments":"(name: \"windowShade\", value: \"open\", displayed:true)"}
+{"type":"sendEvent","linenumber":274,"arguments":"(name: \"windowShade\", value: \"closed\", displayed:true)"}
+{"type":"MethodNode","name":"refresh","linenumber":279,"lastlinenumber":298}
+{"type":"MethodNode","name":"getversion","linenumber":300,"lastlinenumber":304}
+{"type":"sendEvent","linenumber":302,"arguments":"(name: \"version\", value: \"Checking Version ... \")"}
+{"type":"MethodNode","name":"configure","linenumber":307,"lastlinenumber":327}
+{"type":"sendEvent","linenumber":309,"arguments":"(name: \"windowShade\", value: \"unknown\")"}
+{"type":"sendEvent","linenumber":311,"arguments":"(name: \"checkInterval\", value: (2 * 60 * 60 + 10 * 60), displayed: true, data: [protocol: \"zigbee\", hubHardwareId: device.hub.hardwareID])"}
+{"type":"sendEvent","linenumber":312,"arguments":"(name: \"supportedWindowShadeCommands\", value: JsonOutput.toJson([\"open\", \"close\", \"pause\"]), displayed: false)"}
+{"type":"MethodNode","name":"parse","linenumber":329,"lastlinenumber":346,"arg":["description"]}
+{"type":"sendEvent","linenumber":337,"arguments":"(event)"}
+{"type":"createEvent","linenumber":342,"arguments":"(map) : null"}
+{"type":"MethodNode","name":"parseReportAttributeMessage","linenumber":348,"lastlinenumber":419,"arg":["description"]}
+{"type":"sendEvent","linenumber":384,"arguments":"(name:\"level\", value: levelValuePercent, displayed:true)"}
+{"type":"sendEvent","linenumber":387,"arguments":"(name: \"windowShade\", value: \"opening\")"}
+{"type":"sendEvent","linenumber":389,"arguments":"(name: \"windowShade\", value: \"closing\")"}

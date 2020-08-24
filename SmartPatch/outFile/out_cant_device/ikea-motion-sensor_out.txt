@@ -1,0 +1,286 @@
+ import java.util.UUID
+"License"
+"AS IS"
+
+metadata {
+    definition (name: "Ikea Motion Sensor", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "x.com.st.d.sensor.motion", mnmn: "SmartThings", vid: "generic-motion-2") {
+        capability "Battery"
+        capability "Configuration"
+        capability "Motion Sensor"
+        capability "Sensor"
+        capability "Health Check"
+        capability "Refresh"
+
+        fingerprint inClusters: "0000, 0001, 0003, 0009, 0B05, 1000", outClusters: "0003, 0004, 0006, 0019, 1000", manufacturer: "IKEA of Sweden",  model: "TRADFRI motion sensor", deviceJoinName: "IKEA Motion Sensor" 
+    }
+
+    tiles(scale: 2) {
+        multiAttributeTile(name: "motion", type: "generic", width: 6, height: 4) {
+            tileAttribute("device.motion", key: "PRIMARY_CONTROL") {
+                attributeState "active", label: 'motion', icon: "st.motion.motion.active", backgroundColor: "#00A0DC"
+                attributeState "inactive", label: 'no motion', icon: "st.motion.motion.inactive", backgroundColor: "#cccccc"
+            }
+        }
+        valueTile("battery", "device.battery", decoration: "flat", inactiveLabel: false, width: 2, height: 2) {
+            state "battery", label: '${currentValue}% battery', unit: ""
+        }
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", action: "refresh.refresh", icon: "st.secondary.refresh"
+        }
+        main(["motion"])
+        details(["motion", "battery", "refresh"])
+    }
+}
+
+private getCLUSTER_GROUPS() { 0x0004 }
+private getON_WITH_TIMED_OFF_COMMAND() { 0x42 }
+private getBATTERY_VOLTAGE_ATTR() { 0x0020 }
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+//    sendEvent(name: "motion", value: "inactive", displayed: false,)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "motion",  value: "inactive",  displayed: false]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "motion",  value: "inactive",  displayed: false, data: [sign: "${signatureResult1}"])
+//    sendEvent(name: "checkInterval", value: 12 * 60 * 60 + 12 * 60, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID])
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 12 * 60 * 60 + 12 * 60,  displayed: false,  data: [protocol: "zigbee",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "checkInterval",  value: 12 * 60 * 60 + 12 * 60,  displayed: false,  data: [ sign: "${signatureResult2}" ,protocol: "zigbee",  hubHardwareId: device.hub.hardwareID])
+}
+
+def configure() {
+    log.debug "Configuring device ${device.getDataValue("model")}"
+
+    zigbee.readAttribute(zigbee.POWER_CONFIGURATION_CLUSTER, BATTERY_VOLTAGE_ATTR) + zigbee.batteryConfig() +
+            readDeviceBindingTable()
+}
+
+def refresh() {
+    zigbee.readAttribute(zigbee.POWER_CONFIGURATION_CLUSTER, BATTERY_VOLTAGE_ATTR)
+}
+
+def ping() {
+    refresh()
+}
+
+def parse(String description) {
+    log.debug "Parsing message from device: '$description'"
+    def event = zigbee.getEvent(description)
+    if (event) {
+        log.debug "Creating event: ${event}"
+//        sendEvent(event)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${event?.name}", value: "${event?.value}"]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue3= ''
+if(event.containsKey('data') ){
+datavalue3 = event['data']
+datavalue3 = "[" + datavalue3+ "," +"sign: " + "${signatureResult3}" + "]"
+event.put('data',"${datavalue3}")
+ }else{
+datavalue3=  "[sign: " + "${signatureResult3}" +"]"
+event.put('data',"${datavalue3}")
+}
+        sendEvent(event)
+    } else {
+        if (isBindingTableMessage(description)) {
+            parseBindingTableMessage(description)
+        } else if (isAttrOrCmdMessage(description)) {
+            parseAttrCmdMessage(description)
+        } else {
+            log.warn "Unhandled message came in"
+        }
+    }
+}
+
+private Map parseAttrCmdMessage(description) {
+    def descMap = zigbee.parseDescriptionAsMap(description)
+    log.debug "Message description map: ${descMap}"
+    if (descMap.clusterInt == zigbee.POWER_CONFIGURATION_CLUSTER && descMap.attrInt == BATTERY_VOLTAGE_ATTR) {
+        getBatteryEvent(zigbee.convertHexToInt(descMap.value))
+    } else if (descMap.clusterInt == zigbee.ONOFF_CLUSTER && descMap.commandInt == ON_WITH_TIMED_OFF_COMMAND) {
+        getMotionEvent(descMap)
+    }
+}
+
+private Map getMotionEvent(descMap) {
+    
+    
+    def onTime = Integer.parseInt(descMap.data[2] + descMap.data[1], 16) / 10
+    runIn(onTime, "clearMotionStatus", [overwrite: true])
+
+//    createEvent([
+//            name: "motion",
+//            value: "active",
+//            descriptionText: "${device.displayName} detected motion"
+//    ])
+def params4 = null
+def signatureResult4 = null
+params4 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",[            name: "motion",             value: "active",             descriptionText: "${device.displayName} detected motion"    ]]
+]
+signatureResult4 = null
+  try {
+        httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+    createEvent([            name: "motion",             value: "active",             descriptionText: "${device.displayName} detected motion"    ], data: [sign: "${signatureResult4}"])
+}
+
+private def parseBindingTableMessage(description) {
+    Integer groupAddr = getGroupAddrFromBindingTable(description)
+    List cmds = []
+    if (groupAddr) {
+        cmds += addHubToGroup(groupAddr)
+    } else {
+        groupAddr = 0x0000
+        cmds += addHubToGroup(groupAddr)
+        cmds += zigbee.command(CLUSTER_GROUPS, 0x00, "${zigbee.swapEndianHex(zigbee.convertToHexString(groupAddr, 4))} 00")
+    }
+    cmds?.collect { new physicalgraph.device.HubAction(it) }
+}
+
+def clearMotionStatus() {
+//    sendEvent(name: "motion", value: "inactive", descriptionText: "${device.displayName} motion has stopped")
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "motion",  value: "inactive",  descriptionText: "${device.displayName} motion has stopped"]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "motion",  value: "inactive",  descriptionText: "${device.displayName} motion has stopped", data: [sign: "${signatureResult5}"])
+}
+
+private Map getBatteryEvent(rawValue) {
+    Map event = [:]
+    def volts = rawValue / 10
+    if (volts > 0 && rawValue != 0xFF) {
+        event = [name: "battery"]
+        def minVolts = 2.1
+        def maxVolts = 3.0
+        def pct = (volts - minVolts) / (maxVolts - minVolts)
+        event.value = Math.min(100, (int) (pct * 100))
+        def linkText = getLinkText(device)
+        event.descriptionText = "${linkText} battery was ${event.value}%"
+    }
+//    createEvent(event)
+def params6 = null
+def signatureResult6 = null
+params6 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${event?.name}", value: "${event?.value}"]
+]
+signatureResult6 = null
+  try {
+        httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue6= ''
+if(event.containsKey('data') ){
+datavalue6 = event['data']
+datavalue6 = "[" + datavalue6+ "," +"sign: " + "${signatureResult6}" + "]"
+event.put('data',"${datavalue6}")
+ }else{
+datavalue6=  "[sign: " + "${signatureResult6}" +"]"
+event.put('data',"${datavalue6}")
+}
+    createEvent(event)
+}
+
+private Integer getGroupAddrFromBindingTable(description) {
+    log.info "Parsing binding table - '$description'"
+    def btr = zigbee.parseBindingTableResponse(description)
+    def groupEntry = btr?.table_entries?.find { it.dstAddrMode == 1 }
+    if (groupEntry != null) {
+        log.info "Found group binding in the binding table: ${groupEntry}"
+        Integer.parseInt(groupEntry.dstAddr, 16)
+    } else {
+        log.info "The binding table does not contain a group binding"
+        null
+    }
+}
+
+private List addHubToGroup(Integer groupAddr) {
+    ["st cmd 0x0000 0x01 ${CLUSTER_GROUPS} 0x00 {${zigbee.swapEndianHex(zigbee.convertToHexString(groupAddr,4))} 00}",
+     "delay 200"]
+}
+
+private List readDeviceBindingTable() {
+    ["zdo mgmt-bind 0x${device.deviceNetworkId} 0",
+     "delay 200"]
+}
+
+private boolean isAttrOrCmdMessage(description) {
+    (description?.startsWith("catchall:")) || (description?.startsWith("read attr -"))
+}

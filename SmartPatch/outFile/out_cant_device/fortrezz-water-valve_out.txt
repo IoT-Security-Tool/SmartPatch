@@ -1,0 +1,235 @@
+ import java.util.UUID
+"License"
+"AS IS"
+metadata {
+	definition (name: "Fortrezz Water Valve", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "oic.d.watervalve", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false) {
+		capability "Actuator"
+		capability "Health Check"
+		capability "Valve"
+		capability "Refresh"
+		capability "Sensor"
+
+		fingerprint deviceId: "0x1000", inClusters: "0x25,0x72,0x86,0x71,0x22,0x70", deviceJoinName: "FortrezZ Valve"
+		fingerprint mfr:"0084", prod:"0213", model:"0215", deviceJoinName: "FortrezZ Valve" 
+	}
+
+	
+	simulator {
+		status "close":  "command: 2503, payload: FF"
+		status "open": "command: 2503, payload: 00"
+
+		
+		reply "2001FF": "command: 2503, payload: FF"
+		reply "200100": "command: 2503, payload: 00"
+	}
+
+	
+	tiles(scale: 2) {
+		multiAttributeTile(name:"valve", type: "generic", width: 6, height: 4, canChangeIcon: true){
+			tileAttribute ("device.valve", key: "PRIMARY_CONTROL") {
+				attributeState "open", label: '${name}', action: "valve.close", icon: "st.valves.water.open", backgroundColor: "#00A0DC", nextState:"closing"
+				attributeState "closed", label: '${name}', action: "valve.open", icon: "st.valves.water.closed", backgroundColor: "#ffffff", nextState:"opening"
+				attributeState "opening", label: '${name}', action: "valve.close", icon: "st.valves.water.open", backgroundColor: "#00A0DC"
+				attributeState "closing", label: '${name}', action: "valve.open", icon: "st.valves.water.closed", backgroundColor: "#ffffff"
+			}
+		}
+
+		standardTile("refresh", "device.valve", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
+		}
+
+		main "valve"
+		details(["valve","refresh"])
+	}
+}
+
+def installed(){
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+
+//	sendEvent(name: "checkInterval", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID, offlinePingable: "1"])
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 2 * 15 * 60 + 2 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"]]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 2 * 15 * 60 + 2 * 60,  displayed: false,  data: [ sign: "${signatureResult1}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"])
+
+	response(refresh())
+}
+
+def updated(){
+
+//	sendEvent(name: "checkInterval", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID, offlinePingable: "1"])
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 2 * 15 * 60 + 2 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"]]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 2 * 15 * 60 + 2 * 60,  displayed: false,  data: [ sign: "${signatureResult2}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"])
+}
+
+def parse(String description) {
+	log.trace description
+	def cmd = zwave.parse(description)
+	if (cmd) {
+		return zwaveEvent(cmd)
+	}
+	log.debug "Could not parse message"
+	return null
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.switchbinaryv1.SwitchBinaryReport cmd) {
+	def value = cmd.value ? "closed" : "open"
+
+//	return createEventWithDebug([name: "valve", value: value, descriptionText: "$device.displayName valve is $value"])
+def params3 = null
+def signatureResult3 = null
+params3 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",ithDebug([name: "valve",  value: value,  descriptionText: "$device.displayName valve is $value"]]
+]
+signatureResult3 = null
+  try {
+        httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	return createEvent(ithDebug([name: "valve",  value: value,  descriptionText: "$device.displayName valve is $value"], data: [sign: "${signatureResult3}"])ithDebug([name: "valve", value: value, descriptionText: "$device.displayName valve is $value"])
+}
+
+def zwaveEvent(physicalgraph.zwave.Command cmd) {
+//	return createEvent([:]) 
+def params4 = null
+def signatureResult4 = null
+params4 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",[:]]
+]
+signatureResult4 = null
+  try {
+        httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	return createEvent([:], data: [sign: "${signatureResult4}"]) 
+}
+
+def open() {
+	delayBetween([
+		zwave.switchBinaryV1.switchBinarySet(switchValue: 0x00).format(),
+		zwave.switchBinaryV1.switchBinaryGet().format()
+	], 500)
+}
+
+def close() {
+	delayBetween([
+		zwave.switchBinaryV1.switchBinarySet(switchValue: 0xFF).format(),
+		zwave.switchBinaryV1.switchBinaryGet().format()
+	], 500)
+}
+
+
+def ping() {
+	refresh()
+}
+
+def refresh() {
+	zwave.switchBinaryV1.switchBinaryGet().format()
+}
+
+//def createEventWithDebug(eventMap) {
+def params5 = null
+def signatureResult5 = null
+params5 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${ithDebug(eventMap) ?.name}", value: "${ithDebug(eventMap) ?.value}"]
+]
+signatureResult5 = null
+  try {
+        httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue5= ''
+if(ithDebug(eventMap) .containsKey('data') ){
+datavalue5 = ithDebug(eventMap) ['data']
+datavalue5 = "[" + datavalue5+ "," +"sign: " + "${signatureResult5}" + "]"
+ithDebug(eventMap) .put('data',"${datavalue5}")
+ }else{
+datavalue5=  "[sign: " + "${signatureResult5}" +"]"
+ithDebug(eventMap) .put('data',"${datavalue5}")
+}
+def createEvent(ithDebug(eventMap) )ithDebug(eventMap) {
+//	def event = createEvent(eventMap)
+def params6 = null
+def signatureResult6 = null
+params6 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${eventMap?.name}", value: "${eventMap?.value}"]
+]
+signatureResult6 = null
+  try {
+        httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue6= ''
+if(eventMap.containsKey('data') ){
+datavalue6 = eventMap['data']
+datavalue6 = "[" + datavalue6+ "," +"sign: " + "${signatureResult6}" + "]"
+eventMap.put('data',"${datavalue6}")
+ }else{
+datavalue6=  "[sign: " + "${signatureResult6}" +"]"
+eventMap.put('data',"${datavalue6}")
+}
+	def event = createEvent(eventMap)
+	log.debug "Event created with ${event?.name}:${event?.value} - ${event?.descriptionText}"
+	return event
+}

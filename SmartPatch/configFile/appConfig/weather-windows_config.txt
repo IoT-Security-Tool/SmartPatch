@@ -1,0 +1,7 @@
+{"type":"MethodNode","name":"installed","linenumber":53,"lastlinenumber":56}
+{"type":"subscribe","linenumber":55,"arguments":["inTemp","temperature","temperatureHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":58,"lastlinenumber":62}
+{"type":"subscribe","linenumber":61,"arguments":["inTemp","temperature","temperatureHandler"]}
+{"type":"MethodNode","name":"temperatureHandler","linenumber":65,"lastlinenumber":124,"arg":["evt"]}
+{"type":"MethodNode","name":"weatherCheck","linenumber":126,"lastlinenumber":137}
+{"type":"MethodNode","name":"send","linenumber":139,"lastlinenumber":152,"arg":["msg"]}

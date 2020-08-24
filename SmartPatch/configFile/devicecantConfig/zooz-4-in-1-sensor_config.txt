@@ -1,0 +1,14 @@
+{"type":"MethodNode","name":"initialize","linenumber":57}
+{"type":"sendEvent","linenumber":58,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"MethodNode","name":"installed","linenumber":62}
+{"type":"createEvent","linenumber":73,"arguments":["descriptionText:description"," isStateChange:true"]}
+{"type":"createEvent","linenumber":86,"arguments":["descriptionText: \"$device.displayName woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":101,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":114,"arguments":["map"]}
+{"type":"createEvent","linenumber":139,"arguments":["map"]}
+{"type":"createEvent","linenumber":151,"arguments":["map"]}
+{"type":"createEvent","linenumber":163,"arguments":["name: \"tamper\""," value: \"detected\""," descriptionText: \"$device.displayName was tampered\""]}
+{"type":"createEvent","linenumber":169,"arguments":["name: \"tamper\""," value: \"clear\""," descriptionText: \"$device.displayName tamper was cleared\""]}
+{"type":"createEvent","linenumber":172,"arguments":["descriptionText: cmd.toString()"," isStateChange: false"]}
+{"type":"createEvent","linenumber":178,"arguments":["descriptionText: cmd.toString()"," isStateChange: false"]}
+{"type":"sendEvent","linenumber":197,"arguments":["name: \"tamper\""," value: \"clear\""]}

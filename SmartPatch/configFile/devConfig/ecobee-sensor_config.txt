@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"initialize","linenumber":66,"lastlinenumber":69}
+{"type":"sendEvent","linenumber":67,"arguments":"(name: \"DeviceWatch-Enroll\", value: JsonOutput.toJson([protocol: \"cloud\", scheme:\"untracked\"]), displayed: false)"}
+{"type":"MethodNode","name":"installed","linenumber":71,"lastlinenumber":73}
+{"type":"MethodNode","name":"updated","linenumber":75,"lastlinenumber":79}
+{"type":"MethodNode","name":"uninstalled","linenumber":83,"lastlinenumber":87}
+{"type":"MethodNode","name":"refresh","linenumber":89,"lastlinenumber":92}

@@ -1,0 +1,21 @@
+{"type":"MethodNode","name":"installed","linenumber":104}
+{"type":"sendEvent","linenumber":105,"arguments":["name: \"tamper\""," value: \"clear\""," displayed: false"]}
+{"type":"sendEvent","linenumber":106,"arguments":["name: \"motionText\""," value: \"X: 0.0\\nY: 0.0\\nZ: 0.0\""," displayed: false"]}
+{"type":"sendEvent","linenumber":107,"arguments":["name: \"motion\""," value: \"inactive\""," displayed: false"]}
+{"type":"sendEvent","linenumber":115,"arguments":["name: \"tamper\""," value: \"detected\""," displayed: false"]}
+{"type":"sendEvent","linenumber":117,"arguments":["name: \"tamper\""," value: \"clear\""," displayed: false"]}
+{"type":"sendEvent","linenumber":120,"arguments":["name: \"motionText\""," value: \"Disabled\""," displayed: false"]}
+{"type":"createEvent","linenumber":140,"arguments":["descriptionText: description"," displayed: false"]}
+{"type":"createEvent","linenumber":142,"arguments":["\t\t\t\tdescriptionText: \"FGK failed to complete the network security key exchange. If you are unable to receive data from it"," you must remove it from your network and add it again.\"","\t\t\t\teventType: \"ALERT\"","\t\t\t\tname: \"secureInclusion\"","\t\t\t\tvalue: \"failed\"","\t\t\t\tdisplayed: true","\t\t\t"]}
+{"type":"createEvent","linenumber":169,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":211,"arguments":["map"]}
+{"type":"createEvent","linenumber":245,"arguments":["map"]}
+{"type":"createEvent","linenumber":254,"arguments":["map"]}
+{"type":"createEvent","linenumber":260,"arguments":["descriptionText: \"${device.displayName} woke up\""," displayed: false"]}
+{"type":"createEvent","linenumber":319,"arguments":["map"]}
+{"type":"sendEvent","linenumber":337,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":387,"arguments":["name: \"motionText\""," value: \"Vibration:\\n${value} MMI\""," displayed: false"]}
+{"type":"sendEvent","linenumber":390,"arguments":["name: axisMap[sensorType]"," value: value"," displayed: false"]}
+{"type":"sendEvent","linenumber":402,"arguments":["name: \"motionText\""," value: \"X: ${device.currentValue(\"xAxis\")}\\nY: ${device.currentValue(\"yAxis\")}\\nZ: ${device.currentValue(\"zAxis\")}\""," displayed: false"]}
+{"type":"sendEvent","linenumber":403,"arguments":["name: \"threeAxis\""," value: \"${xAxis}","${yAxis}","${zAxis}\""," isStateChange: true"," displayed: false"]}
+{"type":"sendEvent","linenumber":486,"arguments":["name: \"multiStatus\""," value: statusValue"," descriptionText: statusValue"," displayed: display"]}

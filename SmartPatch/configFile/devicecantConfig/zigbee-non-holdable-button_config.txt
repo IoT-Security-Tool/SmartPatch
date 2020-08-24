@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":36}
+{"type":"sendEvent","linenumber":37,"arguments":["name: \"supportedButtonValues\""," value: [\"pushed\"].encodeAsJSON()"," displayed: false"]}
+{"type":"sendEvent","linenumber":38,"arguments":["name: \"numberOfButtons\""," value: 1"," displayed: false"]}
+{"type":"createEvent","linenumber":81,"arguments":["map) : [:"]}
+{"type":"sendEvent","linenumber":176,"arguments":["name: \"DeviceWatch-Enroll\""," displayed: false"," value: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," scheme: \"TRACKED\""," checkInterval: 6 * 60 * 60 + 1 * 60"," offlinePingable: \"1\"].encodeAsJSON()"]}

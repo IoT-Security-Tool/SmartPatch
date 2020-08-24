@@ -1,0 +1,21 @@
+{"type":"MethodNode","name":"installed","linenumber":92}
+{"type":"sendEvent","linenumber":93,"arguments":["name: \"checkInterval\""," value: 12 * 60 * 60 + 8 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":101,"arguments":["name: \"temperatureAlarm\""," value: \"cleared\""," displayed: false"]}
+{"type":"sendEvent","linenumber":103,"arguments":["name: \"temperatureAlarm\""," value: null"," displayed: false"]}
+{"type":"sendEvent","linenumber":112,"arguments":["name: \"coLevel\""," unit: \"ppm\""," value: 0"," displayed: true"]}
+{"type":"sendEvent","linenumber":113,"arguments":["name: \"carbonMonoxide\""," value: \"clear\""," displayed: \"true\""]}
+{"type":"sendEvent","linenumber":114,"arguments":["name: \"tamper\""," value: \"clear\""," displayed: \"true\""]}
+{"type":"sendEvent","linenumber":115,"arguments":["name: \"temperatureAlarm\""," value: \"cleared\""," displayed: false"]}
+{"type":"sendEvent","linenumber":194,"arguments":["name: \"multiStatus\""," value: statusValue"," descriptionText: statusValue"," displayed: display"]}
+{"type":"sendEvent","linenumber":201,"arguments":["descriptionText: \"$device.displayName woke up\""," isStateChange: true"]}
+{"type":"sendEvent","linenumber":233,"arguments":["name: \"carbonMonoxide\""," value: \"clear\")"]}
+{"type":"sendEvent","linenumber":237,"arguments":["name: \"carbonMonoxide\""," value: \"detected\")"]}
+{"type":"sendEvent","linenumber":242,"arguments":["name: \"carbonMonoxide\""," value: \"tested\")"]}
+{"type":"sendEvent","linenumber":245,"arguments":["name: \"carbonMonoxide\""," value: \"clear\")"]}
+{"type":"sendEvent","linenumber":252,"arguments":["name: \"tamper\""," value: (cmd.zwaveAlarmEvent == 3)? \"detected\":\"clear\")"]}
+{"type":"sendEvent","linenumber":258,"arguments":["name: \"temperatureAlarm\""," value: \"cleared\"); break"]}
+{"type":"sendEvent","linenumber":259,"arguments":["name: \"temperatureAlarm\""," value: \"heat\"); break"]}
+{"type":"sendEvent","linenumber":272,"arguments":["name: \"temperature\""," unit: getTemperatureScale()"," value: convertTemperatureIfNeeded(cmd.scaledSensorValue"," cmdScale"," cmd.precision)"," displayed: true"]}
+{"type":"sendEvent","linenumber":275,"arguments":["name: \"coLevel\""," unit: \"ppm\""," value: cmd.scaledSensorValue"," displayed: true"]}
+{"type":"sendEvent","linenumber":293,"arguments":["map"]}
+{"type":"createEvent","linenumber":300,"arguments":["\t\t\t\tdescriptionText: \"Failed to complete the network security key exchange. If you are unable to receive data from it"," you must remove it from your network and add it again.\"","\t\t\t\teventType: \"ALERT\"","\t\t\t\tname: \"secureInclusion\"","\t\t\t\tvalue: \"failed\"","\t\t\t\tdisplayed: true","\t\t"]}

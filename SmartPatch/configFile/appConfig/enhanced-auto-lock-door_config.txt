@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"mainPage","linenumber":16,"lastlinenumber":42}
+{"type":"MethodNode","name":"installed","linenumber":44,"lastlinenumber":46}
+{"type":"MethodNode","name":"updated","linenumber":48,"lastlinenumber":52}
+{"type":"MethodNode","name":"initialize","linenumber":54,"lastlinenumber":60}
+{"type":"subscribe","linenumber":56,"arguments":["lock1","lock","doorHandler","[filterEvents:false]"]}
+{"type":"subscribe","linenumber":57,"arguments":["lock1","unlock","doorHandler","[filterEvents:false]"]}
+{"type":"subscribe","linenumber":58,"arguments":["contact","contact.open","doorHandler"]}
+{"type":"subscribe","linenumber":59,"arguments":["contact","contact.closed","doorHandler"]}
+{"type":"MethodNode","name":"lockDoor","linenumber":62,"lastlinenumber":75}
+{"type":"MethodNode","name":"unlockDoor","linenumber":77,"lastlinenumber":90}
+{"type":"MethodNode","name":"doorHandler","linenumber":92,"lastlinenumber":128,"arg":["evt"]}

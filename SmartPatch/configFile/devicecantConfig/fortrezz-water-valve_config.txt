@@ -1,0 +1,7 @@
+{"type":"MethodNode","name":"installed","linenumber":45}
+{"type":"sendEvent","linenumber":47,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":54,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"createEvent","linenumber":70,"arguments":["ithDebug([name: \"valve\""," value: value"," descriptionText: \"$device.displayName valve is $value\"]"]}
+{"type":"createEvent","linenumber":74,"arguments":["[:]"]}
+{"type":"createEvent","linenumber":100,"arguments":["ithDebug(eventMap) "]}
+{"type":"createEvent","linenumber":101,"arguments":["eventMap"]}

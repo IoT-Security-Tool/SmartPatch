@@ -1,0 +1,309 @@
+ import java.util.UUID
+"License"
+"AS IS"
+import physicalgraph.zigbee.zcl.DataType
+import physicalgraph.zigbee.clusters.iaszone.ZoneStatus
+metadata {
+    definition(name: "Zigbee Curtain", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "oic.d.blind") {
+        capability "Actuator"
+        capability "Configuration"
+        capability "Refresh"
+        capability "Health Check"
+        capability "Switch Level"
+        capability "Stateless Curtain Power Button"
+        capability "Window Shade"
+
+        
+    }
+}
+
+private getCLUSTER_WINDOW_COVERING() { 0x0102 }
+private getATTRIBUTE_CURRENT_LEVEL() { 0x0000 }
+
+
+def parse(String description) {
+    log.debug "description:- ${description}"
+    def map = [:]
+    def resultMap = zigbee.getEvent(description)
+    log.debug "resultMap:- ${resultMap}"
+    if (resultMap) {
+        map = resultMap
+    } else {
+        Map descMap = zigbee.parseDescriptionAsMap(description)
+        log.debug "descMap:- ${descMap}"
+        if (descMap?.clusterInt == zigbee.LEVEL_CONTROL_CLUSTER && descMap.value) {
+            def valueInt = Math.round((zigbee.convertHexToInt(descMap.value)) / 255 * 100)
+            map = [name: "level", value: valueInt]
+        }
+    }
+    if (map?.name == "level") {
+        if (0 == map.value) {
+//            sendEvent(name: "windowShade", value: "closed")
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "windowShade",  value: "closed"]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name: "windowShade",  value: "closed", data: [sign: "${signatureResult1}"])
+        } else if (100 == map.value) {
+//            sendEvent(name: "windowShade", value: "open")
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "windowShade",  value: "open"]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name: "windowShade",  value: "open", data: [sign: "${signatureResult2}"])
+        } else {
+//            sendEvent(name: "windowShade", value: "partially open")
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "windowShade",  value: "partially open"]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name: "windowShade",  value: "partially open", data: [sign: "${signatureResult3}"])
+        }
+        log.debug "map:- ${map}"
+//        sendEvent(map)
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue4= ''
+if(map.containsKey('data') ){
+datavalue4 = map['data']
+datavalue4 = "[" + datavalue4+ "," +"sign: " + "${signatureResult4}" + "]"
+map.put('data',"${datavalue4}")
+ }else{
+datavalue4=  "[sign: " + "${signatureResult4}" +"]"
+map.put('data',"${datavalue4}")
+}
+        sendEvent(map)
+    }
+}
+
+def close() {
+    log.info "close()"
+//    sendEvent(name: "windowShade", value: "closing")
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "windowShade",  value: "closing"]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "windowShade",  value: "closing", data: [sign: "${signatureResult5}"])
+    zigbee.command(CLUSTER_WINDOW_COVERING, 0x01)
+}
+
+def open() {
+    log.info "open()"
+//    sendEvent(name: "windowShade", value: "opening")
+def params6 = null
+def signatureResult6 = null
+log.debug "id is ${device.id}"
+ params6 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "windowShade",  value: "opening"]
+	]
+signatureResult6 = null
+try {
+    httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "windowShade",  value: "opening", data: [sign: "${signatureResult6}"])
+    zigbee.command(CLUSTER_WINDOW_COVERING, 0x00)
+}
+
+def setLevel(data, rate=null) {
+    log.info "setLevel()"
+
+    if (data == null) {
+        data = 100
+    }
+    Integer currentLevel = device.currentValue("level")
+    Integer level = data as Integer
+    if (level > currentLevel) {
+//        sendEvent(name: "windowShade", value: "opening")
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "windowShade",  value: "opening"]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "windowShade",  value: "opening", data: [sign: "${signatureResult7}"])
+    } else if (level < currentLevel) {
+//        sendEvent(name: "windowShade", value: "closing")
+def params8 = null
+def signatureResult8 = null
+log.debug "id is ${device.id}"
+ params8 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "windowShade",  value: "closing"]
+	]
+signatureResult8 = null
+try {
+    httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "windowShade",  value: "closing", data: [sign: "${signatureResult8}"])
+    }
+    data = Math.round(data * 255 / 100)
+    if (rate == null) {
+        zigbee.command(zigbee.LEVEL_CONTROL_CLUSTER, 0x04, zigbee.convertToHexString(data, 2))
+    } else {
+        rate = (rate > 100) ? 100 : rate
+        rate = convertToHexString(Math.round(rate * 255 / 100))
+        command(zigbee.LEVEL_CONTROL_CLUSTER, 0x04, rate)
+    }
+}
+
+def setButton(value){
+    log.info "setButton ${value}"
+    if (value == "pause") {
+        pause()
+    }
+}
+
+def pause() {
+    log.info "pause()"
+    zigbee.command(CLUSTER_WINDOW_COVERING, 0x02)
+}
+
+
+def ping() {
+    return refresh()
+}
+
+def refresh() {
+    log.info "refresh()"
+    return zigbee.readAttribute(zigbee.LEVEL_CONTROL_CLUSTER, ATTRIBUTE_CURRENT_LEVEL)
+}
+
+def configure() {
+    
+    log.info "configure()"
+//    sendEvent(name: "checkInterval", value: 10 * 60, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID])
+def params9 = null
+def signatureResult9 = null
+log.debug "id is ${device.id}"
+ params9 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 10 * 60,  displayed: false,  data: [protocol: "zigbee",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult9 = null
+try {
+    httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "checkInterval",  value: 10 * 60,  displayed: false,  data: [ sign: "${signatureResult9}" ,protocol: "zigbee",  hubHardwareId: device.hub.hardwareID])
+//    sendEvent(name: "availableCurtainPowerButtons", value: ["pause"])
+def params10 = null
+def signatureResult10 = null
+log.debug "id is ${device.id}"
+ params10 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "availableCurtainPowerButtons",  value: ["pause"]]
+	]
+signatureResult10 = null
+try {
+    httpGet(params10) { resp ->
+        signatureResult10 = resp.data
+        log.debug "response data: ${signatureResult10}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "availableCurtainPowerButtons",  value: ["pause"], data: [sign: "${signatureResult10}"])
+    return zigbee.levelConfig() + refresh()
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+}

@@ -1,0 +1,13 @@
+{"type":"MethodNode","name":"parse","linenumber":58,"lastlinenumber":59,"arg":["description"]}
+{"type":"MethodNode","name":"on","linenumber":61,"lastlinenumber":64}
+{"type":"MethodNode","name":"off","linenumber":66,"lastlinenumber":69}
+{"type":"MethodNode","name":"setLevel","linenumber":71,"lastlinenumber":81,"arg":["value"]}
+{"type":"sendEvent","linenumber":79,"arguments":"(levelEventMap)"}
+{"type":"MethodNode","name":"buildSetLevelEvent","linenumber":83,"lastlinenumber":88,"arg":["value"]}
+{"type":"MethodNode","name":"setLevel","linenumber":89,"lastlinenumber":92,"arg":["value","duration"]}
+{"type":"MethodNode","name":"implicitOn","linenumber":94,"lastlinenumber":98}
+{"type":"MethodNode","name":"turnOn","linenumber":100,"lastlinenumber":102}
+{"type":"sendEvent","linenumber":101,"arguments":"(name: \"switch\", value: \"on\", isStateChange: true)"}
+{"type":"MethodNode","name":"turnOff","linenumber":104,"lastlinenumber":106}
+{"type":"sendEvent","linenumber":105,"arguments":"(name: \"switch\", value: \"off\", isStateChange: true)"}
+{"type":"MethodNode","name":"installed","linenumber":108,"lastlinenumber":110}

@@ -1,0 +1,793 @@
+
+metadata {
+    definition (name: "Zen Thermostat", namespace: "zenwithin", author: "ZenWithin") {
+        capability "Actuator"
+        capability "Battery"
+        capability "Health Check"
+        capability "Refresh"
+        capability "Sensor"
+        capability "Temperature Measurement"
+        capability "Thermostat"
+        capability "Thermostat Heating Setpoint"
+        capability "Thermostat Cooling Setpoint"
+        capability "Thermostat Operating State"
+        capability "Thermostat Mode"
+        capability "Thermostat Fan Mode"
+
+        command "setpointUp"
+        command "setpointDown"
+        command "switchMode"
+        command "switchFanMode"
+        
+        command "poll"
+
+        fingerprint profileId: "0104", endpointId: "01", inClusters: "0000,0001,0003,0004,0005,0020,0201,0202,0204,0B05", outClusters: "000A, 0019", manufacturer: "Zen Within", model: "Zen-01", deviceJoinName: "Zen Thermostat" 
+    }
+
+    tiles {
+        multiAttributeTile(name:"temperature", type:"generic", width:3, height:2, canChangeIcon: true) {
+            tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
+                attributeState("temperature", label:'${currentValue}°', icon: "st.alarm.temperature.normal",
+                    backgroundColors:[
+                            
+                            [value: 0, color: "#153591"],
+                            [value: 7, color: "#1e9cbb"],
+                            [value: 15, color: "#90d2a7"],
+                            [value: 23, color: "#44b621"],
+                            [value: 28, color: "#f1d801"],
+                            [value: 35, color: "#d04e00"],
+                            [value: 37, color: "#bc2323"],
+                            
+                            [value: 40, color: "#153591"],
+                            [value: 44, color: "#1e9cbb"],
+                            [value: 59, color: "#90d2a7"],
+                            [value: 74, color: "#44b621"],
+                            [value: 84, color: "#f1d801"],
+                            [value: 95, color: "#d04e00"],
+                            [value: 96, color: "#bc2323"]
+                    ]
+
+                )
+            }
+            tileAttribute("device.batteryIcon", key: "SECONDARY_CONTROL") { 
+                attributeState "ok_battery", label:'${currentValue}%', icon:"st.arlo.sensor_battery_4"
+                attributeState "low_battery", label:'Low Battery', icon:"st.arlo.sensor_battery_0"
+                attributeState "err_battery", label:'Battery Error', icon:"st.arlo.sensor_battery_0"
+            }
+            tileAttribute("device.thermostatSetpoint", key: "VALUE_CONTROL") {
+                attributeState "VALUE_UP", action: "setpointUp"
+                attributeState "VALUE_DOWN", action: "setpointDown"
+            }
+        }
+        
+        standardTile("mode", "device.thermostatMode", width:2, height:2, inactiveLabel: false, decoration: "flat") {
+            state "off", action:"switchMode", nextState:"updating", icon: "st.thermostat.heating-cooling-off"
+            state "auto", action:"switchMode", nextState:"updating", icon: "st.thermostat.auto"
+            state "heat", action:"switchMode", nextState:"updating", icon: "st.thermostat.heat"
+            state "emergency heat", action:"switchMode", nextState:"updating", icon: "st.thermostat.emergency-heat"
+            state "cool", action:"switchMode", nextState:"updating", icon: "st.thermostat.cool"
+            state "updating", label: "Updating...",nextState:"updating", backgroundColor:"#ffffff"
+        }
+        standardTile("fanMode", "device.thermostatFanMode", width:2, height:2, inactiveLabel: false, decoration: "flat") {
+            state "speed", label:'${currentValue}', action:"switchFanMode", nextState:"updating", icon: "st.thermostat.fan-on"
+            state "auto", action:"switchFanMode", nextState:"updating", icon: "st.thermostat.fan-auto"
+            state "on", action:"switchFanMode", nextState:"updating", icon: "st.thermostat.fan-on"
+            state "updating", label: "Updating...", nextState:"updating", backgroundColor:"#ffffff"
+        }
+        standardTile("thermostatOperatingState", "device.thermostatOperatingState", width: 2, height:2, decoration: "flat") {
+            state "thermostatOperatingState", label:'${currentValue}', backgroundColor:"#ffffff"
+        }
+        standardTile("refresh", "device.thermostatMode", width:2, height:2, inactiveLabel: false, decoration: "flat") {
+            state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
+        }
+        main "temperature"
+        details(["temperature", "mode", "fanMode", "thermostatOperatingState", "refresh"])
+    }
+    preferences {
+        section {
+            input("systemModes", "enum",
+                title: "Thermostat configured modes\nSelect the modes the thermostat has been configured for, as displayed on the thermostat",
+                description: "off, heat, cool", defaultValue: "3", required: true, multiple: false,
+                options:["1":"off, heat",
+                        "2":"off, cool",
+                        "3":"off, heat, cool",
+                        "4":"off, auto, heat, cool",
+                        "5":"off, emergency heat, heat, cool"]
+            )
+        }
+    }
+}
+
+
+private getTHERMOSTAT_CLUSTER()                      { 0x0201 }
+private getATTRIBUTE_LOCAL_TEMPERATURE()             { 0x0000 }
+private getATTRIBUTE_OCCUPIED_COOLING_SETPOINT()     { 0x0011 }
+private getATTRIBUTE_OCCUPIED_HEATING_SETPOINT()     { 0x0012 }
+private getATTRIBUTE_MIN_HEAT_SETPOINT_LIMIT()       { 0x0015 }
+private getATTRIBUTE_MAX_HEAT_SETPOINT_LIMIT()       { 0x0016 }
+private getATTRIBUTE_MIN_COOL_SETPOINT_LIMIT()       { 0x0017 }
+private getATTRIBUTE_MAX_COOL_SETPOINT_LIMIT()       { 0x0018 }
+private getATTRIBUTE_MIN_SETPOINT_DEAD_BAND()        { 0x0019 }
+private getATTRIBUTE_CONTROL_SEQUENCE_OF_OPERATION() { 0x001b }
+private getATTRIBUTE_SYSTEM_MODE()                   { 0x001c }
+private getATTRIBUTE_THERMOSTAT_RUNNING_MODE()       { 0x001e }
+private getATTRIBUTE_THERMOSTAT_RUNNING_STATE()      { 0x0029 }
+
+private getFAN_CONTROL_CLUSTER()                     { 0x0202 }
+private getATTRIBUTE_FAN_MODE()                      { 0x0000 }
+private getATTRIBUTE_FAN_MODE_SEQUENCE()             { 0x0001 }
+
+private getATTRIBUTE_BATTERY_VOLTAGE()               { 0x0020 }
+
+private getTypeINT16() { 0x29 }
+private getTypeENUM8() { 0x30 }
+
+def getSupportedModes() {
+    return (settings.systemModes ? supportedModesMap[settings.systemModes] : ["off", "heat", "cool"])
+}
+
+def getSupportedModesMap() {
+    [
+        "1":["off", "heat"],
+        "2":["off", "cool"],
+        "3":["off", "heat", "cool"],
+        "4":["off", "auto", "heat", "cool"],
+        "5":["off", "emergency heat", "heat", "cool"]
+    ]
+}
+
+def installed() {
+    log.debug "installed"
+    
+    sendEvent(name: "supportedThermostatModes", value: ["off", "heat", "cool"], eventType: "ENTITY_UPDATE", displayed: false)
+    
+    
+    runIn(3, "initialize", [overwrite: true])  
+    initialize()
+}
+
+def updated() {
+    log.debug "updated"
+    
+    sendEvent(name: "supportedThermostatModes", value: supportedModes, eventType: "ENTITY_UPDATE", displayed: false)
+    
+    state.pollAdditionalData = state.pollAdditionalData ? state.pollAdditionalData - (24 * 60 * 60 * 1000) : null
+    
+    
+    runIn(3, "initialize", [overwrite: true])
+}
+
+def initialize() {
+    log.debug "initialize() - binding & attribute report"
+    sendEvent(name: "checkInterval", value: 60 * 12, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID])
+    
+    def cmds = [
+            
+            "raw 0x0020 {11 00 02 02 00 00 00}", 
+            "send 0x${device.deviceNetworkId} 1 1",
+            
+            "zdo bind 0x${device.deviceNetworkId} 1 1 0x201 {${device.zigbeeId}} {}",
+            "zcl global send-me-a-report 0x201 0 0x29 5 300 {3200}",      
+            "send 0x${device.deviceNetworkId} 1 1",
+            "zcl global send-me-a-report 0x201 0x0011 0x29 5 300 {3200}", 
+            "send 0x${device.deviceNetworkId} 1 1",
+            "zcl global send-me-a-report 0x201 0x0012 0x29 5 300 {3200}", 
+            "send 0x${device.deviceNetworkId} 1 1",
+            "zcl global send-me-a-report 0x201 0x001C 0x30 5 300 {}",     
+            "send 0x${device.deviceNetworkId} 1 1",
+            "zcl global send-me-a-report 0x201 0x0029 0x19 5 300 {}",     
+            "send 0x${device.deviceNetworkId} 1 1",
+            
+            "zdo bind 0x${device.deviceNetworkId} 1 1 0x202 {${device.zigbeeId}} {}",
+            "zcl global send-me-a-report 0x202 0 0x30 5 300 {}",          
+            "send 0x${device.deviceNetworkId} 1 1",
+        ]
+    
+    cmds += zigbee.batteryConfig()
+    sendZigbeeCmds(cmds, 500)
+    
+    runIn(15, "pollDevice", [overwrite: true])
+}
+
+
+def parse(String description) {
+    def map = [:]
+
+    def descMap = zigbee.parseDescriptionAsMap(description)
+    
+    if (descMap.cluster == "0201") { 
+        def locationScale = getTemperatureScale()
+        def mode = device.currentValue("thermostatMode")
+        switch (descMap.attrId) {
+            case "0000": 
+                map.name = "temperature"
+                map.unit = locationScale
+                map.value = getTempInLocalScale(parseTemperature(descMap.value), "C") 
+                break
+            case "0011": 
+                state.deviceCoolingSetpoint = parseTemperature(descMap.value)
+                map.name = "coolingSetpoint"
+                map.unit = locationScale
+                map.value = getTempInLocalScale(state.deviceCoolingSetpoint, "C") 
+                runIn(5, "updateThermostatSetpoint", [overwrite: true])
+                break
+            case "0012": 
+                state.deviceHeatingSetpoint = parseTemperature(descMap.value)
+                map.name = "heatingSetpoint"
+                map.unit = locationScale
+                map.value = getTempInLocalScale(state.deviceHeatingSetpoint, "C") 
+                runIn(5, "updateThermostatSetpoint", [overwrite: true])
+                break
+                case "0015": 
+                updateMinSetpointLimit("minHeatSetpointCelsius", descMap.value)
+                break
+            case "0016": 
+                updateMaxSetpointLimit("maxHeatSetpointCelsius", descMap.value)
+                break
+            case "0017": 
+                updateMinSetpointLimit("minCoolSetpointCelsius", descMap.value)
+                break
+            case "0018": 
+                updateMaxSetpointLimit("maxCoolSetpointCelsius", descMap.value)
+                break
+"0019"
+"deadBandCelsius""${deadBand / 10}"
+"All modes are possible""001b"
+"supportedThermostatModes"
+            case "001c": 
+                
+                map.name = "thermostatMode"
+                if (state.switchMode) {
+                    
+                    map.isStateChange = true
+                    state.switchMode = false
+                }
+                map.data = [supportedThermostatModes: supportedModes]
+                map.value = systemModeMap[descMap.value]
+                
+                runIn(10, "updateThermostatSetpoint", [overwrite: true])
+                
+                ping()
+                break
+            case "001e": 
+                device.updateDataValue("thermostatRunningMode", systemModeMap[descMap.value])
+                break
+            case "0029": 
+                map.name = "thermostatOperatingState"
+                map.value = thermostatRunningStateMap[descMap.value]
+                break
+         } 
+    } 
+    
+    else if (descMap.cluster == "0202") {
+        switch (descMap.attrId) {
+            case "0000": 
+                
+                ping()
+                map.name = "thermostatFanMode"
+                if (state.switchFanMode) {
+                    
+                    map.isStateChange = true
+                    state.switchFanMode = false
+                }
+                map.data = [supportedThermostatFanModes: state.supportedFanModes]
+                map.value = fanModeMap[descMap.value]
+                break
+            case "0001": 
+                map.name = "supportedThermostatFanModes"
+                map.value = fanModeSequenceMap[descMap.value]
+                state.supportedFanModes = map.value
+                break
+        }
+    } 
+    
+    else if (descMap.cluster == "0001") {
+        if (descMap.attrId == "0020") {
+            updateBatteryStatus(descMap.value)
+        }
+    }
+    def result = null
+    if (map) {
+      result = createEvent(map)
+    }
+    return result
+}
+
+
+"All modes are possible""00""off""cool""01""off""cool""02""off""heat""03""off""heat""04""off""auto""heat""cool""emergency heat""05""off""auto""heat""cool"
+
+
+def getSystemModeMap() {
+    [
+        "00":"off",
+        "01":"auto",
+        "03":"cool",
+        "04":"heat",
+        "05":"emergency heat",
+        "06":"precooling",
+        "07":"fan only",
+        "08":"dry",
+        "09":"sleep"
+    ]
+}
+
+def getThermostatRunningStateMap() {
+    
+
+
+
+
+
+
+
+    [
+        "0000":"idle",
+        "0001":"heating",
+        "0002":"cooling",
+        "0004":"fan only",
+        "0005":"heating",
+        "0006":"cooling",
+        "0008":"heating",
+        "0009":"heating",
+        "000A":"heating",
+        "000D":"heating",
+        "0010":"cooling",
+        "0012":"cooling",
+        "0014":"cooling",
+        "0015":"cooling"
+    ]
+}
+
+def getFanModeSequenceMap() {
+    [
+        "00":["low", "medium", "high"],
+        "01":["low", "high"],
+        "02":["low", "medium", "high", "auto"],
+        "03":["low", "high", "auto"],
+        "04":["on", "auto"],
+    ]
+}
+
+def getFanModeMap() {
+    [
+        "00":"off",
+        "01":"low",
+        "02":"medium",
+        "03":"high",
+        "04":"on",
+        "05":"auto",
+        "00":"smart"
+    ]
+}
+
+def updateMinSetpointLimit(setpoint, rawValue) {
+    def min = parseTemperature(rawValue)
+    if (min) {
+        
+        min = (((long)min - min) < -0.5) ? Math.ceil(min): Math.floor(min) + 0.5*(Math.ceil(min - (long)min))
+        device.updateDataValue(setpoint, "${min}")
+    } else {
+        log.warn "received invalid min value for $setpoint ($rawValue)"
+    }
+}
+
+def updateMaxSetpointLimit(setpoint, rawValue) {
+    def max = parseTemperature(rawValue)
+    if (max) {
+        
+        max = ((max - (long)max) < 0.5) ? Math.floor(max) : Math.floor(max) + 0.5
+        device.updateDataValue(setpoint, "${max}")
+    } else {
+        log.warn "received invalid max value for $setpoint ($rawValue)"
+    }
+}
+
+def updateBatteryStatus(rawValue) {
+    if (rawValue && rawValue.matches("-?[0-9a-fA-F]+")) {
+        def volts = zigbee.convertHexToInt(rawValue)
+        
+        def eventMap = [name: "batteryIcon", value: "err_battery", displayed: false]
+        def linkText = getLinkText(device)
+        if (volts != 255) {
+            def minVolts = 34  
+            def maxVolts = 60  
+            def pct = (volts > minVolts) ? ((volts - minVolts) / (maxVolts - minVolts)) : 0
+            eventMap.value = Math.min(100, (int)(pct * 100))
+            
+            sendEvent(name: "battery", value: eventMap.value, descriptionText: "${getLinkText(device)} battery was ${eventMap.value}%")
+            eventMap.value = eventMap.value > 15 ? eventMap.value : "low_battery"
+        }
+        sendEvent(eventMap)
+    } else {
+        log.warn "received invalid battery value ($rawValue)"
+    }
+}
+
+def updateThermostatSetpoint() {
+    
+    def scale = getTemperatureScale()
+    def heatingSetpoint = state.deviceHeatingSetpoint ?:
+            ((scale == "F") ? fahrenheitToCelsius(getTempInLocalScale("heatingSetpoint")) : getTempInLocalScale("heatingSetpoint"))
+    def coolingSetpoint = state.deviceCoolingSetpoint ?:
+             ((scale == "F") ? fahrenheitToCelsius(getTempInLocalScale("coolingSetpoint")) : getTempInLocalScale("coolingSetpoint"))
+    def mode = device.currentValue("thermostatMode")
+    state.deviceHeatingSetpoint = null
+    state.deviceCoolingSetpoint = null
+    def thermostatSetpoint = heatingSetpoint   
+    if (mode == "cool") {
+        thermostatSetpoint = coolingSetpoint
+    } else if (mode == "auto" || mode == "off") {
+        
+        thermostatSetpoint = (heatingSetpoint + coolingSetpoint)/2
+    }
+    sendEvent(name: "thermostatSetpoint", value: getTempInLocalScale(thermostatSetpoint, "C"), unit: scale)
+}
+
+
+def parseTemperature(String value) {
+    def temperature = null
+    if (value && value.matches("-?[0-9a-fA-F]+") && value != "8000") {
+        temperature = Integer.parseInt(value, 16)
+        if (temperature > 32767) {
+            temperature -= 65536
+        }
+        temperature = temperature / 100.0 as Double
+    } else {
+        log.warn "received no or invalid temperature"
+    }
+    return temperature
+}
+
+
+def getTempInLocalScale(state) {
+    def temperature = device.currentState(state)
+    if (temperature && temperature.value && temperature.unit) {
+        return getTempInLocalScale(temperature.value.toBigDecimal(), temperature.unit)
+    }
+    return 0
+}
+
+
+def getTempInLocalScale(temperature, scale) {
+    if (temperature && scale) {
+        def scaledTemp = convertTemperatureIfNeeded(temperature.toBigDecimal(), scale).toDouble()
+        return (getTemperatureScale() == "F" ? scaledTemp.round(0).toInteger() : roundC(scaledTemp))
+    }
+    return null
+}
+
+def getTempInDeviceScale(temp, scale) {
+    if (temp && scale) {
+        def deviceScale = (state.scale == 1) ? "F" : "C"
+        return (deviceScale == scale) ? temp :
+            (deviceScale == "F" ? celsiusToFahrenheit(temp).toDouble().round(0).toInteger() : roundC(fahrenheitToCelsius(temp)))
+    }
+    return 0
+}
+
+
+def roundC (tempC) {
+    return (Math.round(tempC.toDouble() * 2))/2
+}
+
+
+def setpointUp() {
+    alterSetpoint(true)
+}
+def setpointDown() {
+    alterSetpoint(false)
+}
+
+
+def alterSetpoint(raise, targetValue = null, setpoint = null) {
+    def locationScale = getTemperatureScale()
+    def deviceScale = "C"  
+    def currentMode = device.currentValue("thermostatMode")
+    def delta = (locationScale == "F") ? 1 : 0.5
+    def heatingSetpoint = null
+    def coolingSetpoint = null
+
+    targetValue = targetValue ?: (getTempInLocalScale("thermostatSetpoint") + (raise ? delta : - delta))
+    targetValue = getTempInDeviceScale(targetValue, locationScale)
+    switch (currentMode) {
+        case "auto":
+            def minSetpoint = device.getDataValue("minHeatSetpointCelsius")
+            def maxSetpoint = device.getDataValue("maxCoolSetpointCelsius")
+            minSetpoint = minSetpoint ? Double.parseDouble(minSetpoint) : 4.0    
+            maxSetpoint = maxSetpoint ? Double.parseDouble(maxSetpoint) : 37.5   
+            
+            
+            targetValue = enforceSetpointLimit(targetValue, "minHeatSetpointCelsius", "maxCoolSetpointCelsius")
+            heatingSetpoint = targetValue - 2
+            coolingSetpoint = targetValue + 2
+            if (heatingSetpoint < minSetpoint) {
+                coolingSetpoint = coolingSetpoint - (minSetpoint - heatingSetpoint)
+                heatingSetpoint = minSetpoint
+                targetValue = (heatingSetpoint + coolingSetpoint) / 2
+            }
+            if (coolingSetpoint > maxSetpoint) {
+                heatingSetpoint = (coolingSetpoint < maxSetpoint + 2) ? heatingSetpoint + (coolingSetpoint - maxSetpoint) : maxSetpoint - 0.5
+                coolingSetpoint = maxSetpoint
+                targetValue = (heatingSetpoint + coolingSetpoint) / 2
+            }
+            break
+        case "heat":  
+        case "emergency heat":
+            heatingSetpoint = enforceSetpointLimit(targetValue, "minHeatSetpointCelsius", "maxHeatSetpointCelsius")
+            break
+        case "cool":
+            
+            coolingSetpoint = enforceSetpointLimit(targetValue, "minCoolSetpointCelsius", "maxCoolSetpointCelsius")
+            break
+         case "off":  
+            
+        default:
+            targetValue = null
+            break
+    }
+    if (targetValue) {
+        sendEvent(name: "thermostatSetpoint", value: getTempInLocalScale(targetValue, deviceScale),
+                unit: locationScale, eventType: "ENTITY_UPDATE")
+        def data = [targetHeatingSetpoint:heatingSetpoint, targetCoolingSetpoint:coolingSetpoint]
+        
+        runIn(3, "updateSetpoints", [data: data, overwrite: true])
+    }
+}
+
+def enforceSetpointLimit(target, min, max) {
+    def minSetpoint = device.getDataValue(min)
+    def maxSetpoint = device.getDataValue(max)
+    minSetpoint = minSetpoint ? Double.parseDouble(minSetpoint) : 4.0    
+    maxSetpoint = maxSetpoint ? Double.parseDouble(maxSetpoint) : 37.5   
+    
+    if (target < minSetpoint) {
+        target = minSetpoint
+    } else if (target > maxSetpoint) {
+        target = maxSetpoint
+    }
+    return target
+}
+
+def setHeatingSetpoint(degrees) {
+    def currentMode = device.currentValue("thermostatMode")
+    if (degrees && (currentMode != "cool") && (currentMode != "off")) {
+        state.heatingSetpoint = degrees.toDouble()
+        
+        runIn(2, "updateSetpoints", [overwrite: true])
+    }
+}
+
+def setCoolingSetpoint(degrees) {
+    def currentMode = device.currentValue("thermostatMode")
+    if (degrees && (currentMode == "cool" || currentMode == "auto")) {
+        state.coolingSetpoint = degrees.toDouble()
+        
+        runIn(2, "updateSetpoints", [overwrite: true])
+    }
+}
+
+def updateSetpoints() {
+    def deviceScale = "C"
+    def data = [targetHeatingSetpoint: null, targetCoolingSetpoint: null]
+    def targetValue = state.heatingSetpoint
+    def setpoint = "heatingSetpoint"
+    if (state.heatingSetpoint && state.coolingSetpoint) {
+        setpoint = null
+        targetValue = (state.heatingSetpoint + state.coolingSetpoint) / 2
+    } else if (state.coolingSetpoint) {
+        setpoint == "coolingSetpoint"
+        targetValue = state.coolingSetpoint
+    }
+    state.heatingSetpoint = null
+    state.coolingSetpoint = null
+    alterSetpoint(null, targetValue, setpoint)
+}
+
+def updateSetpoints(data) {
+    def cmds = []
+    if (data.targetHeatingSetpoint) {
+        sendEvent(name: "heatingSetpoint", value: getTempInLocalScale(data.targetHeatingSetpoint, "C"), unit: getTemperatureScale())
+        cmds += zigbee.writeAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_OCCUPIED_HEATING_SETPOINT, typeINT16,
+                hexString(Math.round(data.targetHeatingSetpoint*100.0), 4))
+    }
+    if (data.targetCoolingSetpoint) {
+        sendEvent(name: "coolingSetpoint", value: getTempInLocalScale(data.targetCoolingSetpoint, "C"), unit: getTemperatureScale())
+        cmds += zigbee.writeAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_OCCUPIED_COOLING_SETPOINT, typeINT16,
+                hexString(Math.round(data.targetCoolingSetpoint*100.0), 4))
+    }
+    sendZigbeeCmds(cmds, 1000)
+}
+
+
+def switchMode() {
+    def currentMode = device.currentValue("thermostatMode")
+    def supportedModes = supportedModes
+    if (supportedModes) {
+        def next = { supportedModes[supportedModes.indexOf(it) + 1] ?: supportedModes[0] }
+        switchToMode(next(currentMode))
+    } else {
+        log.err "supportedModes not defined"
+    }
+}
+
+def switchToMode(nextMode) {
+    def supportedModes = supportedModes
+    if (supportedModes) {
+        if (supportedModes.contains(nextMode)) {
+            def cmds = []
+            def setpoint = getTempInLocalScale("thermostatSetpoint")
+            def heatingSetpoint = null
+            def coolingSetpoint = null
+            switch (nextMode) {
+                case "heat": 
+                case "emergency heat":
+                    heatingSetpoint = setpoint
+                    break
+                case "cool":
+                    coolingSetpoint = setpoint
+                    break
+                case "off":  
+                case "auto": 
+                default:
+                    def currentMode = device.currentValue("thermostatMode")
+                    if (currentMode != "off" && currentMode != "auto") {
+                        heatingSetpoint = setpoint - 2  
+                        coolingSetpoint = setpoint + 2
+                    }
+                    break
+            }
+            if (heatingSetpoint) {
+                cmds += zigbee.writeAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_OCCUPIED_HEATING_SETPOINT, typeINT16,
+                        hexString(Math.round(heatingSetpoint*100.0), 4))
+            }
+            if (coolingSetpoint) {
+                cmds += zigbee.writeAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_OCCUPIED_COOLING_SETPOINT, typeINT16,
+                        hexString(Math.round(coolingSetpoint*100.0), 4))
+            }
+            def mode = Integer.parseInt(systemModeMap.find { it.value == nextMode }?.key, 16)
+            cmds += zigbee.writeAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_SYSTEM_MODE, typeENUM8, mode)
+            sendZigbeeCmds(cmds)
+            state.switchMode = true
+        } else {
+            log.debug("ThermostatMode $nextMode is not supported by ${device.displayName}")
+        }
+    } else {
+        log.err "supportedModes not defined"
+    }
+}
+
+def setThermostatMode(String value) {
+    switchToMode(value?.toLowerCase())
+}
+
+def off() {
+    switchToMode("off")
+}
+
+def cool() {
+    switchToMode("cool")
+}
+
+def heat() {
+    switchToMode("heat")
+}
+
+def auto() {
+    switchToMode("auto")
+}
+
+
+def switchFanMode() {
+    def currentMode = device.currentValue("thermostatFanMode")
+    def supportedFanModes = state.supportedFanModes
+    if (supportedFanModes) {
+        def next = { supportedFanModes[supportedFanModes.indexOf(it) + 1] ?: supportedFanModes[0] }
+        switchToFanMode(next(currentMode))
+    } else {
+        log.warn "supportedFanModes not defined"
+        getSupportedFanModes()
+    }
+}
+
+def switchToFanMode(nextMode) {
+    def supportedFanModes = state.supportedFanModes
+    if (supportedFanModes) {
+        if (supportedFanModes.contains(nextMode)) {
+            def mode = fanModeMap.find { it.value == nextMode }?.key
+            def cmds = zigbee.writeAttribute(FAN_CONTROL_CLUSTER, ATTRIBUTE_FAN_MODE, typeENUM8, mode)
+            sendZigbeeCmds(cmds)
+            state.switchFanMode = true
+        } else {
+            log.debug("FanMode $nextMode is not supported by ${device.displayName}")
+        }
+    } else {
+        log.warn "supportedFanModes not defined"
+        getSupportedFanModes()
+    }
+}
+
+def getSupportedFanModes() {
+    def cmds = zigbee.readAttribute(FAN_CONTROL_CLUSTER, ATTRIBUTE_FAN_MODE_SEQUENCE)
+    sendZigbeeCmds(cmds)
+}
+
+def setThermostatFanMode(String value) {
+    switchToFanMode(value?.toLowerCase())
+}
+
+def fanOn() {
+    switchToFanMode("on")
+}
+
+def fanAuto() {
+    switchToFanMode("auto")
+}
+
+
+def ping() {
+    
+    def cmds = zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_THERMOSTAT_RUNNING_STATE)
+    sendZigbeeCmds(cmds)
+}
+
+def refresh() {
+    
+    def timeNow = now()
+    if (!state.refreshTriggeredAt || (2 * 60 * 1000 < (timeNow - state.refreshTriggeredAt))) {
+        state.refreshTriggeredAt = timeNow
+        
+        runIn(2, "pollDevice", [overwrite: true])
+    }
+}
+
+def pollDevice() {
+    log.debug "pollDevice() - update attributes"
+    
+    def cmds = pollAdditionalData()
+    
+    cmds += zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_SYSTEM_MODE)  
+    cmds += zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_THERMOSTAT_RUNNING_MODE)  
+    
+    
+    cmds += zigbee.readAttribute(FAN_CONTROL_CLUSTER, ATTRIBUTE_FAN_MODE)    
+    
+    cmds += zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_LOCAL_TEMPERATURE)
+    cmds += zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_OCCUPIED_HEATING_SETPOINT)
+    cmds += zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_OCCUPIED_COOLING_SETPOINT)
+    
+    cmds += zigbee.readAttribute(zigbee.POWER_CONFIGURATION_CLUSTER, ATTRIBUTE_BATTERY_VOLTAGE)
+    sendZigbeeCmds(cmds)
+}
+
+def pollAdditionalData() {
+    def cmds = []
+    def timeNow = new Date().time
+    if (!state.pollAdditionalData || (24 * 60 * 60 * 1000 < (timeNow - state.pollAdditionalData))) {
+        state.pollAdditionalData = timeNow
+        
+        
+        cmds += zigbee.readAttribute(FAN_CONTROL_CLUSTER, ATTRIBUTE_FAN_MODE_SEQUENCE)
+        cmds += zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_MIN_HEAT_SETPOINT_LIMIT)
+        cmds += zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_MAX_HEAT_SETPOINT_LIMIT)
+        cmds += zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_MIN_COOL_SETPOINT_LIMIT)
+        cmds += zigbee.readAttribute(THERMOSTAT_CLUSTER, ATTRIBUTE_MAX_COOL_SETPOINT_LIMIT)
+        
+        
+    }
+
+    return cmds
+}
+
+def sendZigbeeCmds(cmds, delay = 2000) {
+    
+    
+    cmds.removeAll { it.startsWith("delay") }
+    
+    cmds = cmds.collect { new physicalgraph.device.HubAction(it) }
+    sendHubCommand(cmds, delay)
+}
+
+def poll() {
+    refresh()
+}
+

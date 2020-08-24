@@ -1,0 +1,4 @@
+{"type":"MethodNode","name":"installed","linenumber":37,"lastlinenumber":43}
+{"type":"MethodNode","name":"updated","linenumber":45,"lastlinenumber":53}
+{"type":"MethodNode","name":"turnOn","linenumber":55,"lastlinenumber":67}
+{"type":"MethodNode","name":"turnOff","linenumber":71,"lastlinenumber":73}

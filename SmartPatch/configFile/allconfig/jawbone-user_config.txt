@@ -1,0 +1,10 @@
+{"type":"MethodNode","name":"generateSleepingEvent","linenumber":43,"lastlinenumber":79,"arg":["sleeping"]}
+{"type":"sendEvent","linenumber":59,"arguments":"(results)"}
+{"type":"sendEvent","linenumber":78,"arguments":"(results2)"}
+{"type":"MethodNode","name":"poll","linenumber":82,"lastlinenumber":86}
+{"type":"MethodNode","name":"setMemberId","linenumber":88,"lastlinenumber":91,"arg":["memberId"]}
+{"type":"MethodNode","name":"getMemberId","linenumber":93,"lastlinenumber":96}
+{"type":"MethodNode","name":"uninstalled","linenumber":98,"lastlinenumber":101}
+{"type":"MethodNode","name":"formatValue","linenumber":103,"lastlinenumber":108,"arg":["sleeping"]}
+{"type":"MethodNode","name":"formatDescriptionText","linenumber":110,"lastlinenumber":115,"arg":["linkText","sleeping"]}
+{"type":"MethodNode","name":"getState","linenumber":117,"lastlinenumber":122,"arg":["sleeping"]}

@@ -1,0 +1,15 @@
+{"type":"MethodNode","name":"updated","linenumber":74,"lastlinenumber":77}
+{"type":"sendEvent","linenumber":76,"arguments":"(name: \"checkInterval\", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: \"zigbee\", hubHardwareId: device.hub.hardwareID])"}
+{"type":"MethodNode","name":"installed","linenumber":79,"lastlinenumber":82}
+{"type":"sendEvent","linenumber":81,"arguments":"(name: \"checkInterval\", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: \"zigbee\", hubHardwareId: device.hub.hardwareID])"}
+{"type":"MethodNode","name":"setStatusIcon","linenumber":84,"lastlinenumber":119,"arg":["value"]}
+{"type":"sendEvent","linenumber":118,"arguments":"(\"name\":\"plantStatus\", \"value\":status, \"description\":statusText, displayed: true, isStateChange: true)"}
+{"type":"MethodNode","name":"setPlantFuelLevel","linenumber":121,"lastlinenumber":123,"arg":["value"]}
+{"type":"sendEvent","linenumber":122,"arguments":"(\"name\":\"plantFuelLevel\", \"value\":value, \"description\":statusText, displayed: true, isStateChange: true)"}
+{"type":"MethodNode","name":"setBatteryLevel","linenumber":125,"lastlinenumber":127,"arg":["value"]}
+{"type":"sendEvent","linenumber":126,"arguments":"(\"name\":\"linkBatteryLevel\", \"value\":value, \"description\":statusText, displayed: true, isStateChange: true)"}
+{"type":"MethodNode","name":"setInstallSmartApp","linenumber":129,"lastlinenumber":131,"arg":["value"]}
+{"type":"sendEvent","linenumber":130,"arguments":"(\"name\":\"installSmartApp\", \"value\":value)"}
+{"type":"MethodNode","name":"parse","linenumber":133,"lastlinenumber":163,"arg":["description"]}
+{"type":"createEvent","linenumber":161,"arguments":"(name: event_name, value: json_builder.toString())"}
+{"type":"MethodNode","name":"parseDescriptionAsMap","linenumber":166,"lastlinenumber":175,"arg":["description"]}

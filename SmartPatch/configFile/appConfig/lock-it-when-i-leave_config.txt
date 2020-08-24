@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":43,"lastlinenumber":46}
+{"type":"subscribe","linenumber":45,"arguments":["presence1","presence","presence"]}
+{"type":"MethodNode","name":"updated","linenumber":48,"lastlinenumber":52}
+{"type":"subscribe","linenumber":51,"arguments":["presence1","presence","presence"]}
+{"type":"MethodNode","name":"presence","linenumber":54,"lastlinenumber":75,"arg":["evt"]}
+{"type":"MethodNode","name":"sendMessage","linenumber":77,"lastlinenumber":87,"arg":["msg"]}

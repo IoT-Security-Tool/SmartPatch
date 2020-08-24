@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"installed","linenumber":65,"lastlinenumber":78}
+{"type":"MethodNode","name":"uninstalled","linenumber":81,"lastlinenumber":92}
+{"type":"MethodNode","name":"updated","linenumber":95,"lastlinenumber":103}
+{"type":"MethodNode","name":"initialize","linenumber":106,"lastlinenumber":148}
+{"type":"subscribe","linenumber":133,"arguments":["humidity_sensor","humidity","handleThings"]}
+{"type":"MethodNode","name":"handleThings","linenumber":151,"lastlinenumber":205,"arg":["evt"]}
+{"type":"MethodNode","name":"set_fans","linenumber":208,"lastlinenumber":262,"arg":["fan_state"]}
+{"type":"MethodNode","name":"send","linenumber":265,"lastlinenumber":276,"arg":["msg"]}

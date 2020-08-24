@@ -1,0 +1,14 @@
+{"type":"MethodNode","name":"installed","linenumber":47,"lastlinenumber":52}
+{"type":"subscribe","linenumber":49,"arguments":["master","switch.on","onHandler"]}
+{"type":"subscribe","linenumber":50,"arguments":["master","switch.off","offHandler"]}
+{"type":"subscribe","linenumber":51,"arguments":["master","level","dimHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":54,"lastlinenumber":60}
+{"type":"subscribe","linenumber":57,"arguments":["master","switch.on","onHandler"]}
+{"type":"subscribe","linenumber":58,"arguments":["master","switch.off","offHandler"]}
+{"type":"subscribe","linenumber":59,"arguments":["master","level","dimHandler"]}
+{"type":"MethodNode","name":"logHandler","linenumber":62,"lastlinenumber":64,"arg":["evt"]}
+{"type":"MethodNode","name":"onHandler","linenumber":66,"lastlinenumber":70,"arg":["evt"]}
+{"type":"MethodNode","name":"offHandler","linenumber":72,"lastlinenumber":76,"arg":["evt"]}
+{"type":"MethodNode","name":"dimHandler","linenumber":78,"lastlinenumber":81,"arg":["evt"]}
+{"type":"MethodNode","name":"onSwitches","linenumber":83,"lastlinenumber":87}
+{"type":"MethodNode","name":"offSwitches","linenumber":89,"lastlinenumber":93}

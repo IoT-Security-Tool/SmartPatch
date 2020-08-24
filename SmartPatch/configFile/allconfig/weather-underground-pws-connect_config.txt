@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":44,"lastlinenumber":47}
+{"type":"MethodNode","name":"updated","linenumber":50,"lastlinenumber":54}
+{"type":"MethodNode","name":"initialize","linenumber":57,"lastlinenumber":66}
+{"type":"MethodNode","name":"updateCurrentWeather","linenumber":73,"lastlinenumber":105}
+{"type":"MethodNode","name":"calculateDewPoint","linenumber":108,"lastlinenumber":112,"arg":["t","rh"]}

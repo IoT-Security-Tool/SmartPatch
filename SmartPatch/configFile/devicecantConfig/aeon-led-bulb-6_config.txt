@@ -1,0 +1,15 @@
+{"type":"MethodNode","name":"installed","linenumber":64}
+{"type":"sendEvent","linenumber":67,"arguments":["name: \"checkInterval\""," value: 1860"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"0\"]"]}
+{"type":"sendEvent","linenumber":68,"arguments":["name: \"level\""," value: 100"," unit: \"%\""]}
+{"type":"sendEvent","linenumber":69,"arguments":["name: \"colorTemperature\""," value: COLOR_TEMP_MIN"]}
+{"type":"sendEvent","linenumber":70,"arguments":["name: \"color\""," value: \"#000000\""]}
+{"type":"sendEvent","linenumber":71,"arguments":["name: \"hue\""," value: 0"]}
+{"type":"sendEvent","linenumber":72,"arguments":["name: \"saturation\""," value: 0"]}
+{"type":"createEvent","linenumber":119,"arguments":["name: \"color\""," value: hexColor"]}
+{"type":"createEvent","linenumber":122,"arguments":["name: \"hue\""," value: hsv.hue"]}
+{"type":"createEvent","linenumber":123,"arguments":["name: \"saturation\""," value: hsv.saturation"]}
+{"type":"createEvent","linenumber":133,"arguments":["name: \"colorTemperature\""," value: COLOR_TEMP_MIN"]}
+{"type":"createEvent","linenumber":146,"arguments":["name: \"switch\""," value: value"," descriptionText: \"$device.displayName was turned $value\")"]}
+{"type":"createEvent","linenumber":148,"arguments":["name: \"level\""," value: cmd.value == 99 ? 100 : cmd.value "," unit: \"%\""]}
+{"type":"createEvent","linenumber":159,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":167,"arguments":["name: \"colorTemperature\""," value: cmd.scaledConfigurationValue"]}

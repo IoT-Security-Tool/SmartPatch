@@ -1,0 +1,122 @@
+import java.util.UUID
+/**
+ *  Switch Activates Hello, Home Phrase
+ *
+ *  Copyright 2015 Michael Struck
+ *  Version 1.01 3/8/15
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ *  Ties a Hello, Home phrase to a switch's (virtual or real) on/off state. Perfect for use with IFTTT.
+ *  Simple define a switch to be used, then tie the on/off state of the switch to a specific Hello, Home phrases.
+ *  Connect the switch to an IFTTT action, and the Hello, Home phrase will fire with the switch state change.
+ *
+ *
+ */
+definition(
+    name: "Switch Activates Home Phrase",
+    namespace: "MichaelStruck",
+    author: "Michael Struck",
+    description: "Ties a Hello, Home phrase to a switch's state. Perfect for use with IFTTT.",
+    category: "Convenience",
+    iconUrl: "https://raw.githubusercontent.com/MichaelStruck/SmartThings/master/IFTTT-SmartApps/App1.png",
+    iconX2Url: "https://raw.githubusercontent.com/MichaelStruck/SmartThings/master/IFTTT-SmartApps/App1@2x.png",
+    iconX3Url: "https://raw.githubusercontent.com/MichaelStruck/SmartThings/master/IFTTT-SmartApps/App1@2x.png")
+
+
+preferences {
+	page(name: "getPref")
+}
+	
+def getPref() {    
+    dynamicPage(name: "getPref", title: "Choose Switch and Phrases", install:true, uninstall: true) {
+    section("Choose a switch to use...") {
+		input "controlSwitch", "capability.switch", title: "Switch", multiple: false, required: true
+    }
+    def phrases = location.helloHome?.getPhrases()*.label
+		if (phrases) {
+        	phrases.sort()
+			section("Perform the following phrase when...") {
+				log.trace phrases
+				input "phrase_on", "enum", title: "Switch is on", required: true, options: phrases
+				input "phrase_off", "enum", title: "Switch is off", required: true, options: phrases
+			}
+		}
+	}
+}
+
+def installed() {
+	log.debug "Installed with settings: ${settings}"
+	subscribe(controlSwitch, "switch", "switchHandler")
+}
+
+def updated() {
+	log.debug "Updated with settings: ${settings}"
+	unsubscribe()
+	subscribe(controlSwitch, "switch", "switchHandler")
+}
+
+def switchHandler(evt) {
+    //collect the evt.name evt.value evt.deviceId, evt.id, ID_h, signature, ID_e, and send to external web server for verificaiton
+    //also remember to put  func: "verify", into the query parameter
+
+    //get signature from evt.data
+    def startIndex = evt.data.indexOf("-sign-")
+    def endIndex = evt.data.indexOf("+sign+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No signatrue in event"
+        return
+    }
+    def signString = evt.data.substring(startIndex + "-sign-".length(),endIndex)
+
+    //get ID_e from evt.data
+    startIndex = evt.data.indexOf("-IDe-")
+    endIndex = evt.data.indexOf("+IDe+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No IDe in event"
+        return
+    }
+    def ID_e = evt.data.substring(startIndex + "-IDe-".length(),endIndex)
+
+    log.debug "evt.data: $evt.data \n sing is: $signString \n IDe is $ID_e \n"
+    def params = [
+            uri: state.URL,
+            path: state.PATH,
+            query: [func: "verify", name: "$evt.name", value: "$evt.value", deviceID: "$evt.deviceId", ID_e: ID_e, ID_h: state.ID_handler, sign: signString]
+    ]
+    def verify = null
+    //get the verify result from the external web server
+    try {
+        httpGet(params) { resp ->
+            verify = resp.data
+            log.debug "response data: ${resp.data}"
+        }
+    } catch (e) {
+        log.error "something went wrong: $e"
+    }
+    if("$verify".contentEquals('false\n')){
+        log.trace "event verification failed..."
+        return
+    }
+
+	if (evt.value == "on") {
+    	location.helloHome.execute(settings.phrase_on)
+    } else {
+    	location.helloHome.execute(settings.phrase_off)
+    }
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+}
+def initialize() {
+}

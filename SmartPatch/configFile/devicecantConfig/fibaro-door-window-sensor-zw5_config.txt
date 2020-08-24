@@ -1,0 +1,12 @@
+{"type":"MethodNode","name":"installed","linenumber":42}
+{"type":"sendEvent","linenumber":43,"arguments":["name: \"tamper\""," value: \"clear\""," displayed: false"]}
+{"type":"sendEvent","linenumber":50,"arguments":["name: \"tamper\""," value: \"detected\""," displayed: false"]}
+{"type":"sendEvent","linenumber":52,"arguments":["name: \"tamper\""," value: \"clear\""," displayed: false"]}
+{"type":"createEvent","linenumber":63,"arguments":["descriptionText:description"," displayed:false"]}
+{"type":"createEvent","linenumber":65,"arguments":["\t\t\t\tdescriptionText: \"FGK failed to complete the network security key exchange. If you are unable to receive data from it"," you must remove it from your network and add it again.\"","\t\t\t\teventType: \"ALERT\"","\t\t\t\tname: \"secureInclusion\"","\t\t\t\tvalue: \"failed\"","\t\t\t\tdisplayed: true","\t\t\t"]}
+{"type":"createEvent","linenumber":92,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":144,"arguments":["map"]}
+{"type":"createEvent","linenumber":153,"arguments":["map"]}
+{"type":"createEvent","linenumber":157,"arguments":["descriptionText: \"${device.displayName} woke up\""," displayed: false"]}
+{"type":"createEvent","linenumber":213,"arguments":["map"]}
+{"type":"sendEvent","linenumber":223,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}

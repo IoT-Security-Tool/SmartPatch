@@ -1,0 +1,12 @@
+{"type":"MethodNode","name":"installed","linenumber":50}
+{"type":"sendEvent","linenumber":52,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":58,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"createEvent","linenumber":75,"arguments":["ithDebug([name: \"contact\""," value: value"," descriptionText: \"$device.displayName valve is $value\"])"]}
+{"type":"createEvent","linenumber":76,"arguments":["ithDebug([name: \"valve\""," value: value"," descriptionText: \"$device.displayName valve is $value\"])"]}
+{"type":"createEvent","linenumber":87,"arguments":["ithDebug([descriptionText: \"$device.displayName MSR: $msr\""," isStateChange: false]"]}
+{"type":"createEvent","linenumber":91,"arguments":["ithDebug([descriptionText: cmd.toString()"," isStateChange: true"," displayed: true]"]}
+{"type":"createEvent","linenumber":97,"arguments":["ithDebug([name: \"contact\""," value: value"," descriptionText: \"$device.displayName valve is $value\"])"]}
+{"type":"createEvent","linenumber":98,"arguments":["ithDebug([name: \"valve\""," value: value"," descriptionText: \"$device.displayName valve is $value\"])"]}
+{"type":"createEvent","linenumber":102,"arguments":["[:]"]}
+{"type":"createEvent","linenumber":137,"arguments":["ithDebug(eventMap) "]}
+{"type":"createEvent","linenumber":138,"arguments":["eventMap"]}

@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":27}
+{"type":"sendEvent","linenumber":29,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"createEvent","linenumber":47,"arguments":["name: \"switch\""," value: cmd.value ? \"on\" : \"off\""]}
+{"type":"sendEvent","linenumber":55,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"sendEvent","linenumber":59,"arguments":["name: \"switch\""," value: \"off\""]}

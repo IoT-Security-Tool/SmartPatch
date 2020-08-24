@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"installed","linenumber":34,"lastlinenumber":38}
+{"type":"MethodNode","name":"initialize","linenumber":40,"lastlinenumber":41}
+{"type":"MethodNode","name":"uninstalled","linenumber":43,"lastlinenumber":45}
+{"type":"MethodNode","name":"clearBeacons","linenumber":63,"lastlinenumber":65}
+{"type":"MethodNode","name":"addBeacon","linenumber":67,"lastlinenumber":88}
+{"type":"MethodNode","name":"updateBeacon","linenumber":90,"lastlinenumber":131}
+{"type":"MethodNode","name":"deleteBeacon","linenumber":133,"lastlinenumber":141}
+{"type":"MethodNode","name":"removeChildDevices","linenumber":143,"lastlinenumber":147,"arg":["delete"]}

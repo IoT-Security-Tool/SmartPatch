@@ -1,0 +1,17 @@
+{"type":"MethodNode","name":"listPage","linenumber":49,"lastlinenumber":99}
+{"type":"MethodNode","name":"serverPage","linenumber":101,"lastlinenumber":113}
+{"type":"MethodNode","name":"linkerPage","linenumber":116,"lastlinenumber":131}
+{"type":"MethodNode","name":"notifierPage","linenumber":133,"lastlinenumber":145}
+{"type":"MethodNode","name":"chatPage","linenumber":147,"lastlinenumber":159}
+{"type":"MethodNode","name":"createBlock","linenumber":178,"lastlinenumber":201}
+{"type":"MethodNode","name":"ack","linenumber":203,"lastlinenumber":208}
+{"type":"MethodNode","name":"updateBlock","linenumber":210,"lastlinenumber":212}
+{"type":"MethodNode","name":"sendDataToBlock","linenumber":214,"lastlinenumber":237,"arg":["data","isStateChange"]}
+{"type":"MethodNode","name":"deleteBlock","linenumber":239,"lastlinenumber":250}
+{"type":"MethodNode","name":"blockCoordinates","linenumber":252,"lastlinenumber":254,"arg":["data"]}
+{"type":"MethodNode","name":"blockDNI","linenumber":256,"lastlinenumber":258,"arg":["data"]}
+{"type":"MethodNode","name":"block","linenumber":260,"lastlinenumber":262,"arg":["data"]}
+{"type":"MethodNode","name":"installed","linenumber":264,"lastlinenumber":268}
+{"type":"MethodNode","name":"updated","linenumber":270,"lastlinenumber":275}
+{"type":"MethodNode","name":"initialize","linenumber":277,"lastlinenumber":285}
+{"type":"MethodNode","name":"getServerURL","linenumber":287,"lastlinenumber":289}

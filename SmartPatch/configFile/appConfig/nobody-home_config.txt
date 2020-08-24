@@ -1,0 +1,14 @@
+{"type":"MethodNode","name":"installed","linenumber":43,"lastlinenumber":45}
+{"type":"MethodNode","name":"updated","linenumber":47,"lastlinenumber":50}
+{"type":"MethodNode","name":"init","linenumber":52,"lastlinenumber":58}
+{"type":"subscribe","linenumber":53,"arguments":["people","presence","presence"]}
+{"type":"subscribe","linenumber":54,"arguments":["location","sunrise","setSunrise"]}
+{"type":"subscribe","linenumber":55,"arguments":["location","sunset","setSunset"]}
+{"type":"MethodNode","name":"setSunrise","linenumber":60,"lastlinenumber":62,"arg":["evt"]}
+{"type":"MethodNode","name":"setSunset","linenumber":64,"lastlinenumber":66,"arg":["evt"]}
+{"type":"MethodNode","name":"changeSunMode","linenumber":68,"lastlinenumber":84,"arg":["newMode"]}
+{"type":"MethodNode","name":"presence","linenumber":86,"lastlinenumber":112,"arg":["evt"]}
+{"type":"MethodNode","name":"setAway","linenumber":114,"lastlinenumber":131}
+{"type":"MethodNode","name":"everyoneIsAway","linenumber":133,"lastlinenumber":143}
+{"type":"MethodNode","name":"anyoneIsHome","linenumber":145,"lastlinenumber":155}
+{"type":"MethodNode","name":"send","linenumber":157,"lastlinenumber":164,"arg":["msg"]}

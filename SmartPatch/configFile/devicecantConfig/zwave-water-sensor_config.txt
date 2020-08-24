@@ -1,0 +1,26 @@
+{"type":"MethodNode","name":"initialize","linenumber":45}
+{"type":"sendEvent","linenumber":48,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":51,"arguments":["name: \"checkInterval\""," value: 12 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"MethodNode","name":"installed","linenumber":55}
+{"type":"createEvent","linenumber":86,"arguments":["descriptionText: description"]}
+{"type":"createEvent","linenumber":92,"arguments":["value: description"," descriptionText: description"," isStateChange: false"]}
+{"type":"createEvent","linenumber":101,"arguments":["name: \"water\""," value: eventValue"," descriptionText: \"$device.displayName is $eventValue\""]}
+{"type":"createEvent","linenumber":130,"arguments":["descriptionText: \"Water alarm cleared\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":132,"arguments":["name: \"water\""," value: \"dry\""]}
+{"type":"createEvent","linenumber":136,"arguments":["name: \"water\""," value: \"dry\""]}
+{"type":"createEvent","linenumber":140,"arguments":["name: \"water\""," value: \"wet\""]}
+{"type":"createEvent","linenumber":144,"arguments":["descriptionText: \"Water level dropped\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":147,"arguments":["descriptionText: \"Replace water filter\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":151,"arguments":["descriptionText: \"Water flow $level\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":155,"arguments":["descriptionText: \"Water pressure $level\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":160,"arguments":["descriptionText: \"$device.displayName detected overheat\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":162,"arguments":["descriptionText: \"$device.displayName detected rapid temperature rise\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":164,"arguments":["descriptionText: \"$device.displayName detected low temperature\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":168,"arguments":["descriptionText: \"$device.displayName covering was removed\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":175,"arguments":["name: \"notification$cmd.notificationType\""," value: \"$cmd.event\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":178,"arguments":["name: \"alarm $cmd.v1AlarmType\""," value: value"," displayed: false"]}
+{"type":"createEvent","linenumber":184,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false)"]}
+{"type":"createEvent","linenumber":203,"arguments":["map)"," response(encap(zwave.wakeUpV1.wakeUpNoMoreInformation()))"]}
+{"type":"createEvent","linenumber":219,"arguments":["map"]}
+{"type":"createEvent","linenumber":267,"arguments":["descriptionText: \"$device.displayName: $cmd\""," displayed: false"]}
+{"type":"createEvent","linenumber":277,"arguments":["descriptionText: \"$device.displayName MSR: $msr\""," isStateChange: false"]}

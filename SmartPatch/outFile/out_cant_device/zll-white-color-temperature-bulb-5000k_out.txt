@@ -1,0 +1,246 @@
+ import java.util.UUID
+"License"
+"AS IS"
+
+metadata {
+	definition (name: "ZLL White Color Temperature Bulb 5000K", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "oic.d.light", runLocally: true, minHubCoreVersion: '000.023.00001', executeCommandsLocally: true, genericHandler: "ZLL") {
+
+		capability "Actuator"
+		capability "Color Temperature"
+		capability "Configuration"
+		capability "Polling"
+		capability "Refresh"
+		capability "Switch"
+		capability "Switch Level"
+		capability "Health Check"
+
+		attribute "colorName", "string"
+
+		
+		fingerprint profileId: "C05E", deviceId: "0220", inClusters: "0000, 0004, 0003, 0006, 0008, 0005, 0300", outClusters: "0019", manufacturer: "Eaton", model: "Halo_RL5601", deviceJoinName: "Halo RL56"
+
+		
+		fingerprint inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300, 0B05, 1000", outClusters: "0005, 0019, 0020, 1000", manufacturer: "IKEA of Sweden", model: "TRADFRI bulb E26 WS clear 950lm", deviceJoinName: "IKEA TRÅDFRI White Spectrum LED Bulb", mnmn: "SmartThings", vid: "generic-color-temperature-bulb-2200K-4000K"
+		fingerprint inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300, 0B05, 1000", outClusters: "0005, 0019, 0020, 1000", manufacturer: "IKEA of Sweden", model: "TRADFRI bulb GU10 WS 400lm", deviceJoinName: "IKEA TRÅDFRI White Spectrum LED Bulb", mnmn: "SmartThings", vid: "generic-color-temperature-bulb-2200K-4000K"
+		fingerprint inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300, 0B05, 1000", outClusters: "0005, 0019, 0020, 1000", manufacturer: "IKEA of Sweden", model: "TRADFRI bulb E12 WS opal 400lm", deviceJoinName: "IKEA TRÅDFRI White Spectrum LED Bulb", mnmn: "SmartThings", vid: "generic-color-temperature-bulb-2200K-4000K"
+		fingerprint inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300, 0B05, 1000", outClusters: "0005, 0019, 0020, 1000", manufacturer: "IKEA of Sweden", model: "TRADFRI bulb E26 WS opal 980lm", deviceJoinName: "IKEA TRÅDFRI White Spectrum LED Bulb", mnmn: "SmartThings", vid: "generic-color-temperature-bulb-2200K-4000K"
+		fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300, 0B05, 1000", outClusters: "0005, 0019, 0020, 1000", manufacturer: "IKEA of Sweden", model: "TRADFRI bulb E27 WS clear 950lm", deviceJoinName: "IKEA TRÅDFRI White Spectrum LED Bulb", mnmn: "SmartThings", vid: "generic-color-temperature-bulb-2200K-4000K"
+		fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300, 0B05, 1000", outClusters: "0005, 0019, 0020, 1000", manufacturer: "IKEA of Sweden", model: "TRADFRI bulb E14 WS opal 400lm", deviceJoinName: "IKEA TRÅDFRI White Spectrum LED Bulb", mnmn: "SmartThings", vid: "generic-color-temperature-bulb-2200K-4000K"
+		fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300, 0B05, 1000", outClusters: "0005, 0019, 0020, 1000", manufacturer: "IKEA of Sweden", model: "TRADFRI bulb E27 WS opal 980lm", deviceJoinName: "IKEA TRÅDFRI White Spectrum LED Bulb", mnmn: "SmartThings", vid: "generic-color-temperature-bulb-2200K-4000K"
+
+		
+		fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300", outClusters: "0019", manufacturer: "innr", model: "RS 128 T", deviceJoinName: "Innr Smart Spot Tunable White"
+		fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300", outClusters: "0019", manufacturer: "innr", model: "RB 178 T", deviceJoinName: "Innr Smart Bulb Tunable White"
+		fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300", outClusters: "0019", manufacturer: "innr", model: "RB 148 T", deviceJoinName: "Innr Smart Bulb Tunable White", mnmn: "SmartThings", vid: "generic-color-temperature-bulb-2200K-5000K"
+	}
+
+	
+	tiles(scale: 2) {
+		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true){
+			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
+				attributeState "on", label:'${name}', action:"switch.off", icon:"st.switches.light.on", backgroundColor:"#00A0DC", nextState:"turningOff"
+				attributeState "off", label:'${name}', action:"switch.on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+				attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.light.on", backgroundColor:"#00A0DC", nextState:"turningOff"
+				attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+			}
+			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
+				attributeState "level", action:"switch level.setLevel"
+			}
+			tileAttribute ("colorName", key: "SECONDARY_CONTROL") {
+				attributeState "colorName", label:'${currentValue}'
+			}
+		}
+
+		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh"
+		}
+
+		controlTile("colorTempSliderControl", "device.colorTemperature", "slider", width: 4, height: 2, inactiveLabel: false, range:"(2700..5000)") {
+			state "colorTemperature", action:"color temperature.setColorTemperature"
+		}
+		valueTile("colorTemp", "device.colorTemperature", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "colorTemperature", label: '${currentValue} K'
+		}
+
+		main(["switch"])
+		details(["switch", "colorTempSliderControl", "colorTemp", "refresh"])
+	}
+}
+
+
+private getMOVE_TO_COLOR_TEMPERATURE_COMMAND() { 0x0A }
+private getCOLOR_CONTROL_CLUSTER() { 0x0300 }
+private getATTRIBUTE_COLOR_TEMPERATURE() { 0x0007 }
+
+
+def parse(String description) {
+	log.debug "description is $description"
+	def event = zigbee.getEvent(description)
+	if (event) {
+		if (event.name == "colorTemperature") {
+			event.unit = "K"
+			setGenericName(event.value)
+		}
+//		sendEvent(event)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${event?.name}", value: "${event?.value}"]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue1= ''
+if(event.containsKey('data') ){
+datavalue1 = event['data']
+datavalue1 = "[" + datavalue1+ "," +"sign: " + "${signatureResult1}" + "]"
+event.put('data',"${datavalue1}")
+ }else{
+datavalue1=  "[sign: " + "${signatureResult1}" +"]"
+event.put('data',"${datavalue1}")
+}
+		sendEvent(event)
+	}
+	else {
+		log.warn "DID NOT PARSE MESSAGE for description : $description"
+		log.debug zigbee.parseDescriptionAsMap(description)
+	}
+}
+
+def off() {
+	zigbee.off() + ["delay 1500"] + zigbee.onOffRefresh()
+}
+
+def on() {
+	zigbee.on() + ["delay 1500"] + zigbee.onOffRefresh()
+}
+
+def setLevel(value, rate = null) {
+	zigbee.setLevel(value) + zigbee.onOffRefresh() + zigbee.levelRefresh()
+}
+
+def refresh() {
+	def cmds = zigbee.onOffRefresh() + zigbee.levelRefresh() + zigbee.colorTemperatureRefresh()
+
+	
+	if (!((device.getDataValue("manufacturer") == "Eaton") && (device.getDataValue("model") == "Halo_LT01"))) {
+		cmds += zigbee.onOffConfig() + zigbee.levelConfig()
+	}
+
+	cmds
+}
+
+def poll() {
+	zigbee.onOffRefresh() + zigbee.levelRefresh() + zigbee.colorTemperatureRefresh()
+}
+
+
+def ping() {
+	return zigbee.levelRefresh()
+}
+
+def healthPoll() {
+	log.debug "healthPoll()"
+	def cmds = poll()
+	cmds.each{ sendHubCommand(new physicalgraph.device.HubAction(it))}
+}
+
+def configureHealthCheck() {
+	Integer hcIntervalMinutes = 12
+	if (!state.hasConfiguredHealthCheck) {
+		log.debug "Configuring Health Check, Reporting"
+		unschedule("healthPoll", [forceForLocallyExecuting: true])
+		runEvery5Minutes("healthPoll", [forceForLocallyExecuting: true])
+		
+//		sendEvent(name: "checkInterval", value: hcIntervalMinutes * 60, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID])
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: hcIntervalMinutes * 60,  displayed: false,  data: [protocol: "zigbee",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+		sendEvent(name: "checkInterval",  value: hcIntervalMinutes * 60,  displayed: false,  data: [ sign: "${signatureResult2}" ,protocol: "zigbee",  hubHardwareId: device.hub.hardwareID])
+		state.hasConfiguredHealthCheck = true
+	}
+}
+
+def configure() {
+	log.debug "configure()"
+	configureHealthCheck()
+	
+	zigbee.onOffConfig() + zigbee.levelConfig() + zigbee.onOffRefresh() + zigbee.levelRefresh() + zigbee.colorTemperatureRefresh()
+}
+
+def updated() {
+	log.debug "updated()"
+	configureHealthCheck()
+}
+
+def setColorTemperature(value) {
+	value = value as Integer
+	def tempInMired = Math.round(1000000 / value)
+	def finalHex = zigbee.swapEndianHex(zigbee.convertToHexString(tempInMired, 4))
+
+	zigbee.command(COLOR_CONTROL_CLUSTER, MOVE_TO_COLOR_TEMPERATURE_COMMAND, "$finalHex 0000") +
+	zigbee.readAttribute(COLOR_CONTROL_CLUSTER, ATTRIBUTE_COLOR_TEMPERATURE)
+}
+
+
+def setGenericName(value){
+	if (value != null) {
+		def genericName = ""
+		if (value < 3300) {
+			genericName = "Soft White"
+		} else if (value < 4150) {
+			genericName = "Moonlight"
+		} else if (value <= 5000) {
+			genericName = "Cool White"
+		} else {
+			genericName = "Daylight"
+		}
+//		sendEvent(name: "colorName", value: genericName, displayed: false)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "colorName",  value: genericName,  displayed: false]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+		sendEvent(name: "colorName",  value: genericName,  displayed: false, data: [sign: "${signatureResult3}"])
+	}
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+}

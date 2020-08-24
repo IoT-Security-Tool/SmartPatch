@@ -1,0 +1,389 @@
+ import java.util.UUID
+"License"
+"AS IS"
+metadata {
+	definition (name: "Ecolink Wireless Siren", namespace: "SmartThings", author: "SmartThings", mnmn: "SmartThings", vid: "SmartThings-smartthings-Z-Wave_Siren", ocfDeviceType: "x.com.st.d.siren") {
+		capability "Actuator"
+		capability "Health Check"
+		capability "Switch"
+		capability "Refresh"
+		capability "Sensor"
+		capability "Alarm"
+
+		
+		fingerprint mfr: "014A", prod: "0005", model: "000A", deviceJoinName: "Ecolink Siren"	  
+	}
+
+	tiles {
+		standardTile("alarm", "device.alarm", width: 2, height: 2) {
+			state "off", label: 'off', action: 'alarm.strobe', icon: "st.alarm.alarm.alarm", backgroundColor: "#ffffff"
+			state "both", label: 'alarm!', action: 'alarm.off', icon: "st.alarm.alarm.alarm", backgroundColor: "#e86d13"
+		}
+		standardTile("off", "device.alarm", inactiveLabel: false, decoration: "flat") {
+			state "default", label: '', action: "alarm.off", icon: "st.secondary.off"
+		}
+		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat") {
+			state "default", label: '', action: "refresh.refresh", icon: "st.secondary.refresh"
+		}
+
+		main "alarm"
+		details(["alarm", "off", "refresh"])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+	initialize()
+//	sendEvent(name: "alarm", value: "off", isStateChange: true)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "alarm",  value: "off",  isStateChange: true]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "alarm",  value: "off",  isStateChange: true, data: [sign: "${signatureResult1}"])
+}
+
+def updated() {
+	initialize()
+}
+
+def initialize() {
+	if (!childDevices) {
+		addChildren()
+	}
+//	sendEvent(name: "checkInterval", value: 2 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID, offlinePingable: "1"])
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 2 * 60 * 60 + 2 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"]]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 2 * 60 * 60 + 2 * 60,  displayed: false,  data: [ sign: "${signatureResult2}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"])
+	response(refresh())
+}
+
+def parse(String description) {
+
+	def result = null
+	def cmd = zwave.parse(description)
+	if (cmd) {
+		result = zwaveEvent(cmd)
+		
+		if(result!=null) {
+//			createEvent(result)
+def params3 = null
+def signatureResult3 = null
+params3 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${result?.name}", value: "${result?.value}"]
+]
+signatureResult3 = null
+  try {
+        httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue3= ''
+if(result.containsKey('data') ){
+datavalue3 = result['data']
+datavalue3 = "[" + datavalue3+ "," +"sign: " + "${signatureResult3}" + "]"
+result.put('data',"${datavalue3}")
+ }else{
+datavalue3=  "[sign: " + "${signatureResult3}" +"]"
+result.put('data',"${datavalue3}")
+}
+			createEvent(result)
+		}
+	}
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.basicv1.BasicReport cmd) {
+	
+	
+//	createEvents(cmd.value)
+def params4 = null
+def signatureResult4 = null
+params4 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${(cmd.value?.name}", value: "${(cmd.value?.value}"]
+]
+signatureResult4 = null
+  try {
+        httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue4= ''
+if((cmd.value.containsKey('data') ){
+datavalue4 = (cmd.value['data']
+datavalue4 = "[" + datavalue4+ "," +"sign: " + "${signatureResult4}" + "]"
+(cmd.value.put('data',"${datavalue4}")
+ }else{
+datavalue4=  "[sign: " + "${signatureResult4}" +"]"
+(cmd.value.put('data',"${datavalue4}")
+}
+	createEvent((cmd.value)(cmd.value)
+	if(cmd.value == 0) {
+		sendHubCommand(addDelay(refreshChildren()))
+	}
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.switchbinaryv1.SwitchBinaryReport cmd) {
+//	createEvents(cmd.value)
+def params5 = null
+def signatureResult5 = null
+params5 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${(cmd.value?.name}", value: "${(cmd.value?.value}"]
+]
+signatureResult5 = null
+  try {
+        httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue5= ''
+if((cmd.value.containsKey('data') ){
+datavalue5 = (cmd.value['data']
+datavalue5 = "[" + datavalue5+ "," +"sign: " + "${signatureResult5}" + "]"
+(cmd.value.put('data',"${datavalue5}")
+ }else{
+datavalue5=  "[sign: " + "${signatureResult5}" +"]"
+(cmd.value.put('data',"${datavalue5}")
+}
+	createEvent((cmd.value)(cmd.value)
+}
+
+def zwaveEvent(physicalgraph.zwave.Command cmd) {
+	[:]
+}
+
+//def createEvents(value) {
+def params6 = null
+def signatureResult6 = null
+params6 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${(value) ?.name}", value: "${(value) ?.value}"]
+]
+signatureResult6 = null
+  try {
+        httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue6= ''
+if((value) .containsKey('data') ){
+datavalue6 = (value) ['data']
+datavalue6 = "[" + datavalue6+ "," +"sign: " + "${signatureResult6}" + "]"
+(value) .put('data',"${datavalue6}")
+ }else{
+datavalue6=  "[sign: " + "${signatureResult6}" +"]"
+(value) .put('data',"${datavalue6}")
+}
+def createEvent((value) )(value) {
+//	sendEvent(name: "alarm", value: value ? "both" : "off")
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "alarm",  value: value ? "both" : "off"]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "alarm",  value: value ? "both" : "off", data: [sign: "${signatureResult7}"])
+//	sendEvent(name: "switch", value: value ? "on" : "off")
+def params8 = null
+def signatureResult8 = null
+log.debug "id is ${device.id}"
+ params8 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: value ? "on" : "off"]
+	]
+signatureResult8 = null
+try {
+    httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "switch",  value: value ? "on" : "off", data: [sign: "${signatureResult8}"])
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.multichannelv3.MultiChannelCmdEncap cmd) {
+	if (cmd.commandClass == 0x6C && cmd.parameter.size >= 4) { 
+		
+		cmd.parameter = cmd.parameter.drop(2)
+		
+		cmd.commandClass = cmd.parameter[0]
+		cmd.command = cmd.parameter[1]
+		cmd.parameter = cmd.parameter.drop(2)
+	}
+	def encapsulatedCommand = cmd.encapsulatedCommand()
+	def srcEndpoint = cmd.sourceEndPoint
+	def destEnd = cmd.destinationEndPoint
+	
+	if(srcEndpoint == 1) {
+		zwaveEvent(encapsulatedCommand)
+	} else {
+		String childDni = "${device.deviceNetworkId}-ep$srcEndpoint"
+		def child = childDevices.find { it.deviceNetworkId == childDni }
+
+		child?.handleZWave(encapsulatedCommand)
+	}
+}
+
+def on() {
+	def cmds = []
+	cmds << basicSetCmd(0xFF, 1)
+	cmds << basicGetCmd(1)
+	delayBetween(cmds, 100)
+}
+
+def off() {
+	def cmds = []
+	cmds << basicSetCmd(0x00, 1)
+	cmds << basicGetCmd(1)
+	delayBetween(cmds, 100)
+}
+
+def strobe() {
+	on()
+}
+
+def siren() {
+	on()
+}
+
+def both() {
+	on()
+}
+
+def ping() {
+	refresh()
+}
+
+def refresh() {
+	def cmds = []
+	cmds << refreshChildren()
+	cmds << basicGetCmd(1)
+	return addDelay(cmds)
+}
+
+def refreshChildren() {
+	def cmds = []
+	endPoints.each {
+		cmds << basicGetCmd(it)
+	}
+	return cmds
+}
+
+def addDelay(cmds) {
+	delayBetween(cmds, 200)
+}
+
+def setSirenChildrenOff() {
+	def cmds = []
+	
+	endPoints.each {
+		cmds << basicSetCmd(0x00, it)
+		cmds << basicGetCmd(it)
+	}
+	delayBetween(cmds, 50)
+}
+
+def addChildren() {
+	endPoints.each {
+		String childDni = "${device.deviceNetworkId}-ep$it"
+		String componentLabel =	 "$device.displayName $it"
+		
+		addChildDevice("Z-Wave Binary Switch Endpoint Siren", childDni, device.hub.id,[completedSetup: true, label: componentLabel, isComponent: false])
+	}
+}
+
+def getEndPoints() { [2, 3, 4] }
+
+def basicSetCmd(value, endPoint) {
+	multiChannelCmdEncapCmd(zwave.basicV1.basicSet(value: value), endPoint)
+}
+
+def basicGetCmd(endPoint) {
+	multiChannelCmdEncapCmd(zwave.basicV1.basicGet(), endPoint)
+}
+
+def multiChannelCmdEncapCmd(cmd, endPoint) {	
+	def cmds = []
+	cmds << zwave.multiChannelV3.multiChannelCmdEncap(destinationEndPoint: endPoint).encapsulate(cmd).format()
+}
+
+def sendCommand(deviceDni, commands) {	 
+	def result = commands.collect { 
+		if (it instanceof String) {
+			it
+		} else {
+			multiChannelCmdEncapCmd(it, channelNumber(deviceDni)) 
+		}
+	}
+	sendHubCommand(result, 100)
+}
+
+def channelNumber(String dni) {
+	dni.split("-ep")[-1] as Integer
+}

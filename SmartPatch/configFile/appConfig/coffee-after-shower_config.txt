@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":41,"lastlinenumber":43}
+{"type":"subscribe","linenumber":42,"arguments":["bathroom","humidity","coffeeMaker"]}
+{"type":"MethodNode","name":"updated","linenumber":45,"lastlinenumber":48}
+{"type":"subscribe","linenumber":47,"arguments":["bathroom","humidity","coffeeMaker"]}
+{"type":"MethodNode","name":"coffeeMaker","linenumber":50,"lastlinenumber":55,"arg":["shower"]}

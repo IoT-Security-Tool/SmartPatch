@@ -1,0 +1,7 @@
+{"type":"sendEvent","linenumber":65,"arguments":["name: \"powered\""," value: \"powerOff\""," descriptionText: \"$device.displayName lost power\""]}
+{"type":"sendEvent","linenumber":67,"arguments":["name: \"powered\""," value: \"powerOn\""," descriptionText: \"$device.displayName regained power\""]}
+{"type":"createEvent","linenumber":71,"arguments":["zwaveEvent(cmd)"]}
+{"type":"sendEvent","linenumber":79,"arguments":["name: \"contact\""," value: \"open\""]}
+{"type":"sendEvent","linenumber":80,"arguments":["name: \"switch\""," value: \"doorOpen\""]}
+{"type":"sendEvent","linenumber":82,"arguments":["name: \"contact\""," value: \"closed\""]}
+{"type":"sendEvent","linenumber":83,"arguments":["name: \"switch\""," value: \"doorClosed\""]}

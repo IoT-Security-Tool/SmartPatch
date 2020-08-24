@@ -1,0 +1,10 @@
+{"type":"MethodNode","name":"installed","linenumber":87,"lastlinenumber":91}
+{"type":"MethodNode","name":"updated","linenumber":93,"lastlinenumber":98}
+{"type":"MethodNode","name":"initialize","linenumber":100,"lastlinenumber":102}
+{"type":"MethodNode","name":"helloActions","linenumber":103,"lastlinenumber":109}
+{"type":"MethodNode","name":"executeAction","linenumber":110,"lastlinenumber":118}
+{"type":"MethodNode","name":"structureInfo","linenumber":120,"lastlinenumber":155}
+{"type":"MethodNode","name":"acquiredata","linenumber":157,"lastlinenumber":175}
+{"type":"MethodNode","name":"updateSwitch","linenumber":177,"lastlinenumber":199}
+{"type":"MethodNode","name":"updateThermostat","linenumber":202,"lastlinenumber":238}
+{"type":"MethodNode","name":"updateWindowShade","linenumber":240,"lastlinenumber":258}

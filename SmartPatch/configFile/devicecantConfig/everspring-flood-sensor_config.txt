@@ -1,0 +1,8 @@
+{"type":"createEvent","linenumber":52,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false)"]}
+{"type":"createEvent","linenumber":73,"arguments":["map"]}
+{"type":"createEvent","linenumber":82,"arguments":["map"]}
+{"type":"createEvent","linenumber":103,"arguments":["map"]}
+{"type":"createEvent","linenumber":120,"arguments":["map)"," response(zwave.wakeUpV1.wakeUpNoMoreInformation())"]}
+{"type":"createEvent","linenumber":125,"arguments":["descriptionText: \"${device.displayName}: ${cmd}\""," displayed: false"]}
+{"type":"sendEvent","linenumber":131,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":133,"arguments":["name: \"battery\""," value:100"," unit:\"%\""," descriptionText:\"(Default battery event)\""," displayed:false"]}

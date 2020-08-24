@@ -1,0 +1,4 @@
+{"type":"sendEvent","linenumber":142,"arguments":["name: \"checkInterval\""," value: 60 * 12"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"createEvent","linenumber":163,"arguments":["it"]}
+{"type":"sendEvent","linenumber":373,"arguments":["name: \"DeviceWatch-Enroll\""," displayed: false"," value: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," scheme: \"TRACKED\""," checkInterval: 2 * 60 * 60 + 1 * 60"," lowBatteryThresholds: [15"," 7"," 3]"," offlinePingable: \"1\"].encodeAsJSON()"]}
+{"type":"sendEvent","linenumber":374,"arguments":["name: \"acceleration\""," value: \"inactive\""," descriptionText: \"{{ device.displayName }} was $value\""," displayed: false"]}

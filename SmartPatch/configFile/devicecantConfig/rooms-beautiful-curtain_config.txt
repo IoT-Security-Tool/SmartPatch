@@ -1,0 +1,37 @@
+{"type":"sendEvent","linenumber":87,"arguments":["name: \"replay\""," value: \"pause\""]}
+{"type":"sendEvent","linenumber":92,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"sendEvent","linenumber":93,"arguments":["name: \"windowShade\""," value: \"open\""]}
+{"type":"sendEvent","linenumber":96,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":97,"arguments":["name: \"windowShade\""," value: \"closed\""]}
+{"type":"sendEvent","linenumber":116,"arguments":["name: \"level\""," value: value"]}
+{"type":"sendEvent","linenumber":119,"arguments":["name: \"switch\""," value: value == 0 ? \"off\" : \"on\""]}
+{"type":"sendEvent","linenumber":120,"arguments":["name: \"windowShade\""," value: value == 0 ? \"closed\" : \"open\""]}
+{"type":"sendEvent","linenumber":122,"arguments":["name: \"replay\""," value: \"cont\""]}
+{"type":"sendEvent","linenumber":123,"arguments":["name: \"windowShade\""," value: \"partially open\""]}
+{"type":"sendEvent","linenumber":150,"arguments":["name: \"level\""," value: 0"]}
+{"type":"sendEvent","linenumber":155,"arguments":["name: \"level\""," value: 100"]}
+{"type":"sendEvent","linenumber":160,"arguments":["name: \"level\""," value: 0"]}
+{"type":"sendEvent","linenumber":165,"arguments":["name: \"level\""," value: 100"]}
+{"type":"sendEvent","linenumber":170,"arguments":["name: \"replay\""," value: \"cont\") "]}
+{"type":"sendEvent","linenumber":171,"arguments":["name: \"windowShade\""," value: \"partially open\""]}
+{"type":"sendEvent","linenumber":176,"arguments":["name: \"replay\""," value: \"pause\""]}
+{"type":"sendEvent","linenumber":192,"arguments":["name: \"level\""," value: value"]}
+{"type":"sendEvent","linenumber":213,"arguments":["name: \"battery\""," value: percent"]}
+{"type":"sendEvent","linenumber":214,"arguments":["name: \"battLife\""," value: value"]}
+{"type":"sendEvent","linenumber":235,"arguments":["name: \"checkInterval\""," value: 2 * 10 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"MethodNode","name":"installed","linenumber":240}
+{"type":"sendEvent","linenumber":241,"arguments":["name: \"supportedWindowShadeCommands\""," value: JsonOutput.toJson([\"open\""," \"close\""," \"pause\"])"," displayed: false"]}
+{"type":"sendEvent","linenumber":242,"arguments":["name: \"battery\""," value: 100"]}
+{"type":"sendEvent","linenumber":243,"arguments":["name: \"battLife\""," value: \"full\""]}
+{"type":"sendEvent","linenumber":256,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":257,"arguments":["name: \"windowShade\""," value: \"closed\""]}
+{"type":"sendEvent","linenumber":258,"arguments":["name: \"level\""," value: 100 - Integer.parseInt(device.currentState(\"level\").value)"]}
+{"type":"sendEvent","linenumber":262,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"sendEvent","linenumber":263,"arguments":["name: \"windowShade\""," value: \"open\""]}
+{"type":"sendEvent","linenumber":264,"arguments":["name: \"level\""," value: 100 - Integer.parseInt(device.currentState(\"level\").value)"]}
+{"type":"sendEvent","linenumber":272,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":273,"arguments":["name: \"windowShade\""," value: \"closed\""]}
+{"type":"sendEvent","linenumber":274,"arguments":["name: \"level\""," value: 100 - Integer.parseInt(device.currentState(\"level\").value)"]}
+{"type":"sendEvent","linenumber":278,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"sendEvent","linenumber":279,"arguments":["name: \"windowShade\""," value: \"open\""]}
+{"type":"sendEvent","linenumber":280,"arguments":["name: \"level\""," value: 100 - Integer.parseInt(device.currentState(\"level\").value)"]}

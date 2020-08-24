@@ -1,0 +1,39 @@
+{"type":"MethodNode","name":"installed","linenumber":249}
+{"type":"MethodNode","name":"initialize","linenumber":271}
+{"type":"sendEvent","linenumber":296,"arguments":["name: \"DeviceWatch-Enroll\""," value: \"{\\\"protocol\\\": \\\"LAN\\\""," \\\"scheme\\\":\\\"untracked\\\""," \\\"hubHardwareId\\\": \\\"${hub?.hub?.hardwareID}\\\"}\""]}
+{"type":"sendEvent","linenumber":476,"arguments":["name: \"color\""," value: colorUtil.hslToHex((device.color.hue / 3.6) as int"," (device.color.saturation * 100) as int)"]}
+{"type":"sendEvent","linenumber":477,"arguments":["name: \"hue\""," value: device.color.hue / 3.6"]}
+{"type":"sendEvent","linenumber":478,"arguments":["name: \"saturation\""," value: device.color.saturation * 100"]}
+{"type":"sendEvent","linenumber":480,"arguments":["name: \"label\""," value: device.label"]}
+{"type":"sendEvent","linenumber":481,"arguments":["name: \"level\""," value: Math.round((device.brightness != null ? device.brightness : 1) * 100)"]}
+{"type":"sendEvent","linenumber":482,"arguments":["name: \"switch\""," value: device.power"]}
+{"type":"sendEvent","linenumber":483,"arguments":["name: \"colorTemperature\""," value: device.color.kelvin"]}
+{"type":"sendEvent","linenumber":484,"arguments":["name: \"model\""," value: device.product.name"]}
+{"type":"sendEvent","linenumber":493,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":497,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"MethodNode","name":"installed","linenumber":249}
+{"type":"MethodNode","name":"initialize","linenumber":271}
+{"type":"sendEvent","linenumber":296,"arguments":["name: \"DeviceWatch-Enroll\""," value: \"{\\\"protocol\\\": \\\"LAN\\\""," \\\"scheme\\\":\\\"untracked\\\""," \\\"hubHardwareId\\\": \\\"${hub?.hub?.hardwareID}\\\"}\""]}
+{"type":"sendEvent","linenumber":476,"arguments":["name: \"color\""," value: colorUtil.hslToHex((device.color.hue / 3.6) as int"," (device.color.saturation * 100) as int)"]}
+{"type":"sendEvent","linenumber":477,"arguments":["name: \"hue\""," value: device.color.hue / 3.6"]}
+{"type":"sendEvent","linenumber":478,"arguments":["name: \"saturation\""," value: device.color.saturation * 100"]}
+{"type":"sendEvent","linenumber":480,"arguments":["name: \"label\""," value: device.label"]}
+{"type":"sendEvent","linenumber":481,"arguments":["name: \"level\""," value: Math.round((device.brightness != null ? device.brightness : 1) * 100)"]}
+{"type":"sendEvent","linenumber":482,"arguments":["name: \"switch\""," value: device.power"]}
+{"type":"sendEvent","linenumber":483,"arguments":["name: \"colorTemperature\""," value: device.color.kelvin"]}
+{"type":"sendEvent","linenumber":484,"arguments":["name: \"model\""," value: device.product.name"]}
+{"type":"sendEvent","linenumber":493,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":497,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}
+{"type":"MethodNode","name":"installed","linenumber":249}
+{"type":"MethodNode","name":"initialize","linenumber":271}
+{"type":"sendEvent","linenumber":296,"arguments":["name: \"DeviceWatch-Enroll\""," value: \"{\\\"protocol\\\": \\\"LAN\\\""," \\\"scheme\\\":\\\"untracked\\\""," \\\"hubHardwareId\\\": \\\"${hub?.hub?.hardwareID}\\\"}\""]}
+{"type":"sendEvent","linenumber":476,"arguments":["name: \"color\""," value: colorUtil.hslToHex((device.color.hue / 3.6) as int"," (device.color.saturation * 100) as int)"]}
+{"type":"sendEvent","linenumber":477,"arguments":["name: \"hue\""," value: device.color.hue / 3.6"]}
+{"type":"sendEvent","linenumber":478,"arguments":["name: \"saturation\""," value: device.color.saturation * 100"]}
+{"type":"sendEvent","linenumber":480,"arguments":["name: \"label\""," value: device.label"]}
+{"type":"sendEvent","linenumber":481,"arguments":["name: \"level\""," value: Math.round((device.brightness != null ? device.brightness : 1) * 100)"]}
+{"type":"sendEvent","linenumber":482,"arguments":["name: \"switch\""," value: device.power"]}
+{"type":"sendEvent","linenumber":483,"arguments":["name: \"colorTemperature\""," value: device.color.kelvin"]}
+{"type":"sendEvent","linenumber":484,"arguments":["name: \"model\""," value: device.product.name"]}
+{"type":"sendEvent","linenumber":493,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"]}
+{"type":"sendEvent","linenumber":497,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"]}

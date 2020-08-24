@@ -1,0 +1,1368 @@
+ import java.util.UUID
+/**
+ *  Copyright 2017 SmartThings
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+import groovy.transform.Field
+
+// enummaps
+@Field final Map      MODE = [
+    OFF:   "off",
+    HEAT:  "heat",
+    AUTO:  "auto",
+    COOL:  "cool",
+    EHEAT: "emergency heat"
+]
+
+@Field final Map      FAN_MODE = [
+    OFF:       "off",
+    AUTO:      "auto",
+    CIRCULATE: "circulate",
+    ON:        "on"
+]
+
+@Field final Map      OP_STATE = [
+    COOLING:   "cooling",
+    HEATING:   "heating",
+    FAN:       "fan only",
+    PEND_COOL: "pending cool",
+    PEND_HEAT: "pending heat",
+    VENT_ECO:  "vent economizer",
+    IDLE:      "idle"
+]
+
+@Field final Map SETPOINT_TYPE = [
+    COOLING: "cooling",
+    HEATING: "heating"
+]
+
+@Field final List HEAT_ONLY_MODES = [MODE.HEAT, MODE.EHEAT]
+@Field final List COOL_ONLY_MODES = [MODE.COOL]
+@Field final List DUAL_SETPOINT_MODES = [MODE.AUTO]
+@Field final List RUNNING_OP_STATES = [OP_STATE.HEATING, OP_STATE.COOLING]
+
+// config - TODO: move these to a pref page
+@Field List SUPPORTED_MODES = [MODE.OFF, MODE.HEAT, MODE.AUTO, MODE.COOL, MODE.EHEAT]
+@Field List SUPPORTED_FAN_MODES = [FAN_MODE.OFF, FAN_MODE.AUTO, FAN_MODE.ON]
+
+@Field final Float    THRESHOLD_DEGREES = 1.0
+@Field final Integer  SIM_HVAC_CYCLE_SECONDS = 15
+@Field final Integer  DELAY_EVAL_ON_MODE_CHANGE_SECONDS = 3
+
+@Field final Integer  MIN_SETPOINT = 35
+@Field final Integer  MAX_SETPOINT = 95
+@Field final Integer  AUTO_MODE_SETPOINT_SPREAD = 4 // In auto mode, heat & cool setpoints must be this far apart
+// end config
+
+// derivatives
+@Field final IntRange FULL_SETPOINT_RANGE = (MIN_SETPOINT..MAX_SETPOINT)
+@Field final IntRange HEATING_SETPOINT_RANGE = (MIN_SETPOINT..(MAX_SETPOINT - AUTO_MODE_SETPOINT_SPREAD))
+@Field final IntRange COOLING_SETPOINT_RANGE = ((MIN_SETPOINT + AUTO_MODE_SETPOINT_SPREAD)..MAX_SETPOINT)
+
+// defaults
+@Field final String   DEFAULT_MODE = MODE.OFF
+@Field final String   DEFAULT_FAN_MODE = FAN_MODE.AUTO
+@Field final String   DEFAULT_OP_STATE = OP_STATE.IDLE
+@Field final String   DEFAULT_PREVIOUS_STATE = OP_STATE.HEATING
+@Field final String   DEFAULT_SETPOINT_TYPE = SETPOINT_TYPE.HEATING
+@Field final Integer  DEFAULT_TEMPERATURE = 72
+@Field final Integer  DEFAULT_HEATING_SETPOINT = 68
+@Field final Integer  DEFAULT_COOLING_SETPOINT = 80
+@Field final Integer  DEFAULT_THERMOSTAT_SETPOINT = DEFAULT_HEATING_SETPOINT
+@Field final Integer  DEFAULT_HUMIDITY = 52
+
+
+metadata {
+    // Automatically generated. Make future change here.
+    definition (name: "Simulated Thermostat", namespace: "smartthings/testing", author: "SmartThings") {
+        capability "Sensor"
+        capability "Actuator"
+        capability "Health Check"
+
+        capability "Thermostat"
+        capability "Relative Humidity Measurement"
+        capability "Configuration"
+        capability "Refresh"
+
+        command "tempUp"
+        command "tempDown"
+        command "heatUp"
+        command "heatDown"
+        command "coolUp"
+        command "coolDown"
+        command "setpointUp"
+        command "setpointDown"
+
+        command "cycleMode"
+        command "cycleFanMode"
+
+        command "setTemperature", ["number"]
+        command "setHumidityPercent", ["number"]
+        command "delayedEvaluate"
+        command "runSimHvacCycle"
+
+        command "markDeviceOnline"
+        command "markDeviceOffline"
+    }
+
+    tiles(scale: 2) {
+        multiAttributeTile(name:"thermostatMulti", type:"thermostat", width:6, height:4) {
+            tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
+                attributeState("temp", label:'${currentValue}°', unit:"°F", defaultState: true)
+            }
+            tileAttribute("device.temperature", key: "VALUE_CONTROL") {
+                attributeState("VALUE_UP", action: "setpointUp")
+                attributeState("VALUE_DOWN", action: "setpointDown")
+            }
+            tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
+                attributeState("humidity", label: '${currentValue}%', unit: "%", defaultState: true)
+            }
+            tileAttribute("device.thermostatOperatingState", key: "OPERATING_STATE") {
+                attributeState("idle", backgroundColor: "#FFFFFF")
+                attributeState("heating", backgroundColor: "#E86D13")
+                attributeState("cooling", backgroundColor: "#00A0DC")
+            }
+            tileAttribute("device.thermostatMode", key: "THERMOSTAT_MODE") {
+                attributeState("off",  label: '${name}')
+                attributeState("heat", label: '${name}')
+                attributeState("cool", label: '${name}')
+                attributeState("auto", label: '${name}')
+                attributeState("emergency heat", label: 'e-heat')
+            }
+            tileAttribute("device.heatingSetpoint", key: "HEATING_SETPOINT") {
+                attributeState("default", label: '${currentValue}', unit: "°F", defaultState: true)
+            }
+            tileAttribute("device.coolingSetpoint", key: "COOLING_SETPOINT") {
+                attributeState("default", label: '${currentValue}', unit: "°F", defaultState: true)
+            }
+        }
+
+        standardTile("mode", "device.thermostatMode", width: 2, height: 2, decoration: "flat") {
+            state "off",            action: "cycleMode", nextState: "updating", icon: "st.thermostat.heating-cooling-off", backgroundColor: "#CCCCCC", defaultState: true
+            state "heat",           action: "cycleMode", nextState: "updating", icon: "st.thermostat.heat"
+            state "cool",           action: "cycleMode", nextState: "updating", icon: "st.thermostat.cool"
+            state "auto",           action: "cycleMode", nextState: "updating", icon: "st.thermostat.auto"
+            state "emergency heat", action: "cycleMode", nextState: "updating", icon: "st.thermostat.emergency-heat"
+            state "updating", label: "Working"
+        }
+
+        standardTile("fanMode", "device.thermostatFanMode", width: 2, height: 2, decoration: "flat") {
+            state "off",       action: "cycleFanMode", nextState: "updating", icon: "st.thermostat.fan-off", backgroundColor: "#CCCCCC", defaultState: true
+            state "auto",      action: "cycleFanMode", nextState: "updating", icon: "st.thermostat.fan-auto"
+            state "on",        action: "cycleFanMode", nextState: "updating", icon: "st.thermostat.fan-on"
+            state "circulate", action: "cycleFanMode", nextState: "updating", icon: "st.thermostat.fan-circulate"
+            state "updating", label: "Working"
+        }
+
+        valueTile("heatingSetpoint", "device.heatingSetpoint", width: 2, height: 2, decoration: "flat") {
+            state "heat", label:'Heat\n${currentValue}°', unit: "°F", backgroundColor:"#E86D13"
+        }
+        standardTile("heatDown", "device.temperature", width: 1, height: 1, decoration: "flat") {
+            state "default", label: "heat", action: "heatDown", icon: "st.thermostat.thermostat-down"
+        }
+        standardTile("heatUp", "device.temperature", width: 1, height: 1, decoration: "flat") {
+            state "default", label: "heat", action: "heatUp", icon: "st.thermostat.thermostat-up"
+        }
+
+        valueTile("coolingSetpoint", "device.coolingSetpoint", width: 2, height: 2, decoration: "flat") {
+            state "cool", label: 'Cool\n${currentValue}°', unit: "°F", backgroundColor: "#00A0DC"
+        }
+        standardTile("coolDown", "device.temperature", width: 1, height: 1, decoration: "flat") {
+            state "default", label: "cool", action: "coolDown", icon: "st.thermostat.thermostat-down"
+        }
+        standardTile("coolUp", "device.temperature", width: 1, height: 1, decoration: "flat") {
+            state "default", label: "cool", action: "coolUp", icon: "st.thermostat.thermostat-up"
+        }
+
+        valueTile("roomTemp", "device.temperature", width: 2, height: 1, decoration: "flat") {
+            state "default", label:'${currentValue}°', unit: "°F", backgroundColors: [
+                // Celsius Color Range
+                [value:  0, color: "#153591"],
+                [value:  7, color: "#1E9CBB"],
+                [value: 15, color: "#90D2A7"],
+                [value: 23, color: "#44B621"],
+                [value: 29, color: "#F1D801"],
+                [value: 33, color: "#D04E00"],
+                [value: 36, color: "#BC2323"],
+                // Fahrenheit Color Range
+                [value: 40, color: "#153591"],
+                [value: 44, color: "#1E9CBB"],
+                [value: 59, color: "#90D2A7"],
+                [value: 74, color: "#44B621"],
+                [value: 84, color: "#F1D801"],
+                [value: 92, color: "#D04E00"],
+                [value: 96, color: "#BC2323"]
+            ]
+        }
+        standardTile("tempDown", "device.temperature", width: 1, height: 1, decoration: "flat") {
+            state "default", label: "temp", action: "tempDown", icon: "st.thermostat.thermostat-down"
+        }
+        standardTile("tempUp", "device.temperature", width: 1, height: 1, decoration: "flat") {
+            state "default", label: "temp", action: "tempUp", icon: "st.thermostat.thermostat-up"
+        }
+
+        // To modify the simulation environment
+        valueTile("simControlLabel", "device.switch", width: 4, height: 1, decoration: "flat") {
+            state "default", label: "Simulated Environment Control"
+        }
+
+        valueTile("blank1x1", "device.switch", width: 1, height: 1, decoration: "flat") {
+            state "default", label: ""
+        }
+        valueTile("blank2x1", "device.switch", width: 2, height: 1, decoration: "flat") {
+            state "default", label: ""
+        }
+
+        valueTile("humiditySliderLabel", "device.humidity", width: 3, height: 1, decoration: "flat") {
+            state "default", label: 'Simulated Humidity: ${currentValue}%'
+        }
+
+        controlTile("humiditySlider", "device.humidity", "slider", width: 1, height: 1, range: "(0..100)") {
+            state "humidity", action: "setHumidityPercent"
+        }
+
+        standardTile("refresh", "device.switch", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label: "", action: "refresh", icon: "st.secondary.refresh"
+        }
+
+        valueTile("reset", "device.switch", width: 2, height: 2, decoration: "flat") {
+            state "default", label: "Reset to Defaults", action: "configure"
+        }
+
+        standardTile("deviceHealthControl", "device.healthStatus", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+            state "online",  label: "ONLINE", backgroundColor: "#00A0DC", action: "markDeviceOffline", icon: "st.Health & Wellness.health9", nextState: "goingOffline", defaultState: true
+            state "offline", label: "OFFLINE", backgroundColor: "#E86D13", action: "markDeviceOnline", icon: "st.Health & Wellness.health9", nextState: "goingOnline"
+            state "goingOnline", label: "Going ONLINE", backgroundColor: "#FFFFFF", icon: "st.Health & Wellness.health9"
+            state "goingOffline", label: "Going OFFLINE", backgroundColor: "#FFFFFF", icon: "st.Health & Wellness.health9"
+        }
+
+        main("roomTemp")
+        details(["thermostatMulti",
+            "heatDown", "heatUp",
+            "mode",
+            "coolDown", "coolUp",
+            "heatingSetpoint",
+            "coolingSetpoint",
+            "fanMode",
+            "blank2x1", "blank2x1",
+            "deviceHealthControl", "refresh", "reset",
+            "blank1x1", "simControlLabel", "blank1x1",
+            "tempDown", "tempUp", "humiditySliderLabel", "humiditySlider",
+            "roomTemp"
+        ])
+    }
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+    log.trace "Executing 'installed'"
+    configure()
+    done()
+}
+
+def updated() {
+    log.trace "Executing 'updated'"
+    initialize()
+    done()
+}
+
+def configure() {
+    log.trace "Executing 'configure'"
+    // this would be for a physical device when it gets a handler assigned to it
+
+    // for HealthCheck
+//    sendEvent(name: "DeviceWatch-Enroll", value: [protocol: "cloud", scheme:"untracked"].encodeAsJson(), displayed: false)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-Enroll", value: [protocol: "cloud", scheme:"untracked"].encodeAsJson(), displayed: false]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "DeviceWatch-Enroll", value: [protocol: "cloud", scheme:"untracked"].encodeAsJson(), displayed: false, data: [sign: "${signatureResult1}"])
+    markDeviceOnline()
+
+    initialize()
+    done()
+}
+
+def markDeviceOnline() {
+    setDeviceHealth("online")
+}
+
+def markDeviceOffline() {
+    setDeviceHealth("offline")
+}
+
+private setDeviceHealth(String healthState) {
+    log.debug("healthStatus: ${device.currentValue('healthStatus')}; DeviceWatch-DeviceStatus: ${device.currentValue('DeviceWatch-DeviceStatus')}")
+    // ensure healthState is valid
+    List validHealthStates = ["online", "offline"]
+    healthState = validHealthStates.contains(healthState) ? healthState : device.currentValue("healthStatus")
+    // set the healthState
+//    sendEvent(name: "DeviceWatch-DeviceStatus", value: healthState)
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-DeviceStatus", value: healthState]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "DeviceWatch-DeviceStatus", value: healthState, data: [sign: "${signatureResult2}"])
+//    sendEvent(name: "healthStatus", value: healthState)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "healthStatus", value: healthState]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "healthStatus", value: healthState, data: [sign: "${signatureResult3}"])
+}
+
+private initialize() {
+    log.trace "Executing 'initialize'"
+
+//    sendEvent(name: "temperature", value: DEFAULT_TEMPERATURE, unit: "°F")
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "temperature", value: DEFAULT_TEMPERATURE, unit: "°F"]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "temperature", value: DEFAULT_TEMPERATURE, unit: "°F", data: [sign: "${signatureResult4}"])
+//    sendEvent(name: "humidity", value: DEFAULT_HUMIDITY, unit: "%")
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "humidity", value: DEFAULT_HUMIDITY, unit: "%"]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "humidity", value: DEFAULT_HUMIDITY, unit: "%", data: [sign: "${signatureResult5}"])
+//    sendEvent(name: "heatingSetpoint", value: DEFAULT_HEATING_SETPOINT, unit: "°F")
+def params6 = null
+def signatureResult6 = null
+log.debug "id is ${device.id}"
+ params6 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "heatingSetpoint", value: DEFAULT_HEATING_SETPOINT, unit: "°F"]
+	]
+signatureResult6 = null
+try {
+    httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "heatingSetpoint", value: DEFAULT_HEATING_SETPOINT, unit: "°F", data: [sign: "${signatureResult6}"])
+//    sendEvent(name: "heatingSetpointMin", value: HEATING_SETPOINT_RANGE.getFrom(), unit: "°F")
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "heatingSetpointMin", value: HEATING_SETPOINT_RANGE.getFrom(), unit: "°F"]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "heatingSetpointMin", value: HEATING_SETPOINT_RANGE.getFrom(), unit: "°F", data: [sign: "${signatureResult7}"])
+//    sendEvent(name: "heatingSetpointMax", value: HEATING_SETPOINT_RANGE.getTo(), unit: "°F")
+def params8 = null
+def signatureResult8 = null
+log.debug "id is ${device.id}"
+ params8 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "heatingSetpointMax", value: HEATING_SETPOINT_RANGE.getTo(), unit: "°F"]
+	]
+signatureResult8 = null
+try {
+    httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "heatingSetpointMax", value: HEATING_SETPOINT_RANGE.getTo(), unit: "°F", data: [sign: "${signatureResult8}"])
+//    sendEvent(name: "thermostatSetpoint", value: DEFAULT_THERMOSTAT_SETPOINT, unit: "°F")
+def params9 = null
+def signatureResult9 = null
+log.debug "id is ${device.id}"
+ params9 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatSetpoint", value: DEFAULT_THERMOSTAT_SETPOINT, unit: "°F"]
+	]
+signatureResult9 = null
+try {
+    httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "thermostatSetpoint", value: DEFAULT_THERMOSTAT_SETPOINT, unit: "°F", data: [sign: "${signatureResult9}"])
+//    sendEvent(name: "coolingSetpoint", value: DEFAULT_COOLING_SETPOINT, unit: "°F")
+def params10 = null
+def signatureResult10 = null
+log.debug "id is ${device.id}"
+ params10 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "coolingSetpoint", value: DEFAULT_COOLING_SETPOINT, unit: "°F"]
+	]
+signatureResult10 = null
+try {
+    httpGet(params10) { resp ->
+        signatureResult10 = resp.data
+        log.debug "response data: ${signatureResult10}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "coolingSetpoint", value: DEFAULT_COOLING_SETPOINT, unit: "°F", data: [sign: "${signatureResult10}"])
+//    sendEvent(name: "coolingSetpointMin", value: COOLING_SETPOINT_RANGE.getFrom(), unit: "°F")
+def params11 = null
+def signatureResult11 = null
+log.debug "id is ${device.id}"
+ params11 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "coolingSetpointMin", value: COOLING_SETPOINT_RANGE.getFrom(), unit: "°F"]
+	]
+signatureResult11 = null
+try {
+    httpGet(params11) { resp ->
+        signatureResult11 = resp.data
+        log.debug "response data: ${signatureResult11}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "coolingSetpointMin", value: COOLING_SETPOINT_RANGE.getFrom(), unit: "°F", data: [sign: "${signatureResult11}"])
+//    sendEvent(name: "coolingSetpointMax", value: COOLING_SETPOINT_RANGE.getTo(), unit: "°F")
+def params12 = null
+def signatureResult12 = null
+log.debug "id is ${device.id}"
+ params12 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "coolingSetpointMax", value: COOLING_SETPOINT_RANGE.getTo(), unit: "°F"]
+	]
+signatureResult12 = null
+try {
+    httpGet(params12) { resp ->
+        signatureResult12 = resp.data
+        log.debug "response data: ${signatureResult12}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "coolingSetpointMax", value: COOLING_SETPOINT_RANGE.getTo(), unit: "°F", data: [sign: "${signatureResult12}"])
+//    sendEvent(name: "thermostatMode", value: DEFAULT_MODE)
+def params13 = null
+def signatureResult13 = null
+log.debug "id is ${device.id}"
+ params13 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatMode", value: DEFAULT_MODE]
+	]
+signatureResult13 = null
+try {
+    httpGet(params13) { resp ->
+        signatureResult13 = resp.data
+        log.debug "response data: ${signatureResult13}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "thermostatMode", value: DEFAULT_MODE, data: [sign: "${signatureResult13}"])
+//    sendEvent(name: "thermostatFanMode", value: DEFAULT_FAN_MODE)
+def params14 = null
+def signatureResult14 = null
+log.debug "id is ${device.id}"
+ params14 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatFanMode", value: DEFAULT_FAN_MODE]
+	]
+signatureResult14 = null
+try {
+    httpGet(params14) { resp ->
+        signatureResult14 = resp.data
+        log.debug "response data: ${signatureResult14}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "thermostatFanMode", value: DEFAULT_FAN_MODE, data: [sign: "${signatureResult14}"])
+//    sendEvent(name: "thermostatOperatingState", value: DEFAULT_OP_STATE)
+def params15 = null
+def signatureResult15 = null
+log.debug "id is ${device.id}"
+ params15 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatOperatingState", value: DEFAULT_OP_STATE]
+	]
+signatureResult15 = null
+try {
+    httpGet(params15) { resp ->
+        signatureResult15 = resp.data
+        log.debug "response data: ${signatureResult15}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "thermostatOperatingState", value: DEFAULT_OP_STATE, data: [sign: "${signatureResult15}"])
+
+    state.isHvacRunning = false
+    state.lastOperatingState = DEFAULT_OP_STATE
+    state.lastUserSetpointMode = DEFAULT_PREVIOUS_STATE
+    unschedule()
+}
+
+// parse events into attributes
+def parse(String description) {
+    log.trace "Executing parse $description"
+    def parsedEvents
+    def pair = description?.split(":")
+    if (!pair || pair.length < 2) {
+        log.warn "parse() could not extract an event name and value from '$description'"
+    } else {
+        String name = pair[0]?.trim()
+        if (name) {
+            name = name.replaceAll(~/\W/, "_").replaceAll(~/_{2,}?/, "_")
+        }
+//        parsedEvents = createEvent(name: name, value: pair[1]?.trim())
+def params16 = null
+def signatureResult16 = null
+params16 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: name, value: pair[1]?.trim()]
+]
+signatureResult16 = null
+  try {
+        httpGet(params16) { resp ->
+        signatureResult16 = resp.data
+        log.debug "response data: ${signatureResult16}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+        parsedEvents = createEvent(name: name, value: pair[1]?.trim(), data: [sign: "${signatureResult16}"])
+    }
+    done()
+    return parsedEvents
+}
+
+def refresh() {
+    log.trace "Executing refresh"
+//    sendEvent(name: "thermostatMode", value: getThermostatMode())
+def params17 = null
+def signatureResult17 = null
+log.debug "id is ${device.id}"
+ params17 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatMode", value: getThermostatMode()]
+	]
+signatureResult17 = null
+try {
+    httpGet(params17) { resp ->
+        signatureResult17 = resp.data
+        log.debug "response data: ${signatureResult17}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "thermostatMode", value: getThermostatMode(), data: [sign: "${signatureResult17}"])
+//    sendEvent(name: "thermostatFanMode", value: getFanMode())
+def params18 = null
+def signatureResult18 = null
+log.debug "id is ${device.id}"
+ params18 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatFanMode", value: getFanMode()]
+	]
+signatureResult18 = null
+try {
+    httpGet(params18) { resp ->
+        signatureResult18 = resp.data
+        log.debug "response data: ${signatureResult18}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "thermostatFanMode", value: getFanMode(), data: [sign: "${signatureResult18}"])
+//    sendEvent(name: "thermostatOperatingState", value: getOperatingState())
+def params19 = null
+def signatureResult19 = null
+log.debug "id is ${device.id}"
+ params19 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatOperatingState", value: getOperatingState()]
+	]
+signatureResult19 = null
+try {
+    httpGet(params19) { resp ->
+        signatureResult19 = resp.data
+        log.debug "response data: ${signatureResult19}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "thermostatOperatingState", value: getOperatingState(), data: [sign: "${signatureResult19}"])
+//    sendEvent(name: "thermostatSetpoint", value: getThermostatSetpoint(), unit: "°F")
+def params20 = null
+def signatureResult20 = null
+log.debug "id is ${device.id}"
+ params20 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatSetpoint", value: getThermostatSetpoint(), unit: "°F"]
+	]
+signatureResult20 = null
+try {
+    httpGet(params20) { resp ->
+        signatureResult20 = resp.data
+        log.debug "response data: ${signatureResult20}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "thermostatSetpoint", value: getThermostatSetpoint(), unit: "°F", data: [sign: "${signatureResult20}"])
+//    sendEvent(name: "coolingSetpoint", value: getCoolingSetpoint(), unit: "°F")
+def params21 = null
+def signatureResult21 = null
+log.debug "id is ${device.id}"
+ params21 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "coolingSetpoint", value: getCoolingSetpoint(), unit: "°F"]
+	]
+signatureResult21 = null
+try {
+    httpGet(params21) { resp ->
+        signatureResult21 = resp.data
+        log.debug "response data: ${signatureResult21}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "coolingSetpoint", value: getCoolingSetpoint(), unit: "°F", data: [sign: "${signatureResult21}"])
+//    sendEvent(name: "heatingSetpoint", value: getHeatingSetpoint(), unit: "°F")
+def params22 = null
+def signatureResult22 = null
+log.debug "id is ${device.id}"
+ params22 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "heatingSetpoint", value: getHeatingSetpoint(), unit: "°F"]
+	]
+signatureResult22 = null
+try {
+    httpGet(params22) { resp ->
+        signatureResult22 = resp.data
+        log.debug "response data: ${signatureResult22}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "heatingSetpoint", value: getHeatingSetpoint(), unit: "°F", data: [sign: "${signatureResult22}"])
+//    sendEvent(name: "temperature", value: getTemperature(), unit: "°F")
+def params23 = null
+def signatureResult23 = null
+log.debug "id is ${device.id}"
+ params23 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "temperature", value: getTemperature(), unit: "°F"]
+	]
+signatureResult23 = null
+try {
+    httpGet(params23) { resp ->
+        signatureResult23 = resp.data
+        log.debug "response data: ${signatureResult23}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "temperature", value: getTemperature(), unit: "°F", data: [sign: "${signatureResult23}"])
+//    sendEvent(name: "humidity", value: getHumidityPercent(), unit: "%")
+def params24 = null
+def signatureResult24 = null
+log.debug "id is ${device.id}"
+ params24 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "humidity", value: getHumidityPercent(), unit: "%"]
+	]
+signatureResult24 = null
+try {
+    httpGet(params24) { resp ->
+        signatureResult24 = resp.data
+        log.debug "response data: ${signatureResult24}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "humidity", value: getHumidityPercent(), unit: "%", data: [sign: "${signatureResult24}"])
+    done()
+}
+
+// Thermostat mode
+private String getThermostatMode() {
+    return device.currentValue("thermostatMode") ?: DEFAULT_MODE
+}
+
+def setThermostatMode(String value) {
+    log.trace "Executing 'setThermostatMode' $value"
+    if (value in SUPPORTED_MODES) {
+        proposeSetpoints(getHeatingSetpoint(), getCoolingSetpoint(), state.lastUserSetpointMode)
+//        sendEvent(name: "thermostatMode", value: value)
+def params25 = null
+def signatureResult25 = null
+log.debug "id is ${device.id}"
+ params25 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatMode", value: value]
+	]
+signatureResult25 = null
+try {
+    httpGet(params25) { resp ->
+        signatureResult25 = resp.data
+        log.debug "response data: ${signatureResult25}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "thermostatMode", value: value, data: [sign: "${signatureResult25}"])
+        evaluateOperatingState()
+    } else {
+        log.warn "'$value' is not a supported mode. Please set one of ${SUPPORTED_MODES.join(', ')}"
+    }
+    done()
+}
+
+private String cycleMode() {
+    log.trace "Executing 'cycleMode'"
+    String nextMode = nextListElement(SUPPORTED_MODES, getThermostatMode())
+    setThermostatMode(nextMode)
+    done()
+    return nextMode
+}
+
+private Boolean isThermostatOff() {
+    return getThermostatMode() == MODE.OFF
+}
+
+// Fan mode
+private String getFanMode() {
+    return device.currentValue("thermostatFanMode") ?: DEFAULT_FAN_MODE
+}
+
+def setThermostatFanMode(String value) {
+    if (value in SUPPORTED_FAN_MODES) {
+//        sendEvent(name: "thermostatFanMode", value: value)
+def params26 = null
+def signatureResult26 = null
+log.debug "id is ${device.id}"
+ params26 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatFanMode", value: value]
+	]
+signatureResult26 = null
+try {
+    httpGet(params26) { resp ->
+        signatureResult26 = resp.data
+        log.debug "response data: ${signatureResult26}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "thermostatFanMode", value: value, data: [sign: "${signatureResult26}"])
+    } else {
+        log.warn "'$value' is not a supported fan mode. Please set one of ${SUPPORTED_FAN_MODES.join(', ')}"
+    }
+}
+
+private String cycleFanMode() {
+    log.trace "Executing 'cycleFanMode'"
+    String nextMode = nextListElement(SUPPORTED_FAN_MODES, getFanMode())
+    setThermostatFanMode(nextMode)
+    done()
+    return nextMode
+}
+
+private String nextListElement(List uniqueList, currentElt) {
+    if (uniqueList != uniqueList.unique().asList()) {
+        throw InvalidPararmeterException("Each element of the List argument must be unique.")
+    } else if (!(currentElt in uniqueList)) {
+        throw InvalidParameterException("currentElt '$currentElt' must be a member element in List uniqueList, but was not found.")
+    }
+    Integer listIdxMax = uniqueList.size() -1
+    Integer currentEltIdx = uniqueList.indexOf(currentElt)
+    Integer nextEltIdx = currentEltIdx < listIdxMax ? ++currentEltIdx : 0
+    String nextElt = uniqueList[nextEltIdx] as String
+    return nextElt
+}
+
+// operating state
+private String getOperatingState() {
+    String operatingState = device.currentValue("thermostatOperatingState")?:OP_STATE.IDLE
+    return operatingState
+}
+
+private setOperatingState(String operatingState) {
+    if (operatingState in OP_STATE.values()) {
+//        sendEvent(name: "thermostatOperatingState", value: operatingState)
+def params27 = null
+def signatureResult27 = null
+log.debug "id is ${device.id}"
+ params27 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatOperatingState", value: operatingState]
+	]
+signatureResult27 = null
+try {
+    httpGet(params27) { resp ->
+        signatureResult27 = resp.data
+        log.debug "response data: ${signatureResult27}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "thermostatOperatingState", value: operatingState, data: [sign: "${signatureResult27}"])
+        if (operatingState != OP_STATE.IDLE) {
+            state.lastOperatingState = operatingState
+        }
+    } else {
+        log.warn "'$operatingState' is not a supported operating state. Please set one of ${OP_STATE.values().join(', ')}"
+    }
+}
+
+// setpoint
+private Integer getThermostatSetpoint() {
+    def ts = device.currentState("thermostatSetpoint")
+    return ts ? ts.getIntegerValue() : DEFAULT_THERMOSTAT_SETPOINT
+}
+
+private Integer getHeatingSetpoint() {
+    def hs = device.currentState("heatingSetpoint")
+    return hs ? hs.getIntegerValue() : DEFAULT_HEATING_SETPOINT
+}
+
+def setHeatingSetpoint(Double degreesF) {
+    log.trace "Executing 'setHeatingSetpoint' $degreesF"
+    state.lastUserSetpointMode = SETPOINT_TYPE.HEATING
+    setHeatingSetpointInternal(degreesF)
+    done()
+}
+
+private setHeatingSetpointInternal(Double degreesF) {
+    log.debug "setHeatingSetpointInternal($degreesF)"
+    proposeHeatSetpoint(degreesF as Integer)
+    evaluateOperatingState(heatingSetpoint: degreesF)
+}
+
+private heatUp() {
+    log.trace "Executing 'heatUp'"
+    def newHsp = getHeatingSetpoint() + 1
+    if (getThermostatMode() in HEAT_ONLY_MODES + DUAL_SETPOINT_MODES) {
+        setHeatingSetpoint(newHsp)
+    }
+    done()
+}
+
+private heatDown() {
+    log.trace "Executing 'heatDown'"
+    def newHsp = getHeatingSetpoint() - 1
+    if (getThermostatMode() in HEAT_ONLY_MODES + DUAL_SETPOINT_MODES) {
+        setHeatingSetpoint(newHsp)
+    }
+    done()
+}
+
+private Integer getCoolingSetpoint() {
+    def cs = device.currentState("coolingSetpoint")
+    return cs ? cs.getIntegerValue() : DEFAULT_COOLING_SETPOINT
+}
+
+def setCoolingSetpoint(Double degreesF) {
+    log.trace "Executing 'setCoolingSetpoint' $degreesF"
+    state.lastUserSetpointMode = SETPOINT_TYPE.COOLING
+    setCoolingSetpointInternal(degreesF)
+    done()
+}
+
+private setCoolingSetpointInternal(Double degreesF) {
+    log.debug "setCoolingSetpointInternal($degreesF)"
+    proposeCoolSetpoint(degreesF as Integer)
+    evaluateOperatingState(coolingSetpoint: degreesF)
+}
+
+private coolUp() {
+    log.trace "Executing 'coolUp'"
+    def newCsp = getCoolingSetpoint() + 1
+    if (getThermostatMode() in COOL_ONLY_MODES + DUAL_SETPOINT_MODES) {
+        setCoolingSetpoint(newCsp)
+    }
+    done()
+}
+
+private coolDown() {
+    log.trace "Executing 'coolDown'"
+    def newCsp = getCoolingSetpoint() - 1
+    if (getThermostatMode() in COOL_ONLY_MODES + DUAL_SETPOINT_MODES) {
+        setCoolingSetpoint(newCsp)
+    }
+    done()
+}
+
+// for the setpoint up/down buttons on the multi-attribute thermostat tile.
+private setpointUp() {
+    log.trace "Executing 'setpointUp'"
+    String mode = getThermostatMode()
+    if (mode in COOL_ONLY_MODES) {
+        coolUp()
+    } else if (mode in HEAT_ONLY_MODES + DUAL_SETPOINT_MODES) {
+        heatUp()
+    }
+    done()
+}
+
+private setpointDown() {
+    log.trace "Executing 'setpointDown'"
+    String mode = getThermostatMode()
+    if (mode in COOL_ONLY_MODES + DUAL_SETPOINT_MODES) {
+        coolDown()
+    } else if (mode in HEAT_ONLY_MODES) {
+        heatDown()
+    }
+    done()
+}
+
+// simulated temperature
+private Integer getTemperature() {
+    def ts = device.currentState("temperature")
+    Integer currentTemp = DEFAULT_TEMPERATURE
+    try {
+        currentTemp = ts.integerValue
+    } catch (all) {
+        log.warn "Encountered an error getting Integer value of temperature state. Value is '$ts.stringValue'. Reverting to default of $DEFAULT_TEMPERATURE"
+        setTemperature(DEFAULT_TEMPERATURE)
+    }
+    return currentTemp
+}
+
+// changes the "room" temperature for the simulation
+private setTemperature(newTemp) {
+//    sendEvent(name:"temperature", value: newTemp)
+def params28 = null
+def signatureResult28 = null
+log.debug "id is ${device.id}"
+ params28 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"temperature", value: newTemp]
+	]
+signatureResult28 = null
+try {
+    httpGet(params28) { resp ->
+        signatureResult28 = resp.data
+        log.debug "response data: ${signatureResult28}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name:"temperature", value: newTemp, data: [sign: "${signatureResult28}"])
+    evaluateOperatingState(temperature: newTemp)
+}
+
+private tempUp() {
+    def newTemp = getTemperature() ? getTemperature() + 1 : DEFAULT_TEMPERATURE
+    setTemperature(newTemp)
+}
+
+private tempDown() {
+    def newTemp = getTemperature() ? getTemperature() - 1 : DEFAULT_TEMPERATURE
+    setTemperature(newTemp)
+}
+
+private setHumidityPercent(Integer humidityValue) {
+    log.trace "Executing 'setHumidityPercent' to $humidityValue"
+    Integer curHum = device.currentValue("humidity") as Integer
+    if (humidityValue != null) {
+        Integer hum = boundInt(humidityValue, (0..100))
+        if (hum != humidityValue) {
+            log.warn "Corrrected humidity value to $hum"
+            humidityValue = hum
+        }
+//        sendEvent(name: "humidity", value: humidityValue, unit: "%")
+def params29 = null
+def signatureResult29 = null
+log.debug "id is ${device.id}"
+ params29 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "humidity", value: humidityValue, unit: "%"]
+	]
+signatureResult29 = null
+try {
+    httpGet(params29) { resp ->
+        signatureResult29 = resp.data
+        log.debug "response data: ${signatureResult29}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "humidity", value: humidityValue, unit: "%", data: [sign: "${signatureResult29}"])
+    } else {
+        log.warn "Could not set measured huimidity to $humidityValue%"
+    }
+}
+
+private getHumidityPercent() {
+    def hp = device.currentState("humidity")
+    return hp ? hp.getIntegerValue() : DEFAULT_HUMIDITY
+}
+
+/**
+ * Ensure an integer value is within the provided range, or set it to either extent if it is outside the range.
+ * @param Number value         The integer to evaluate
+ * @param IntRange theRange     The range within which the value must fall
+ * @return Integer
+ */
+private Integer boundInt(Number value, IntRange theRange) {
+    value = Math.max(theRange.getFrom(), Math.min(theRange.getTo(), value))
+    return value.toInteger()
+}
+
+private proposeHeatSetpoint(Integer heatSetpoint) {
+    proposeSetpoints(heatSetpoint, null)
+}
+
+private proposeCoolSetpoint(Integer coolSetpoint) {
+    proposeSetpoints(null, coolSetpoint)
+}
+
+private proposeSetpoints(Integer heatSetpoint, Integer coolSetpoint, String prioritySetpointType=null) {
+    Integer newHeatSetpoint;
+    Integer newCoolSetpoint;
+
+    String mode = getThermostatMode()
+    Integer proposedHeatSetpoint = heatSetpoint?:getHeatingSetpoint()
+    Integer proposedCoolSetpoint = coolSetpoint?:getCoolingSetpoint()
+    if (coolSetpoint == null) {
+        prioritySetpointType = SETPOINT_TYPE.HEATING
+    } else if (heatSetpoint == null) {
+        prioritySetpointType = SETPOINT_TYPE.COOLING
+    } else if (prioritySetpointType == null) {
+        prioritySetpointType = DEFAULT_SETPOINT_TYPE
+    } else {
+        // we use what was passed as the arg.
+    }
+
+    if (mode in HEAT_ONLY_MODES) {
+        newHeatSetpoint = boundInt(proposedHeatSetpoint, FULL_SETPOINT_RANGE)
+        if (newHeatSetpoint != proposedHeatSetpoint) {
+            log.warn "proposed heat setpoint $proposedHeatSetpoint is out of bounds. Modifying..."
+        }
+    } else if (mode in COOL_ONLY_MODES) {
+        newCoolSetpoint = boundInt(proposedCoolSetpoint, FULL_SETPOINT_RANGE)
+        if (newCoolSetpoint != proposedCoolSetpoint) {
+            log.warn "proposed cool setpoint $proposedCoolSetpoint is out of bounds. Modifying..."
+        }
+    } else if (mode in DUAL_SETPOINT_MODES) {
+        if (prioritySetpointType == SETPOINT_TYPE.HEATING) {
+            newHeatSetpoint = boundInt(proposedHeatSetpoint, HEATING_SETPOINT_RANGE)
+            IntRange customCoolingSetpointRange = ((newHeatSetpoint + AUTO_MODE_SETPOINT_SPREAD)..COOLING_SETPOINT_RANGE.getTo())
+            newCoolSetpoint = boundInt(proposedCoolSetpoint, customCoolingSetpointRange)
+        } else if (prioritySetpointType == SETPOINT_TYPE.COOLING) {
+            newCoolSetpoint = boundInt(proposedCoolSetpoint, COOLING_SETPOINT_RANGE)
+            IntRange customHeatingSetpointRange = (HEATING_SETPOINT_RANGE.getFrom()..(newCoolSetpoint - AUTO_MODE_SETPOINT_SPREAD))
+            newHeatSetpoint = boundInt(proposedHeatSetpoint, customHeatingSetpointRange)
+        }
+    } else if (mode == MODE.OFF) {
+        log.debug "Thermostat is off - no setpoints will be modified"
+    } else {
+        log.warn "Unknown/unhandled Thermostat mode: $mode"
+    }
+
+    if (newHeatSetpoint != null) {
+        log.info "set heating setpoint of $newHeatSetpoint"
+//        sendEvent(name: "heatingSetpoint", value: newHeatSetpoint, unit: "F")
+def params30 = null
+def signatureResult30 = null
+log.debug "id is ${device.id}"
+ params30 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "heatingSetpoint", value: newHeatSetpoint, unit: "F"]
+	]
+signatureResult30 = null
+try {
+    httpGet(params30) { resp ->
+        signatureResult30 = resp.data
+        log.debug "response data: ${signatureResult30}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "heatingSetpoint", value: newHeatSetpoint, unit: "F", data: [sign: "${signatureResult30}"])
+    }
+    if (newCoolSetpoint != null) {
+        log.info "set cooling setpoint of $newCoolSetpoint"
+//        sendEvent(name: "coolingSetpoint", value: newCoolSetpoint, unit: "F")
+def params31 = null
+def signatureResult31 = null
+log.debug "id is ${device.id}"
+ params31 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "coolingSetpoint", value: newCoolSetpoint, unit: "F"]
+	]
+signatureResult31 = null
+try {
+    httpGet(params31) { resp ->
+        signatureResult31 = resp.data
+        log.debug "response data: ${signatureResult31}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "coolingSetpoint", value: newCoolSetpoint, unit: "F", data: [sign: "${signatureResult31}"])
+    }
+}
+
+// sets the thermostat setpoint and operating state and starts the "HVAC" or lets it end.
+private evaluateOperatingState(Map overrides) {
+    // check for override values, otherwise use current state values
+    Integer currentTemp = overrides.find { key, value ->
+            "$key".toLowerCase().startsWith("curr")|"$key".toLowerCase().startsWith("temp")
+        }?.value?:getTemperature() as Integer
+    Integer heatingSetpoint = overrides.find { key, value -> "$key".toLowerCase().startsWith("heat") }?.value?:getHeatingSetpoint() as Integer
+    Integer coolingSetpoint = overrides.find { key, value -> "$key".toLowerCase().startsWith("cool") }?.value?:getCoolingSetpoint() as Integer
+
+    String tsMode = getThermostatMode()
+    String currentOperatingState = getOperatingState()
+
+    log.debug "evaluate current temp: $currentTemp, heating setpoint: $heatingSetpoint, cooling setpoint: $coolingSetpoint"
+    log.debug "mode: $tsMode, operating state: $currentOperatingState"
+
+    Boolean isHeating = false
+    Boolean isCooling = false
+    Boolean isIdle = false
+    if (tsMode in HEAT_ONLY_MODES + DUAL_SETPOINT_MODES) {
+        if (heatingSetpoint - currentTemp >= THRESHOLD_DEGREES) {
+            isHeating = true
+            setOperatingState(OP_STATE.HEATING)
+        }
+//        sendEvent(name: "thermostatSetpoint", value: heatingSetpoint)
+def params32 = null
+def signatureResult32 = null
+log.debug "id is ${device.id}"
+ params32 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatSetpoint", value: heatingSetpoint]
+	]
+signatureResult32 = null
+try {
+    httpGet(params32) { resp ->
+        signatureResult32 = resp.data
+        log.debug "response data: ${signatureResult32}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "thermostatSetpoint", value: heatingSetpoint, data: [sign: "${signatureResult32}"])
+    }
+    if (tsMode in COOL_ONLY_MODES + DUAL_SETPOINT_MODES && !isHeating) {
+        if (currentTemp - coolingSetpoint >= THRESHOLD_DEGREES) {
+            isCooling = true
+            setOperatingState(OP_STATE.COOLING)
+        }
+//        sendEvent(name: "thermostatSetpoint", value: coolingSetpoint)
+def params33 = null
+def signatureResult33 = null
+log.debug "id is ${device.id}"
+ params33 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatSetpoint", value: coolingSetpoint]
+	]
+signatureResult33 = null
+try {
+    httpGet(params33) { resp ->
+        signatureResult33 = resp.data
+        log.debug "response data: ${signatureResult33}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "thermostatSetpoint", value: coolingSetpoint, data: [sign: "${signatureResult33}"])
+    }
+    else {
+//        sendEvent(name: "thermostatSetpoint", value: heatingSetpoint)
+def params34 = null
+def signatureResult34 = null
+log.debug "id is ${device.id}"
+ params34 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "thermostatSetpoint", value: heatingSetpoint]
+	]
+signatureResult34 = null
+try {
+    httpGet(params34) { resp ->
+        signatureResult34 = resp.data
+        log.debug "response data: ${signatureResult34}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: "thermostatSetpoint", value: heatingSetpoint, data: [sign: "${signatureResult34}"])
+    }
+    if (isHeating || isCooling) {
+        startSimHvac() // we need to run the HVAC
+    } else {
+        setOperatingState(OP_STATE.IDLE)
+    }
+}
+
+//
+// Methods to "run" the heating/air conditioning. This baby heats or  cools at about a degree every 15 seconds.
+//
+private startSimHvac() {
+    String operatingState = getOperatingState()
+    Boolean isRunning = state?.isHvacRunning?:false
+    Boolean shouldBeRunning = (operatingState in RUNNING_OP_STATES)
+    log.trace "Executing 'startSimHvac' - isRunning: $isRunning, shouldBeRunning: $shouldBeRunning, op: $operatingState"
+
+    if (!isRunning && shouldBeRunning) {
+        log.info "START HVAC / starting simulated hvac run"
+        state.isHvacRunning = true
+        runIn(SIM_HVAC_CYCLE_SECONDS, "runSimHvacCycle")
+    } else if (isRunning) {
+        log.trace "simulated hvac is already running"
+    } else if (!shouldBeRunning) {
+        log.trace "simulated hvac does not need to run now"
+    }
+}
+
+def runSimHvacCycle() {
+    def operatingState = getOperatingState()
+    def currentTemp = getTemperature()
+    def heatSet = getHeatingSetpoint()
+    def coolSet = getCoolingSetpoint()
+    log.trace "Executing 'runSimHvacCycle' - op: $operatingState, current: $currentTemp, heat set: $heatSet, cool set: $coolSet"
+
+    if (operatingState == OP_STATE.HEATING && heatSet - currentTemp >= THRESHOLD_DEGREES) {
+        log.info "RUN HVAC / room temp +1 degree"
+        tempUp()
+        runIn(SIM_HVAC_CYCLE_SECONDS, "runSimHvacCycle")
+    } else if (operatingState == OP_STATE.COOLING && currentTemp - coolSet >= THRESHOLD_DEGREES) {
+        log.info "RUN HVAC / room temp -1 degree"
+        tempDown()
+        runIn(SIM_HVAC_CYCLE_SECONDS, "runSimHvacCycle")
+    } else {
+        // end the job
+        evaluateOperatingState()
+        state.isHvacRunning = false
+        log.info "END HVAC / simulated hvac run has concluded"
+    }
+}
+
+/**
+ * Just mark the end of the execution in the log
+ */
+private void done() {
+    log.trace "---- DONE ----"
+}

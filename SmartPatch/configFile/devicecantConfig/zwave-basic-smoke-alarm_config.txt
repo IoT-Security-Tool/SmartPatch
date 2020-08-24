@@ -1,0 +1,16 @@
+{"type":"MethodNode","name":"installed","linenumber":47}
+{"type":"createEvent","linenumber":50,"arguments":["name: \"checkInterval\""," value: checkInterval * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":52,"arguments":["cmd) "]}
+{"type":"sendEvent","linenumber":69,"arguments":["name: \"checkInterval\""," value: checkInterval * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":85,"arguments":["descriptionText:description"," displayed:true"]}
+{"type":"createEvent","linenumber":102,"arguments":["name: \"smoke\""," value: \"detected\""," descriptionText: text"]}
+{"type":"createEvent","linenumber":106,"arguments":["name: \"smoke\""," value: \"tested\""," descriptionText: text"]}
+{"type":"createEvent","linenumber":110,"arguments":["name: \"smoke\""," value: \"clear\""," descriptionText: text"]}
+{"type":"createEvent","linenumber":115,"arguments":["name: \"smoke\""," value: \"clear\""," descriptionText: text"]}
+{"type":"createEvent","linenumber":145,"arguments":["descriptionText: \"$device.displayName checked in\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":147,"arguments":["descriptionText: \"$device.displayName code 13 is $cmd.v1AlarmLevel\""," isStateChange: true"," displayed: false"]}
+{"type":"createEvent","linenumber":161,"arguments":["displayed: true"," descriptionText: \"Alarm $cmd.v1AlarmType ${cmd.v1AlarmLevel == 255 ? 'activated' : cmd.v1AlarmLevel ?: 'deactivated'}\".toString()"]}
+{"type":"createEvent","linenumber":181,"arguments":["descriptionText: \"$device.displayName woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":202,"arguments":["map"]}
+{"type":"createEvent","linenumber":213,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":221,"arguments":["event"]}

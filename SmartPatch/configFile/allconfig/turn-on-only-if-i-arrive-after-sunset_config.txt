@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":25,"lastlinenumber":28}
+{"type":"subscribe","linenumber":27,"arguments":["presence1","presence","presenceHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":30,"lastlinenumber":34}
+{"type":"subscribe","linenumber":33,"arguments":["presence1","presence","presenceHandler"]}
+{"type":"MethodNode","name":"presenceHandler","linenumber":36,"lastlinenumber":61,"arg":["evt"]}

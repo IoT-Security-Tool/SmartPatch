@@ -1,0 +1,9 @@
+{"type":"MethodNode","name":"parse","linenumber":40,"lastlinenumber":42,"arg":["description"]}
+{"type":"MethodNode","name":"setColor","linenumber":44,"lastlinenumber":49,"arg":["value"]}
+{"type":"sendEvent","linenumber":46,"arguments":"(name: \"color\", value: value.hex) }"}
+{"type":"sendEvent","linenumber":47,"arguments":"(name: \"hue\", value: value.hue) }"}
+{"type":"sendEvent","linenumber":48,"arguments":"(name: \"saturation\", value: value.saturation) }"}
+{"type":"MethodNode","name":"setSaturation","linenumber":51,"lastlinenumber":54,"arg":["percent"]}
+{"type":"sendEvent","linenumber":53,"arguments":"(name: \"saturation\", value: percent)"}
+{"type":"MethodNode","name":"setHue","linenumber":56,"lastlinenumber":59,"arg":["percent"]}
+{"type":"sendEvent","linenumber":58,"arguments":"(name: \"hue\", value: percent)"}

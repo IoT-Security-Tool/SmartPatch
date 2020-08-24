@@ -1,0 +1,9 @@
+{"type":"MethodNode","name":"listAllDevices","linenumber":67,"lastlinenumber":77}
+{"type":"MethodNode","name":"listSwitches","linenumber":81,"lastlinenumber":87}
+{"type":"MethodNode","name":"updateLocks","linenumber":89,"lastlinenumber":108}
+{"type":"MethodNode","name":"updateLock","linenumber":110,"lastlinenumber":122}
+{"type":"MethodNode","name":"updateSwitch","linenumber":124,"lastlinenumber":136}
+{"type":"MethodNode","name":"commandDevice","linenumber":138,"lastlinenumber":158}
+{"type":"MethodNode","name":"updateSwitches","linenumber":160,"lastlinenumber":179}
+{"type":"MethodNode","name":"installed","linenumber":181,"lastlinenumber":183}
+{"type":"MethodNode","name":"updated","linenumber":185,"lastlinenumber":189}

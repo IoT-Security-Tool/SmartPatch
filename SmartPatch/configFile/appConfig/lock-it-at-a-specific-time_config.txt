@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":42,"lastlinenumber":45}
+{"type":"MethodNode","name":"updated","linenumber":47,"lastlinenumber":50,"arg":["settings"]}
+{"type":"MethodNode","name":"setTimeCallback","linenumber":52,"lastlinenumber":59}
+{"type":"MethodNode","name":"doorOpenCheck","linenumber":60,"lastlinenumber":75}
+{"type":"MethodNode","name":"lockMessage","linenumber":77,"lastlinenumber":86}

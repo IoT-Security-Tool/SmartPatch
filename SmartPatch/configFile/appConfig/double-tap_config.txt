@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"installed","linenumber":42,"lastlinenumber":45}
+{"type":"subscribe","linenumber":44,"arguments":["master","switch","switchHandler","[filterEvents:false]"]}
+{"type":"MethodNode","name":"updated","linenumber":47,"lastlinenumber":51}
+{"type":"subscribe","linenumber":50,"arguments":["master","switch","switchHandler","[filterEvents:false]"]}
+{"type":"MethodNode","name":"switchHandler","linenumber":53,"lastlinenumber":72,"arg":["evt"]}
+{"type":"MethodNode","name":"onSwitches","linenumber":74,"lastlinenumber":76}
+{"type":"MethodNode","name":"offSwitches","linenumber":78,"lastlinenumber":80}
+{"type":"MethodNode","name":"lastTwoStatesWere","linenumber":82,"lastlinenumber":100,"arg":["value","states","evt"]}

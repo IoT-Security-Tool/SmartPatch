@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"defaultPage","linenumber":33,"lastlinenumber":56}
+{"type":"MethodNode","name":"installed","linenumber":58,"lastlinenumber":60}
+{"type":"MethodNode","name":"uninstalled","linenumber":62,"lastlinenumber":66}
+{"type":"MethodNode","name":"updated","linenumber":68,"lastlinenumber":72}
+{"type":"MethodNode","name":"initializeDevices","linenumber":74,"lastlinenumber":90}
+{"type":"MethodNode","name":"labelMap","linenumber":93,"lastlinenumber":107}

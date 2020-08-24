@@ -1,0 +1,152 @@
+ import java.util.UUID
+/**
+ *  Copyright 2016 SmartThings, Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+metadata {
+	definition (
+		name: "sliderDeviceTile",
+		namespace: "smartthings/tile-ux",
+		author: "SmartThings") {
+
+		capability "Switch Level"
+		command "setRangedLevel", ["number"]
+	}
+
+	tiles(scale: 2) {
+		controlTile("tinySlider", "device.level", "slider", height: 2, width: 2, inactiveLabel: false) {
+			state "level", action:"switch level.setLevel"
+		}
+
+		controlTile("mediumSlider", "device.level", "slider", height: 2, width: 4, inactiveLabel: false) {
+			state "level", action:"switch level.setLevel"
+		}
+
+		controlTile("largeSlider", "device.level", "slider", decoration: "flat", height: 2, width: 6, inactiveLabel: false) {
+			state "level", action:"switch level.setLevel"
+		}
+
+		controlTile("rangeSlider", "device.rangedLevel", "slider", height: 2, width: 4, range: "(20..80)") {
+			state "level", action:"setRangedLevel"
+		}
+
+		valueTile("rangeValue", "device.rangedLevel", height: 2, width: 2) {
+			state "range", label:'${currentValue}', defaultState: true
+		}
+
+		controlTile("rangeSliderConstrained", "device.rangedLevel", "slider", height: 2, width: 4, range: "(40..60)") {
+			state "level", action:"setRangedLevel"
+		}
+
+		main("rangeValue")
+		details([
+			"tinySlider", "mediumSlider",
+			"largeSlider",
+			"rangeSlider", "rangeValue",
+			"rangeSliderConstrained"
+		])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+//	sendEvent(name: "level", value: 63)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level", value: 63]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "level", value: 63, data: [sign: "${signatureResult1}"])
+//	sendEvent(name: "rangedLevel", value: 47)
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "rangedLevel", value: 47]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "rangedLevel", value: 47, data: [sign: "${signatureResult2}"])
+}
+
+def parse(String description) {
+}
+
+def setLevel(value, rate = null) {
+	log.debug "setting level to $value"
+//	sendEvent(name:"level", value:value)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"level", value:value]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name:"level", value:value, data: [sign: "${signatureResult3}"])
+}
+
+def setRangedLevel(value) {
+	log.debug "setting ranged level to $value"
+//	sendEvent(name:"rangedLevel", value:value)
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"rangedLevel", value:value]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name:"rangedLevel", value:value, data: [sign: "${signatureResult4}"])
+}

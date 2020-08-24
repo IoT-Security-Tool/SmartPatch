@@ -1,0 +1,4 @@
+{"type":"MethodNode","name":"handlePower","linenumber":51,"lastlinenumber":53,"arg":["value"]}
+{"type":"sendEvent","linenumber":52,"arguments":"(name: \"power\", value: value)"}
+{"type":"MethodNode","name":"handleKwhBilling","linenumber":55,"lastlinenumber":57,"arg":["kwh"]}
+{"type":"sendEvent","linenumber":56,"arguments":"(name: \"energy\", value: kwh.round(3))"}

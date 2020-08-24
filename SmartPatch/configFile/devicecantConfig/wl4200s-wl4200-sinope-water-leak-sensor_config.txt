@@ -1,0 +1,5 @@
+{"type":"createEvent","linenumber":81,"arguments":["map"]}
+{"type":"createEvent","linenumber":85,"arguments":["allMaps"]}
+{"type":"MethodNode","name":"installed","linenumber":233}
+{"type":"sendEvent","linenumber":246,"arguments":["name: \"checkInterval\""," value: 60*60*24"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":342,"arguments":["results"]}

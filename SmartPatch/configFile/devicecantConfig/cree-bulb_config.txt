@@ -1,0 +1,2 @@
+{"type":"sendEvent","linenumber":56,"arguments":["resultMap"]}
+{"type":"sendEvent","linenumber":95,"arguments":["name: \"checkInterval\""," value: 60 * 12"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}

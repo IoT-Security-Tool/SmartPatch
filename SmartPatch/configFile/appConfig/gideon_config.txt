@@ -1,0 +1,16 @@
+{"type":"MethodNode","name":"installed","linenumber":49,"lastlinenumber":53}
+{"type":"MethodNode","name":"updated","linenumber":55,"lastlinenumber":60}
+{"type":"MethodNode","name":"initialize","linenumber":62,"lastlinenumber":66}
+{"type":"subscribe","linenumber":64,"arguments":["outlet","energy","outletHandler"]}
+{"type":"subscribe","linenumber":65,"arguments":["outlet","switch","outletHandler"]}
+{"type":"MethodNode","name":"outletHandler","linenumber":69,"lastlinenumber":72,"arg":["evt"]}
+{"type":"MethodNode","name":"device","linenumber":75,"lastlinenumber":77,"arg":["it","type"]}
+{"type":"MethodNode","name":"getAllDevices","linenumber":129,"lastlinenumber":137}
+{"type":"MethodNode","name":"getDoorLockStatus","linenumber":140,"lastlinenumber":147}
+{"type":"MethodNode","name":"updateDoorLock","linenumber":149,"lastlinenumber":167}
+{"type":"MethodNode","name":"getPresenceStatus","linenumber":170,"lastlinenumber":178}
+{"type":"MethodNode","name":"getMotionStatus","linenumber":181,"lastlinenumber":189}
+{"type":"MethodNode","name":"getOutletStatus","linenumber":192,"lastlinenumber":200}
+{"type":"MethodNode","name":"updateOutlet","linenumber":202,"lastlinenumber":221}
+{"type":"MethodNode","name":"updateSwitch","linenumber":224,"lastlinenumber":242}
+{"type":"MethodNode","name":"getTempSensorsStatus","linenumber":245,"lastlinenumber":253}

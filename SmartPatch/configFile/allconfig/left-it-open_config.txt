@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"installed","linenumber":49,"lastlinenumber":52}
+{"type":"subscribe","linenumber":51,"arguments":[]}
+{"type":"MethodNode","name":"updated","linenumber":54,"lastlinenumber":58}
+{"type":"subscribe","linenumber":57,"arguments":[]}
+{"type":"MethodNode","name":"subscribe","linenumber":60,"lastlinenumber":63}
+{"type":"subscribe","linenumber":61,"arguments":["contact","contact.open","doorOpen"]}
+{"type":"subscribe","linenumber":62,"arguments":["contact","contact.closed","doorClosed"]}
+{"type":"MethodNode","name":"doorOpen","linenumber":65,"lastlinenumber":69,"arg":["evt"]}
+{"type":"MethodNode","name":"doorClosed","linenumber":71,"lastlinenumber":74,"arg":["evt"]}
+{"type":"MethodNode","name":"doorOpenTooLong","linenumber":76,"lastlinenumber":93}
+{"type":"MethodNode","name":"sendMessage","linenumber":95,"lastlinenumber":108}

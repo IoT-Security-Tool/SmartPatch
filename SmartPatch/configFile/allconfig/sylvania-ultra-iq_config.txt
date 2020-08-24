@@ -1,0 +1,13 @@
+{"type":"MethodNode","name":"parse","linenumber":50,"lastlinenumber":64,"arg":["description"]}
+{"type":"createEvent","linenumber":60,"arguments":"(name: name, value: value)"}
+{"type":"MethodNode","name":"on","linenumber":67,"lastlinenumber":71}
+{"type":"sendEvent","linenumber":69,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"MethodNode","name":"off","linenumber":73,"lastlinenumber":77}
+{"type":"sendEvent","linenumber":75,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"MethodNode","name":"setLevel","linenumber":78,"lastlinenumber":96,"arg":["value","rate"]}
+{"type":"sendEvent","linenumber":83,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"sendEvent","linenumber":87,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"sendEvent","linenumber":90,"arguments":"(name: \"level\", value: value)"}
+{"type":"MethodNode","name":"configure","linenumber":99,"lastlinenumber":110}
+{"type":"MethodNode","name":"hex","linenumber":114,"lastlinenumber":120,"arg":["value","width"]}
+{"type":"MethodNode","name":"getEndpointId","linenumber":122,"lastlinenumber":124}

@@ -1,0 +1,4 @@
+{"type":"MethodNode","name":"installed","linenumber":27}
+{"type":"sendEvent","linenumber":29,"arguments":["name: \"checkInterval\""," value: 1930"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":39,"arguments":["name: \"status\""," displayed: true"," value: 'online'"," descriptionText: \"$device.displayName is online\""]}
+{"type":"createEvent","linenumber":43,"arguments":["descriptionText: \"$device.displayName: $cmd\""," displayed: false"]}

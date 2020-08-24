@@ -1,0 +1,200 @@
+import java.util.UUID
+/**
+ *  Copyright 2015 SmartThings
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ *  Left It Open
+ *
+ *  Author: SmartThings
+ *  Date: 2013-05-09
+ */
+definition(
+    name: "Left It Open",
+    namespace: "smartthings",
+    author: "SmartThings",
+    description: "Notifies you when you have left a door or window open longer that a specified amount of time.",
+    category: "Convenience",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/ModeMagic/bon-voyage.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/ModeMagic/bon-voyage%402x.png"
+)
+
+preferences {
+
+  section("Monitor this door or window") {
+    input "contact", "capability.contactSensor"
+  }
+
+  section("And notify me if it's open for more than this many minutes (default 10)") {
+    input "openThreshold", "number", description: "Number of minutes", required: false
+  }
+
+  section("Delay between notifications (default 10 minutes") {
+    input "frequency", "number", title: "Number of minutes", description: "", required: false
+  }
+
+  section("Via text message at this number (or via push notification if not specified") {
+    input("recipients", "contact", title: "Send notifications to") {
+      input "phone", "phone", title: "Phone number (optional)", required: false
+    }
+  }
+}
+
+def installed() {
+  log.trace "installed()"
+  subscribe()
+}
+
+def updated() {
+  log.trace "updated()"
+  unsubscribe()
+  subscribe()
+}
+
+def subscribe() {
+  subscribe(contact, "contact.open", doorOpen)
+  subscribe(contact, "contact.closed", doorClosed)
+}
+
+def doorOpen(evt) {
+    //collect the evt.name evt.value evt.deviceId, evt.id, ID_h, signature, ID_e, and send to external web server for verificaiton
+    //also remember to put  func: "verify", into the query parameter
+
+    //get signature from evt.data
+    def startIndex = evt.data.indexOf("-sign-")
+    def endIndex = evt.data.indexOf("+sign+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No signatrue in event"
+        return
+    }
+    def signString = evt.data.substring(startIndex + "-sign-".length(),endIndex)
+
+    //get ID_e from evt.data
+    startIndex = evt.data.indexOf("-IDe-")
+    endIndex = evt.data.indexOf("+IDe+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No IDe in event"
+        return
+    }
+    def ID_e = evt.data.substring(startIndex + "-IDe-".length(),endIndex)
+
+    log.debug "evt.data: $evt.data \n sing is: $signString \n IDe is $ID_e \n"
+    def params = [
+            uri: state.URL,
+            path: state.PATH,
+            query: [func: "verify", name: "$evt.name", value: "$evt.value", deviceID: "$evt.deviceId", ID_e: ID_e, ID_h: state.ID_handler, sign: signString]
+    ]
+    def verify = null
+    //get the verify result from the external web server
+    try {
+        httpGet(params) { resp ->
+            verify = resp.data
+            log.debug "response data: ${resp.data}"
+        }
+    } catch (e) {
+        log.error "something went wrong: $e"
+    }
+    if("$verify".contentEquals('false\n')){
+        log.trace "event verification failed..."
+        return
+    }
+
+  log.trace "doorOpen($evt.name: $evt.value)"
+  def delay = (openThreshold != null && openThreshold != "") ? openThreshold * 60 : 600
+  runIn(delay, doorOpenTooLong, [overwrite: true])
+}
+
+def doorClosed(evt) {
+    //collect the evt.name evt.value evt.deviceId, evt.id, ID_h, signature, ID_e, and send to external web server for verificaiton
+    //also remember to put  func: "verify", into the query parameter
+
+    //get signature from evt.data
+    def startIndex = evt.data.indexOf("-sign-")
+    def endIndex = evt.data.indexOf("+sign+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No signatrue in event"
+        return
+    }
+    def signString = evt.data.substring(startIndex + "-sign-".length(),endIndex)
+
+    //get ID_e from evt.data
+    startIndex = evt.data.indexOf("-IDe-")
+    endIndex = evt.data.indexOf("+IDe+")
+    if(startIndex == -1 || endIndex == -1){
+        log.trace "No IDe in event"
+        return
+    }
+    def ID_e = evt.data.substring(startIndex + "-IDe-".length(),endIndex)
+
+    log.debug "evt.data: $evt.data \n sing is: $signString \n IDe is $ID_e \n"
+    def params = [
+            uri: state.URL,
+            path: state.PATH,
+            query: [func: "verify", name: "$evt.name", value: "$evt.value", deviceID: "$evt.deviceId", ID_e: ID_e, ID_h: state.ID_handler, sign: signString]
+    ]
+    def verify = null
+    //get the verify result from the external web server
+    try {
+        httpGet(params) { resp ->
+            verify = resp.data
+            log.debug "response data: ${resp.data}"
+        }
+    } catch (e) {
+        log.error "something went wrong: $e"
+    }
+    if("$verify".contentEquals('false\n')){
+        log.trace "event verification failed..."
+        return
+    }
+
+  log.trace "doorClosed($evt.name: $evt.value)"
+  unschedule(doorOpenTooLong)
+}
+
+def doorOpenTooLong() {
+  def contactState = contact.currentState("contact")
+  def freq = (frequency != null && frequency != "") ? frequency * 60 : 600
+
+  if (contactState.value == "open") {
+    def elapsed = now() - contactState.rawDateCreated.time
+    def threshold = ((openThreshold != null && openThreshold != "") ? openThreshold * 60000 : 60000) - 1000
+    if (elapsed >= threshold) {
+      log.debug "Contact has stayed open long enough since last check ($elapsed ms):  calling sendMessage()"
+      sendMessage()
+      runIn(freq, doorOpenTooLong, [overwrite: false])
+    } else {
+      log.debug "Contact has not stayed open long enough since last check ($elapsed ms):  doing nothing"
+    }
+  } else {
+    log.warn "doorOpenTooLong() called but contact is closed:  doing nothing"
+  }
+}
+
+void sendMessage() {
+  def minutes = (openThreshold != null && openThreshold != "") ? openThreshold : 10
+  def msg = "${contact.displayName} has been left open for ${minutes} minutes."
+  log.info msg
+  if (location.contactBookEnabled) {
+    sendNotificationToContacts(msg, recipients)
+  } else {
+    if (phone) {
+      sendSms phone, msg
+    } else {
+      sendPush msg
+    }
+  }
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+}
+def initialize() {
+}

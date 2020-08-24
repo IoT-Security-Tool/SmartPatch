@@ -1,0 +1,3 @@
+{"type":"MethodNode","name":"on","linenumber":39,"lastlinenumber":41}
+{"type":"MethodNode","name":"off","linenumber":43,"lastlinenumber":45}
+{"type":"MethodNode","name":"refresh","linenumber":47,"lastlinenumber":49}

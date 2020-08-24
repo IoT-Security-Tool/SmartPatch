@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"parse","linenumber":41,"lastlinenumber":42,"arg":["description"]}
+{"type":"MethodNode","name":"on","linenumber":44,"lastlinenumber":46}
+{"type":"sendEvent","linenumber":45,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"MethodNode","name":"off","linenumber":48,"lastlinenumber":50}
+{"type":"sendEvent","linenumber":49,"arguments":"(name: \"switch\", value: \"off\")"}

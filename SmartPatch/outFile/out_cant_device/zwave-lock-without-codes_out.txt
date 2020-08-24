@@ -1,0 +1,834 @@
+ import java.util.UUID
+"License"
+"AS IS"
+metadata {
+	definition(name: "Z-Wave Lock Without Codes", namespace: "smartthings", author: "SmartThings", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false, mnmn: "SmartThings", vid: "generic-lock-2") {
+		capability "Actuator"
+		capability "Lock"
+		capability "Refresh"
+		capability "Sensor"
+		capability "Battery"
+		capability "Health Check"
+		capability "Configuration"
+
+		fingerprint inClusters: "0x62"
+		fingerprint mfr: "010E", prod: "0009", model: "0001", deviceJoinName: "Danalock V3 Smart Lock"
+		fingerprint mfr: "0090", prod: "0003", model: "0446", deviceJoinName: "Kwikset Convert Deadbolt Door Lock" 
+		fingerprint mfr: "033F", prod: "0001", model: "0001", deviceJoinName: "August Smart Lock Pro"
+		fingerprint mfr: "021D", prod: "0003", model: "0001", deviceJoinName: "Alfred Smart Home Touchscreen Deadbolt" 
+	}
+
+	simulator {
+	}
+
+	tiles(scale: 2) {
+		multiAttributeTile(name: "toggle", type: "generic", width: 6, height: 4) {
+			tileAttribute("device.lock", key: "PRIMARY_CONTROL") {
+				attributeState "locked", label: 'locked', action: "lock.unlock", icon: "st.locks.lock.locked", backgroundColor: "#00A0DC", nextState: "unlocking"
+				attributeState "unlocked", label: 'unlocked', action: "lock.lock", icon: "st.locks.lock.unlocked", backgroundColor: "#ffffff", nextState: "locking"
+				attributeState "unlocked with timeout", label: 'unlocked', action: "lock.lock", icon: "st.locks.lock.unlocked", backgroundColor: "#ffffff", nextState: "locking"
+				attributeState "unknown", label: "unknown", action: "lock.lock", icon: "st.locks.lock.unknown", backgroundColor: "#ffffff", nextState: "locking"
+				attributeState "locking", label: 'locking', icon: "st.locks.lock.locked", backgroundColor: "#00A0DC"
+				attributeState "unlocking", label: 'unlocking', icon: "st.locks.lock.unlocked", backgroundColor: "#ffffff"
+			}
+		}
+		standardTile("lock", "device.lock", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "default", label: 'lock', action: "lock.lock", icon: "st.locks.lock.locked", nextState: "locking"
+		}
+		standardTile("unlock", "device.lock", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "default", label: 'unlock', action: "lock.unlock", icon: "st.locks.lock.unlocked", nextState: "unlocking"
+		}
+		valueTile("battery", "device.battery", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "battery", label: '${currentValue}% battery', unit: ""
+		}
+		standardTile("refresh", "device.lock", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "default", label: '', action: "refresh.refresh", icon: "st.secondary.refresh"
+		}
+
+		main "toggle"
+		details(["toggle", "lock", "unlock", "battery", "refresh"])
+	}
+}
+
+import physicalgraph.zwave.commands.doorlockv1.*
+
+
+private getCommandClassVersions() {
+	[
+		0x62: 1,  
+		0x63: 1,  
+		0x71: 2,  
+		0x72: 2,  
+		0x80: 1,  
+		0x85: 2,  
+		0x86: 1,  
+		0x98: 1   
+	]
+}
+
+
+def installed() {
+	
+//	sendEvent(name: "checkInterval", value: 1 * 60 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID, offlinePingable: "1"])
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 1 * 60 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"]]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 1 * 60 * 60,  displayed: false,  data: [ sign: "${signatureResult1}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"])
+	scheduleInstalledCheck()
+}
+
+
+def scheduleInstalledCheck() {
+	runIn(120, "installedCheck", [forceForLocallyExecuting: true])
+}
+
+def installedCheck() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+	if (device.currentState("lock") && device.currentState("battery")) {
+		unschedule("installedCheck")
+	} else {
+		
+		if (!state.lastLockDetailsQuery || secondsPast(state.lastLockDetailsQuery, 2 * 60)) {
+			def actions = updated()
+
+			if (actions) {
+				sendHubCommand(actions.toHubAction())
+			}
+		}
+
+		scheduleInstalledCheck()
+	}
+}
+
+
+def uninstalled() {
+	def deviceName = device.displayName
+	log.trace "[DTH] Executing 'uninstalled()' for device $deviceName"
+//	sendEvent(name: "lockRemoved", value: device.id, isStateChange: true, displayed: false)
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "lockRemoved",  value: device.id,  isStateChange: true,  displayed: false]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "lockRemoved",  value: device.id,  isStateChange: true,  displayed: false, data: [sign: "${signatureResult2}"])
+}
+
+
+def updated() {
+	
+//	sendEvent(name: "checkInterval", value: 1 * 60 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID, offlinePingable: "1"])
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 1 * 60 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"]]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 1 * 60 * 60,  displayed: false,  data: [ sign: "${signatureResult3}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"])
+
+	def hubAction = null
+	try {
+		def cmds = []
+		if (!device.currentState("lock") || !state.configured) {
+			log.debug "Returning commands for lock operation get and battery get"
+			if (!state.configured) {
+				cmds << doConfigure()
+			}
+			cmds << refresh()
+			hubAction = response(delayBetween(cmds, 30 * 1000))
+		}
+	} catch (e) {
+		log.warn "updated() threw $e"
+	}
+	hubAction
+}
+
+
+def configure() {
+	log.trace "[DTH] Executing 'configure()' for device ${device.displayName}"
+	def cmds = doConfigure()
+	log.debug "Configure returning with commands := $cmds"
+	cmds
+}
+
+
+def doConfigure() {
+	log.trace "[DTH] Executing 'doConfigure()' for device ${device.displayName}"
+	state.configured = true
+	def cmds = []
+	cmds << secure(zwave.doorLockV1.doorLockOperationGet())
+	if (zwaveInfo.mfr != "010E") {
+		cmds << secure(zwave.batteryV1.batteryGet())
+		cmds = delayBetween(cmds, 30 * 1000)
+	}
+
+	state.lastLockDetailsQuery = now()
+
+	log.debug "Do configure returning with commands := $cmds"
+	cmds
+}
+
+
+def parse(String description) {
+	log.trace "[DTH] Executing 'parse(String description)' for device ${device.displayName} with description = $description"
+
+	def result = null
+	if (description.startsWith("Err")) {
+		if (state.sec) {
+//			result = createEvent(descriptionText: description, isStateChange: true, displayed: false)
+def params4 = null
+def signatureResult4 = null
+params4 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: description,  isStateChange: true,  displayed: false]
+]
+signatureResult4 = null
+  try {
+        httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			result = createEvent(descriptionText: description,  isStateChange: true,  displayed: false, data: [sign: "${signatureResult4}"])
+		} else {
+//			result = createEvent(
+//				descriptionText: "This lock failed to complete the network security key exchange. If you are unable to control it via SmartThings, you must remove it from your network and add it again.",
+//				eventType: "ALERT",
+//				name: "secureInclusion",
+//				value: "failed",
+//				displayed: true,
+//			)
+def params5 = null
+def signatureResult5 = null
+params5 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",				descriptionText: "This lock failed to complete the network security key exchange. If you are unable to control it via SmartThings,  you must remove it from your network and add it again.", 				eventType: "ALERT", 				name: "secureInclusion", 				value: "failed", 				displayed: true, 			]
+]
+signatureResult5 = null
+  try {
+        httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			result = createEvent(				descriptionText: "This lock failed to complete the network security key exchange. If you are unable to control it via SmartThings,  you must remove it from your network and add it again.", 				eventType: "ALERT", 				name: "secureInclusion", 				value: "failed", 				displayed: true, 			, data: [sign: "${signatureResult5}"])
+		}
+	} else {
+		def cmd = zwave.parse(description, commandClassVersions)
+		if (cmd) {
+			result = zwaveEvent(cmd)
+		}
+	}
+	log.debug "[DTH] parse() - returning result=$result"
+	result
+}
+
+
+def zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityMessageEncapsulation cmd) {
+	log.trace "[DTH] Executing 'zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityMessageEncapsulation)' with cmd = $cmd"
+	def encapsulatedCommand = cmd.encapsulatedCommand(commandClassVersions)
+	if (encapsulatedCommand) {
+		zwaveEvent(encapsulatedCommand)
+	}
+}
+
+
+def zwaveEvent(physicalgraph.zwave.commands.securityv1.NetworkKeyVerify cmd) {
+	log.trace "[DTH] Executing 'zwaveEvent(physicalgraph.zwave.commands.securityv1.NetworkKeyVerify)' with cmd = $cmd"
+//	createEvent(name: "secureInclusion", value: "success", descriptionText: "Secure inclusion was successful", isStateChange: true)
+def params6 = null
+def signatureResult6 = null
+params6 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "secureInclusion",  value: "success",  descriptionText: "Secure inclusion was successful",  isStateChange: true]
+]
+signatureResult6 = null
+  try {
+        httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	createEvent(name: "secureInclusion",  value: "success",  descriptionText: "Secure inclusion was successful",  isStateChange: true, data: [sign: "${signatureResult6}"])
+}
+
+
+def zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityCommandsSupportedReport cmd) {
+	log.trace "[DTH] Executing 'zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityCommandsSupportedReport)' with cmd = $cmd"
+	state.sec = cmd.commandClassSupport.collect { String.format("%02X ", it) }.join()
+	if (cmd.commandClassControl) {
+		state.secCon = cmd.commandClassControl.collect { String.format("%02X ", it) }.join()
+	}
+//	createEvent(name: "secureInclusion", value: "success", descriptionText: "Lock is securely included", isStateChange: true)
+def params7 = null
+def signatureResult7 = null
+params7 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "secureInclusion",  value: "success",  descriptionText: "Lock is securely included",  isStateChange: true]
+]
+signatureResult7 = null
+  try {
+        httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	createEvent(name: "secureInclusion",  value: "success",  descriptionText: "Lock is securely included",  isStateChange: true, data: [sign: "${signatureResult7}"])
+}
+
+
+def zwaveEvent(DoorLockOperationReport cmd) {
+	log.trace "[DTH] Executing 'zwaveEvent(DoorLockOperationReport)' with cmd = $cmd"
+	def result = []
+
+	unschedule("followupStateCheck")
+	unschedule("stateCheck")
+
+	
+	def map = [name: "lock"]
+	map.data = [lockName: device.displayName]
+	if (cmd.doorLockMode == 0xFF) {
+		map.value = "locked"
+		map.descriptionText = "Locked"
+	} else if (cmd.doorLockMode >= 0x40) {
+		map.value = "unknown"
+		map.descriptionText = "Unknown state"
+	} else if (cmd.doorLockMode == 0x01) {
+		map.value = "unlocked with timeout"
+		map.descriptionText = "Unlocked with timeout"
+	} else {
+		map.value = "unlocked"
+		map.descriptionText = "Unlocked"
+	}
+//	return result ? [createEvent(map), *result] : createEvent(map)
+def params8 = null
+def signatureResult8 = null
+params8 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",map),  *result] : createEvent(map]
+]
+signatureResult8 = null
+  try {
+        httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	return result ? [createEvent(map),  *result] : createEvent(map, data: [sign: "${signatureResult8}"]), *result] : createEvent(map)
+}
+
+
+def zwaveEvent(physicalgraph.zwave.commands.alarmv2.AlarmReport cmd) {
+	log.trace "[DTH] Executing 'zwaveEvent(physicalgraph.zwave.commands.alarmv2.AlarmReport)' with cmd = $cmd"
+	def result = []
+
+	if (cmd.zwaveAlarmType == 6) {
+		result = handleAccessAlarmReport(cmd)
+	} else if (cmd.zwaveAlarmType == 8) {
+		
+		result = handleBatteryAlarmReport(cmd)
+	} else {
+		result = handleAlarmReportUsingAlarmType(cmd)
+	}
+
+	result = result ?: null
+	log.debug "[DTH] zwaveEvent(physicalgraph.zwave.commands.alarmv2.AlarmReport) returning with result = $result"
+	result
+}
+
+
+private def handleAccessAlarmReport(cmd) {
+	log.trace "[DTH] Executing 'handleAccessAlarmReport' with cmd = $cmd"
+	def result = []
+	def map = null
+	def codeID, changeType, codeName
+	def deviceName = device.displayName
+	if (1 <= cmd.zwaveAlarmEvent && cmd.zwaveAlarmEvent < 10) {
+		map = [name: "lock", value: (cmd.zwaveAlarmEvent & 1) ? "locked" : "unlocked"]
+	}
+	switch (cmd.zwaveAlarmEvent) {
+		case 1: 
+			map.descriptionText = "Locked manually"
+			map.data = [method: (cmd.alarmLevel == 2) ? "keypad" : "manual"]
+			break
+		case 2: 
+			map.descriptionText = "Unlocked manually"
+			map.data = [method: "manual"]
+			break
+		case 3: 
+			map.descriptionText = "Locked"
+			map.data = [method: "command"]
+			break
+		case 4: 
+			map.descriptionText = "Unlocked"
+			map.data = [method: "command"]
+			break
+		case 7:
+			map = [name: "lock", value: "unknown", descriptionText: "Unknown state"]
+			map.data = [method: "manual"]
+			break
+		case 8:
+			map = [name: "lock", value: "unknown", descriptionText: "Unknown state"]
+			map.data = [method: "command"]
+			break
+		case 9: 
+			map = [name: "lock", value: "locked", data: [method: "auto"]]
+			map.descriptionText = "Auto locked"
+			break
+		case 0xA:
+			map = [name: "lock", value: "unknown", descriptionText: "Unknown state"]
+			map.data = [method: "auto"]
+			break
+		case 0xB:
+			map = [name: "lock", value: "unknown", descriptionText: "Unknown state"]
+			break
+		case 0x13:
+			map = [name: "tamper", value: "detected", descriptionText: "Keypad attempts exceed code entry limit", isStateChange: true, displayed: true]
+			break
+		default:
+			map = [displayed: false, descriptionText: "Alarm event ${cmd.alarmType} level ${cmd.alarmLevel}"]
+			break
+	}
+
+	if (map) {
+		if (map.data) {
+			map.data.lockName = deviceName
+		} else {
+			map.data = [lockName: deviceName]
+		}
+//		result << createEvent(map)
+def params9 = null
+def signatureResult9 = null
+params9 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult9 = null
+  try {
+        httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue9= ''
+if(map.containsKey('data') ){
+datavalue9 = map['data']
+datavalue9 = "[" + datavalue9+ "," +"sign: " + "${signatureResult9}" + "]"
+map.put('data',"${datavalue9}")
+ }else{
+datavalue9=  "[sign: " + "${signatureResult9}" +"]"
+map.put('data',"${datavalue9}")
+}
+		result << createEvent(map)
+	}
+	result = result.flatten()
+	result
+}
+
+
+private def handleBatteryAlarmReport(cmd) {
+	log.trace "[DTH] Executing 'handleBatteryAlarmReport' with cmd = $cmd"
+	def result = []
+	def deviceName = device.displayName
+	def map = null
+	switch (cmd.zwaveAlarmEvent) {
+		case 0x01: 
+			log.debug "Batteries replaced. Queueing a battery get."
+			runIn(10, "queryBattery", [overwrite: true, forceForLocallyExecuting: true])
+			result << response(secure(zwave.batteryV1.batteryGet()))
+			break;
+		case 0x0A:
+			map = [name: "battery", value: 1, descriptionText: "Battery level critical", displayed: true, data: [lockName: deviceName]]
+			break
+		case 0x0B:
+			map = [name: "battery", value: 0, descriptionText: "Battery too low to operate lock", isStateChange: true, displayed: true, data: [lockName: deviceName]]
+			break
+		default:
+			map = [displayed: false, descriptionText: "Alarm event ${cmd.alarmType} level ${cmd.alarmLevel}"]
+			break
+	}
+//	result << createEvent(map)
+def params10 = null
+def signatureResult10 = null
+params10 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult10 = null
+  try {
+        httpGet(params10) { resp ->
+        signatureResult10 = resp.data
+        log.debug "response data: ${signatureResult10}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue10= ''
+if(map.containsKey('data') ){
+datavalue10 = map['data']
+datavalue10 = "[" + datavalue10+ "," +"sign: " + "${signatureResult10}" + "]"
+map.put('data',"${datavalue10}")
+ }else{
+datavalue10=  "[sign: " + "${signatureResult10}" +"]"
+map.put('data',"${datavalue10}")
+}
+	result << createEvent(map)
+	result
+}
+
+
+private def handleAlarmReportUsingAlarmType(cmd) {
+	log.trace "[DTH] Executing 'handleAlarmReportUsingAlarmType' with cmd = $cmd"
+	def result = []
+	def map = null
+	def deviceName = device.displayName
+	switch(cmd.alarmType) {
+		case 9:
+		case 17:
+			map = [ name: "lock", value: "unknown", descriptionText: "Unknown state" ]
+			break
+		case 16: 
+		case 19: 
+			map = [ name: "lock", value: "unlocked" , method: "keypad"]
+			map.descriptionText = "Unlocked by keypad"
+			break
+		case 18: 
+			codeID = readCodeSlotId(cmd)
+			map = [ name: "lock", value: "locked" ]
+			map.descriptionText = "Locked by keypad"
+			map.data = [ method: "keypad" ]
+			break
+		case 21: 
+			map = [ name: "lock", value: "locked", data: [ method: (cmd.alarmLevel == 2) ? "keypad" : "manual" ] ]
+			map.descriptionText = "Locked manually"
+			break
+		case 22: 
+			map = [ name: "lock", value: "unlocked", data: [ method: "manual" ] ]
+			map.descriptionText = "Unlocked manually"
+			break
+		case 23:
+			map = [ name: "lock", value: "unknown", descriptionText: "Unknown state" ]
+			map.data = [ method: "command" ]
+			break
+		case 24: 
+			map = [ name: "lock", value: "locked", data: [ method: "command" ] ]
+			map.descriptionText = "Locked"
+			break
+		case 25: 
+			map = [ name: "lock", value: "unlocked", data: [ method: "command" ] ]
+			map.descriptionText = "Unlocked"
+			break
+		case 26:
+			map = [ name: "lock", value: "unknown", descriptionText: "Unknown state" ]
+			map.data = [ method: "auto" ]
+			break
+		case 27: 
+			map = [ name: "lock", value: "locked", data: [ method: "auto" ] ]
+			map.descriptionText = "Auto locked"
+			break
+		case 130:  
+			map = [ descriptionText: "Batteries replaced", isStateChange: true ]
+			break
+		case 161: 
+			if (cmd.alarmLevel == 2) {
+				map = [ name: "tamper", value: "detected", descriptionText: "Front escutcheon removed", isStateChange: true ]
+			}
+			break
+		case 167: 
+			if (!state.lastbatt || now() - state.lastbatt > 12*60*60*1000) {
+				map = [ descriptionText: "Battery low", isStateChange: true ]
+				result << response(secure(zwave.batteryV1.batteryGet()))
+			} else {
+				map = [ name: "battery", value: device.currentValue("battery"), descriptionText: "Battery low", isStateChange: true ]
+			}
+			break
+		case 168: 
+			map = [ name: "battery", value: 1, descriptionText: "Battery level critical", displayed: true ]
+			break
+		case 169: 
+			map = [ name: "battery", value: 0, descriptionText: "Battery too low to operate lock", isStateChange: true, displayed: true ]
+			break
+		default:
+			map = [ displayed: false, descriptionText: "Alarm event ${cmd.alarmType} level ${cmd.alarmLevel}" ]
+			break
+	}
+
+	if (map) {
+		if (map.data) {
+			map.data.lockName = deviceName
+		} else {
+			map.data = [ lockName: deviceName ]
+		}
+//		result << createEvent(map)
+def params11 = null
+def signatureResult11 = null
+params11 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult11 = null
+  try {
+        httpGet(params11) { resp ->
+        signatureResult11 = resp.data
+        log.debug "response data: ${signatureResult11}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue11= ''
+if(map.containsKey('data') ){
+datavalue11 = map['data']
+datavalue11 = "[" + datavalue11+ "," +"sign: " + "${signatureResult11}" + "]"
+map.put('data',"${datavalue11}")
+ }else{
+datavalue11=  "[sign: " + "${signatureResult11}" +"]"
+map.put('data',"${datavalue11}")
+}
+		result << createEvent(map)
+	}
+	result = result.flatten()
+	result
+}
+
+
+def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
+	log.trace "[DTH] Executing 'zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport)' with cmd = $cmd"
+	def map = [name: "battery", unit: "%"]
+	if (cmd.batteryLevel == 0xFF) {
+		map.value = 1
+		map.descriptionText = "${device.displayName} has a low battery"
+		map.isStateChange = true
+	} else {
+		map.value = cmd.batteryLevel
+	}
+	state.lastbatt = now()
+	unschedule("queryBattery")
+	if (cmd.batteryLevel == 0 && device.latestValue("battery") > 20) {
+		
+		
+		log.warn "Erroneous battery report dropped from ${device.latestValue("battery")} to $map.value. Not reporting"
+	} else {
+//		createEvent(map)
+def params12 = null
+def signatureResult12 = null
+params12 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult12 = null
+  try {
+        httpGet(params12) { resp ->
+        signatureResult12 = resp.data
+        log.debug "response data: ${signatureResult12}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue12= ''
+if(map.containsKey('data') ){
+datavalue12 = map['data']
+datavalue12 = "[" + datavalue12+ "," +"sign: " + "${signatureResult12}" + "]"
+map.put('data',"${datavalue12}")
+ }else{
+datavalue12=  "[sign: " + "${signatureResult12}" +"]"
+map.put('data',"${datavalue12}")
+}
+		createEvent(map)
+	}
+
+}
+
+
+
+def zwaveEvent(physicalgraph.zwave.Command cmd) {
+	log.trace "[DTH] Executing 'zwaveEvent(physicalgraph.zwave.Command)' with cmd = $cmd"
+//	createEvent(displayed: false, descriptionText: "$cmd")
+def params13 = null
+def signatureResult13 = null
+params13 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",displayed: false,  descriptionText: "$cmd"]
+]
+signatureResult13 = null
+  try {
+        httpGet(params13) { resp ->
+        signatureResult13 = resp.data
+        log.debug "response data: ${signatureResult13}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	createEvent(displayed: false,  descriptionText: "$cmd", data: [sign: "${signatureResult13}"])
+}
+
+
+def lockAndCheck(doorLockMode) {
+	def cmds = []
+	cmds << zwave.doorLockV1.doorLockOperationSet(doorLockMode: doorLockMode)
+	cmds << zwave.doorLockV1.doorLockOperationGet()
+	if (zwaveInfo.mfr == "010E") {
+		
+		cmds << zwave.batteryV1.batteryGet()
+	}
+	secureSequence(cmds, 4200)
+}
+
+
+def lock() {
+	log.trace "[DTH] Executing lock() for device ${device.displayName}"
+	lockAndCheck(DoorLockOperationSet.DOOR_LOCK_MODE_DOOR_SECURED)
+}
+
+
+def unlock() {
+	log.trace "[DTH] Executing unlock() for device ${device.displayName}"
+	lockAndCheck(DoorLockOperationSet.DOOR_LOCK_MODE_DOOR_UNSECURED)
+}
+
+
+def unlockWithTimeout() {
+	if (zwaveInfo.mfr == "010E") {
+		
+		log.trace "[DTH] Executing unlock() for device ${device.displayName}"
+	} else {
+		log.trace "[DTH] Executing unlockWithTimeout() for device ${device.displayName}"
+		lockAndCheck(DoorLockOperationSet.DOOR_LOCK_MODE_DOOR_UNSECURED_WITH_TIMEOUT)
+	}
+}
+
+
+def ping() {
+	log.trace "[DTH] Executing ping() for device ${device.displayName}"
+	runIn(30, "followupStateCheck")
+	if (zwaveInfo.mfr == "010E") {
+		secure(zwave.doorLockV1.doorLockOperationGet())
+	} else {
+		secureSequence([zwave.doorLockV1.doorLockOperationGet(), zwave.batteryV1.batteryGet()])
+	}
+}
+
+
+def followupStateCheck() {
+	runEvery1Hour(stateCheck)
+	stateCheck()
+}
+
+
+def stateCheck() {
+	sendHubCommand(new physicalgraph.device.HubAction(secure(zwave.doorLockV1.doorLockOperationGet())))
+}
+
+
+def refresh() {
+	log.trace "[DTH] Executing refresh() for device ${device.displayName}"
+	if (zwaveInfo.mfr == "010E") {
+		secure(zwave.doorLockV1.doorLockOperationGet())
+	} else {
+		secureSequence([zwave.doorLockV1.doorLockOperationGet(), zwave.batteryV1.batteryGet()])
+	}
+}
+
+
+private secure(physicalgraph.zwave.Command cmd) {
+	zwave.securityV1.securityMessageEncapsulation().encapsulate(cmd).format()
+}
+
+
+private secureSequence(commands, delay = 4200) {
+	delayBetween(commands.collect { secure(it) }, delay)
+}
+
+
+private Boolean secondsPast(timestamp, seconds) {
+	if (!(timestamp instanceof Number)) {
+		if (timestamp instanceof Date) {
+			timestamp = timestamp.time
+		} else if ((timestamp instanceof String) && timestamp.isNumber()) {
+			timestamp = timestamp.toLong()
+		} else {
+			return true
+		}
+	}
+	return (now() - timestamp) > (seconds * 1000)
+}
+
+private queryBattery() {
+	log.debug "Running queryBattery"
+	if (!state.lastbatt || now() - state.lastbatt > 10*1000) {
+		log.debug "It's been more than 10s since battery was updated after a replacement. Querying battery."
+		runIn(10, "queryBattery", [overwrite: true, forceForLocallyExecuting: true])
+		sendHubCommand(secure(zwave.batteryV1.batteryGet()))
+	}
+}
+
