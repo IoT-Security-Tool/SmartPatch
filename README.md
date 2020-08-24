@@ -8,3 +8,9 @@ SmartPatch_smartapp:  pacth SmartApps with AST
 SmartPatchWithoutParse: for SmartApps and Device Handlers that cannot use AST  
 #The code to be modified is placed in sourceFile/srcAPP and sourceFile/srcDevice  
 #output is in outFile/out_cant_APP and outFile/out_cant_Device  
+
+FakeEvents:
+Fake methods of various event types  
+
+Way to Defence:
+Defense methods for various fake events  
