@@ -1,0 +1,117 @@
+// begin - 1
+import groovy.time.TimeCategory
+import java.text.SimpleDateFormat
+// end - 1
+
+definition(
+    name: "sunrise-event-time-check",
+    namespace: "0000",
+    author: "SmartPatch",
+    description: "vefirying sunrise event",
+    category: "My Apps",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+
+preferences {
+}
+
+def installed() {
+    // begin - 3
+    state.lastEventTime = null
+    state.timePeriod = 5
+    // end - 3
+	initialize()
+}
+
+def updated()
+{
+	unsubscribe()
+	initialize()
+}
+
+
+def initialize() {
+    subscribe(location, "sunrise", handler)
+    log.debug "initialize"
+}
+
+
+
+def handler(evt) {
+    // begin - 4
+    // check whether sunrise event happens twice in a short period of time
+    if (null != state.lastEventTime){ //if null, this is the first sunrise since the SmartAPP is installed, go ahead and check the event time
+        def timePeriod = state.timePeriod
+        def allowHappenTime = null
+        use( TimeCategory ) {
+            allowHappenTime = Date.parseToStringDate("$state.lastEventTime") + timePeriod.minutes
+        }
+        if (Date.parseToStringDate("$evt.date") < allowHappenTime){
+            log.trace "evt.date is $evt.date, last sunrise time is $state.lastEventTime, less than $timePeriod minutes"
+            return
+        }
+    }
+    // begin - 4
+    
+	// begin - 2 
+    // check the evt.date whether it is near to getSunriseandSunset
+	
+	def correctTime = getSunriseAndSunset().sunrise
+    
+    // when want to explictly let the event pass, set the groundtruth to current time
+    //correctTime = new Date()
+    correctTime = correctTime.toString()
+    
+	
+	def offsetPositive = 5
+	def offsetNegative = 0 - offsetPositive
+	
+	def correctTimewithoffsetPositive = null
+    use( TimeCategory ) {
+        correctTimewithoffsetPositive =  Date.parseToStringDate("$correctTime") + offsetPositive.minutes
+    }
+	
+    def correctTimewithoffsetNegative = null
+    use( TimeCategory ) {
+        correctTimewithoffsetNegative = Date.parseToStringDate("$correctTime") + offsetNegative.minutes
+    }
+	
+	
+	
+    if (evt.date > correctTimewithoffsetPositive || evt.date < correctTimewithoffsetNegative){
+		log.trace "evt.date is $evt.date, the sunrise event should happen near $correctTime (from $correctTimewithoffsetNegative to $correctTimewithoffsetPositive)"
+        return
+    }
+	// end - 2 
+    
+    // begin - 5
+    // check OK, record the latest sunrise event time
+    state.lastEventTime = evt.date.toString()
+    // end - 5
+    
+	def showText = "\n"
+    	
+    showText =  showText +  "event data $evt.data \n"
+	showText =  showText + "event date $evt.date \n"
+	showText =  showText +  "event description $evt.description \n"
+	showText =  showText + "event descriptionText $evt.descriptionText \n"
+	showText =  showText + "event device $evt.device \n"
+	showText =  showText + "event displayName $evt.displayName \n"
+	showText =  showText + "event deviceId $evt.deviceId \n"
+	showText =  showText + "event id $evt.id \n"
+	showText =  showText + "event hubId $evt.hubId \n"
+	showText =  showText + "event installedSmartAppId $evt.installedSmartAppId \n"
+	showText =  showText + "event location $evt.location \n"
+	showText =  showText + "event name $evt.name \n"
+	showText =  showText + "event source $evt.source \n"
+	showText =  showText + "event unit $evt.unit \n"
+	showText =  showText + "event value $evt.value \n"
+	showText =  showText + "event isDigital ${evt.isDigital()} \n"
+	showText =  showText + "event isPhysical ${evt.isPhysical()} \n"
+	showText =  showText + "event isStateChange ${evt.isStateChange()} \n"
+    
+    log.trace "$showText"
+    //sendPush("$showText")
+
+}

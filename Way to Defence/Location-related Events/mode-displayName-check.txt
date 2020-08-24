@@ -1,0 +1,67 @@
+definition(
+    name: "mode-displayName-check",
+    namespace: "0000",
+    author: "SmartPatch",
+    description: "vefirying mode event",
+    category: "My Apps",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+
+preferences {
+}
+
+def installed() {
+	initialize()
+}
+
+def updated()
+{
+	unsubscribe()
+	initialize()
+}
+
+
+def initialize() {
+    subscribe(location, "mode", handler)
+    log.debug "initialize"
+}
+
+
+def handler(evt) {
+	// begin
+    // check the evt.displayName whether it equals to the location name
+    // spoofed mode event always has a displayName of "mode"
+    // real    mode event always has a displayName of "$location.name"
+   	//if (evt.displayName == "mode")
+    if (evt.displayName != location.name){
+		log.trace "evt.displayName is $evt.displayName, it shoudl be ${location.name}"
+        return
+    }
+	// end
+    
+	def showText = "\n"
+    	
+    showText =  showText +  "event data $evt.data \n"
+	showText =  showText + "event date $evt.date \n"
+	showText =  showText +  "event description $evt.description \n"
+	showText =  showText + "event descriptionText $evt.descriptionText \n"
+	showText =  showText + "event device $evt.device \n"
+	showText =  showText + "event displayName $evt.displayName \n"
+	showText =  showText + "event deviceId $evt.deviceId \n"
+	showText =  showText + "event id $evt.id \n"
+	showText =  showText + "event hubId $evt.hubId \n"
+	showText =  showText + "event installedSmartAppId $evt.installedSmartAppId \n"
+	showText =  showText + "event location $evt.location \n"
+	showText =  showText + "event name $evt.name \n"
+	showText =  showText + "event source $evt.source \n"
+	showText =  showText + "event unit $evt.unit \n"
+	showText =  showText + "event value $evt.value \n"
+	showText =  showText + "event isDigital ${evt.isDigital()} \n"
+	showText =  showText + "event isPhysical ${evt.isPhysical()} \n"
+	showText =  showText + "event isStateChange ${evt.isStateChange()} \n"
+    
+    log.trace "$showText"
+    //sendPush("$showText")
+
+}
