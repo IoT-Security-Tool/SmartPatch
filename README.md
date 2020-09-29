@@ -14,3 +14,5 @@ Fake methods of various event types
 
 Way to Defence:
 Defense methods for various fake events  
+
+More details and instructions will be uploaded/updated later.
