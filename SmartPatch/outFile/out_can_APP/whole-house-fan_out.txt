@@ -49,6 +49,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -62,6 +66,7 @@ def updated() {
 }
 
 def initialize() {
+
 	state.fanRunning = false;
     
     subscribe(outTemp, "temperature", "checkThings");
@@ -149,11 +154,4 @@ def checkThings(evt) {
     	fans.off();
         state.fanRunning = false;
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

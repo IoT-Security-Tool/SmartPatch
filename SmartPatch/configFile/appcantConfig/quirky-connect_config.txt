@@ -124,3 +124,45 @@
 {"type":"sendEvent","linenumber":974,"arguments":["name:\"temperature\"","value:cToF(status.temperature)","unit:\"F\""]}
 {"type":"sendEvent","linenumber":1024,"arguments":["name:\"switch\"","value:\"on\") "]}
 {"type":"sendEvent","linenumber":1025,"arguments":["name:\"switch\"","value:\"off\""]}
+{"type":"subscribe","linenumber":38,"arguments":["/powerstripCallback)\t{ action:[ POST: powerstripEventHandler","GET: subscriberIdentifyVerification]"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":39,"arguments":["/sensor_podCallback) { action:[ POST: sensor_podEventHandler","GET: subscriberIdentifyVerification]"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":40,"arguments":["/piggy_bankCallback) { action:[ POST: piggy_bankEventHandler","GET: subscriberIdentifyVerification]"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":41,"arguments":["/eggtrayCallback) \t{ action:[ POST: eggtrayEventHandler","GET: subscriberIdentifyVerification]"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":42,"arguments":["/cloud_clockCallback){ action:[ POST: cloud_clockEventHandler","GET: subscriberIdentifyVerification]"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":281,"arguments":["log.debug In subscriberIdentifyVerification"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"MethodNode","name":"initialize","linenumber":288}
+{"type":"MethodNode","name":"installed","linenumber":577}
+{"type":"sendEvent","linenumber":678,"arguments":["results"]}
+{"type":"sendEvent","linenumber":714,"arguments":[" name : \"dial\""," value : it.label "," unit : \"\" "]}
+{"type":"sendEvent","linenumber":715,"arguments":[" name : \"info\""," value : it.name "," unit : \"\" "]}
+{"type":"sendEvent","linenumber":744,"arguments":[" name : \"dial\""," value : it.label "," unit : \"\" "]}
+{"type":"sendEvent","linenumber":745,"arguments":[" name : \"info\""," value : it.name "," unit : \"\" "]}
+{"type":"sendEvent","linenumber":825,"arguments":["name:\"inventory\"","value:\"haveBadEgg\""]}
+{"type":"sendEvent","linenumber":833,"arguments":["name:\"inventory\"","value:\"noEggs\""]}
+{"type":"sendEvent","linenumber":838,"arguments":["name:\"inventory\"","value:\"goodEggs\""]}
+{"type":"sendEvent","linenumber":840,"arguments":[" name : \"totalEggs\""," value : totalEggs "," unit : \"\" "]}
+{"type":"sendEvent","linenumber":841,"arguments":[" name : \"freshEggs\""," value : freshEggs "," unit : \"\" "]}
+{"type":"sendEvent","linenumber":842,"arguments":[" name : \"oldEggs\""," value : oldEggs "," unit : \"\" "]}
+{"type":"sendEvent","linenumber":918,"arguments":["name:\"acceleration\"","value:\"active\"","unit:\"\""]}
+{"type":"sendEvent","linenumber":920,"arguments":["name:\"acceleration\"","value:\"inactive\"","unit:\"\""]}
+{"type":"sendEvent","linenumber":924,"arguments":["name:\"goal\"","value:dollarize(status.savings_goal)","unit:\"\""]}
+{"type":"sendEvent","linenumber":926,"arguments":["name:\"balance\"","value:dollarize(status.balance)","unit:\"\""]}
+{"type":"sendEvent","linenumber":958,"arguments":["name:\"sound\"","value:\"active\"","unit:\"\") "]}
+{"type":"sendEvent","linenumber":959,"arguments":["name:\"sound\"","value:\"inactive\"","unit:\"\""]}
+{"type":"sendEvent","linenumber":961,"arguments":["name:\"light\"","value:\"active\"","unit:\"\") "]}
+{"type":"sendEvent","linenumber":962,"arguments":["name:\"light\"","value:\"inactive\"","unit:\"\""]}
+{"type":"sendEvent","linenumber":964,"arguments":["name:\"acceleration\"","value:\"active\"","unit:\"\") "]}
+{"type":"sendEvent","linenumber":965,"arguments":["name:\"acceleration\"","value:\"inactive\"","unit:\"\""]}
+{"type":"sendEvent","linenumber":967,"arguments":["name:\"powerSource\"","value:\"powered\"","unit:\"\") "]}
+{"type":"sendEvent","linenumber":968,"arguments":["name:\"powerSource\"","value:\"battery\"","unit:\"\""]}
+{"type":"sendEvent","linenumber":970,"arguments":["name:\"humidity\"","value:status.humidity","unit:\"\""]}
+{"type":"sendEvent","linenumber":972,"arguments":["name:\"battery\"","value:(status.battery * 100).toInteger()","unit:\"\""]}
+{"type":"sendEvent","linenumber":974,"arguments":["name:\"temperature\"","value:cToF(status.temperature)","unit:\"F\""]}
+{"type":"sendEvent","linenumber":1024,"arguments":["name:\"switch\"","value:\"on\") "]}
+{"type":"sendEvent","linenumber":1025,"arguments":["name:\"switch\"","value:\"off\""]}

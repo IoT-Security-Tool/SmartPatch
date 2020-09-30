@@ -429,6 +429,7 @@ def listUsers () {
 
 def installed() {
 
+
 	if (!state?.circle)
         state.circle = settings.circle
 
@@ -702,6 +703,7 @@ def generateInitialEvent (member, childDevice) {
 }
 
 def initialize() {
+
 	// TODO: subscribe to attributes, devices, locations, etc.
 }
 
@@ -754,8 +756,4 @@ def placeEventHandler() {
     	}
     }
 
-}
-def installed() {
-}
-def initialize() {
 }

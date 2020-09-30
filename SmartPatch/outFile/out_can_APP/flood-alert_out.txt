@@ -37,6 +37,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	subscribe(alarm, "water.wet", waterWetHandler)
 }
 
@@ -114,10 +118,5 @@ def waterWetHandler(evt) {
 	}
 }
 
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
 def initialize() {
 }

@@ -217,6 +217,10 @@ def pageStateComplete(pageName) {
 */
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -230,6 +234,7 @@ def updated() {
 }
 
 def initialize() {
+
 	log.debug "initializing"
 	subscribe(smartBlock, "redstoneSignalStrength", redstoneSignalStrengthHandler)
 	subscribe(smartBlock, "smartBlockNeighborChanged", smartBlockNeighborChangedHandler, [filterEvents: false])
@@ -1113,11 +1118,4 @@ def allBlocks() {
 		"420": "Lead",
 		"421": "Name Tag"
 	]
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

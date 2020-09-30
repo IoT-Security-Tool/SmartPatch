@@ -47,6 +47,11 @@ preferences {
 
 def installed()
 {   
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(master, "switch.on", onHandler)
 	subscribe(master, "switch.off", offHandler)
 	subscribe(master, "level", dimHandler)   
@@ -217,11 +222,6 @@ private offSwitches() {
 	if(switches && offSwitches) { switches + offSwitches }
 	else if(switches) { switches }
 	else { offSwitches }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

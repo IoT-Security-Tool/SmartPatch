@@ -56,6 +56,7 @@ def defaultPage() {
 }
 
 def installed() {
+
     log.debug "Installed with settings: ${settings}"
 }
 
@@ -104,8 +105,6 @@ def labelMap() {
         sliderDeviceTile: "Tile Device Slider",
         colorWheelDeviceTile: "Tile Device Color Wheel"
     ]
-}
-def installed() {
 }
 def initialize() {
 }

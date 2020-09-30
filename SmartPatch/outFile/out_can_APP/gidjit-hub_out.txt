@@ -85,6 +85,7 @@ mappings {
 
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -98,6 +99,7 @@ def updated() {
 }
 
 def initialize() {
+
 	// subscribe to attributes, devices, locations, etc.
 }
 def helloActions() {
@@ -257,7 +259,3 @@ void updateWindowShade() {
     }
 }
 // TODO: implement event handlers
-def installed() {
-}
-def initialize() {
-}

@@ -49,6 +49,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
         // commented out log statement because presence sensor label could contain user's name
 	//log.debug "Current mode = ${location.mode}, people = ${people.collect{it.label + ': ' + it.currentPresence}}"
@@ -187,11 +191,6 @@ private send(msg) {
 
 private findFalseAlarmThreshold() {
 	(falseAlarmThreshold != null && falseAlarmThreshold != "") ? falseAlarmThreshold : 10
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

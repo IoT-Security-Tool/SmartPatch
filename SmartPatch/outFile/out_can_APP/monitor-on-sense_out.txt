@@ -36,6 +36,10 @@ section("Turn on switch...") {
 
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	subscribe(accelerationSensor, "acceleration.active", accelerationActiveHandler)
 }
 
@@ -90,10 +94,5 @@ def accelerationActiveHandler(evt) {
 
 		switch1.on()
 	}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
 def initialize() {
 }

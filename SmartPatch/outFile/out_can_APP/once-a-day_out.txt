@@ -40,6 +40,7 @@ preferences {
 }
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 	schedule(startTime, "startTimerCallback")
 	schedule(stopTime, "stopTimerCallback")
@@ -61,8 +62,6 @@ def startTimerCallback() {
 def stopTimerCallback() {
 	log.debug "Turning off switches"
 	switches.off()
-}
-def installed() {
 }
 def initialize() {
 }

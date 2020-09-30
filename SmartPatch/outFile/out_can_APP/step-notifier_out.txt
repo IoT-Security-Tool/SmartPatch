@@ -140,6 +140,10 @@ private saveSelectedSong() {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -153,6 +157,7 @@ def updated() {
 }
 
 def initialize() {
+
 
 	log.trace "Entering initialize()"
     
@@ -448,11 +453,4 @@ def sonosNotification() {
 	}
 
 	log.trace "Exiting sonosNotification()"
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

@@ -61,6 +61,7 @@ def configActions() {
 }
 
 def installed() {
+
     initialize()
 }
 
@@ -70,6 +71,7 @@ def updated() {
 }
 
 def initialize() {
+
     schedule(timeToday(timeOfDay, location?.timeZone), "checkPresence")
     if (customName) {
       app.setTitle(customName)
@@ -124,7 +126,3 @@ private hideOptions() {
     (days || modes)? false: true
 }
 
-def installed() {
-}
-def initialize() {
-}

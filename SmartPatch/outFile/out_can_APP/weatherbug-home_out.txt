@@ -167,6 +167,10 @@ def setTemperature() {
 
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	initialize()
 }
@@ -202,6 +206,7 @@ def updated() {
 * Subscribe to changes on the thermostat attributes
 */
 def initialize() {
+
 	log.trace "initialize enter"
     subscribe(thermostatDevice, "heatingSetpoint", pushLatest)
     subscribe(thermostatDevice, "coolingSetpoint", pushLatest)
@@ -347,11 +352,4 @@ def sendToWeatherBug(postParams)
     {
         log.debug "Communication with WeatherBug failed.\n${ex}";
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

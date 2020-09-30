@@ -32,12 +32,14 @@ preferences {
 }
 
 def installed() {
+
   log.debug "Installed with settings: ${settings}"
 
   initialize()
 }
 
 def initialize() {
+
 }
 
 def uninstalled() {
@@ -144,8 +146,4 @@ private removeChildDevices(delete) {
   delete.each {
     deleteChildDevice(it.deviceNetworkId)
   }
-}
-def installed() {
-}
-def initialize() {
 }

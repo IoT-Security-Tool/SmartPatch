@@ -35,6 +35,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	subscribe(theSwitch, "switch.on", switchOnHandler, [filterEvents: false])
 }
@@ -97,11 +101,6 @@ def switchOnHandler(evt) {
 
 def turnOffSwitch() {
 	theSwitch.off()
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

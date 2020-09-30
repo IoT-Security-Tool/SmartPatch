@@ -205,6 +205,7 @@ mappings {
 }
 
 def installed() {
+
 //	subscribe(motions, "motion.active", motionOpenHandler)
 
 //	subscribe(contactSensors, "contact.open", contactOpenHandler)
@@ -585,8 +586,6 @@ private removeSubscription(devices) {
 
 private device(it, type) {
 	it ? [id: it.id, label: it.displayName, type: type] : null
-}
-def installed() {
 }
 def initialize() {
 }

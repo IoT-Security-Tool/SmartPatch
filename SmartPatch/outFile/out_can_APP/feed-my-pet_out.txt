@@ -35,6 +35,8 @@ preferences {
 
 def installed()
 {
+
+
 	schedule(time1, "scheduleCheck")
 }
 
@@ -48,8 +50,6 @@ def scheduleCheck()
 {
 	log.trace "scheduledFeeding"
 	feeder?.feed()
-}
-def installed() {
 }
 def initialize() {
 }

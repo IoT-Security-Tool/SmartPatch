@@ -39,6 +39,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(presence1, "presence.present", presence)
 }
 
@@ -97,11 +102,6 @@ def presence(evt)
 		sendPush "Unlocked door due to arrival of $evt.displayName"
 		lock1.unlock()
 	}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

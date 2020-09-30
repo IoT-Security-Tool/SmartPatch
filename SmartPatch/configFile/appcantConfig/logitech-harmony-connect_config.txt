@@ -43,3 +43,18 @@
 {"type":"MethodNode","name":"","linenumber":0}
 {"type":"subscribe","linenumber":830,"arguments":["log.warn Harmony - No subscribed device found for device: ${evt.deviceId}"]}
 {"type":"MethodNode","name":"","linenumber":0}
+{"type":"MethodNode","name":"installed","linenumber":297}
+{"type":"MethodNode","name":"initialize","linenumber":326}
+{"type":"sendEvent","linenumber":489,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"offline\""," displayed: false"," isStateChange: true"]}
+{"type":"sendEvent","linenumber":511,"arguments":["name: \"DeviceWatch-DeviceStatus\""," value: \"online\""," displayed: false"," isStateChange: true"]}
+{"type":"sendEvent","linenumber":518,"arguments":["name: \"currentActivity\""," value: \"--\""," descriptionText: \"There isn't any activity running\""," displayed: false"]}
+{"type":"sendEvent","linenumber":526,"arguments":["name: \"currentActivity\""," value: currentActivity"," descriptionText: \"Current activity is ${currentActivity}\""," displayed: false"]}
+{"type":"sendEvent","linenumber":540,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"sendEvent","linenumber":542,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":585,"arguments":["name: \"activities\""," value: new groovy.json.JsonBuilder(activities).toString()"," descriptionText: \"Activities are ${activities.collect { it.name }?.join('"," ')}\""," displayed: false"]}
+{"type":"subscribe","linenumber":769,"arguments":["device"," attribute"," deviceHandler"]}
+{"type":"MethodNode","name":" deviceHandler","linenumber":816}
+{"type":"subscribe","linenumber":798,"arguments":["device"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":830,"arguments":["log.warn Harmony - No subscribed device found for device: ${evt.deviceId}"]}
+{"type":"MethodNode","name":"","linenumber":0}

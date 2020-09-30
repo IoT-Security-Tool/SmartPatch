@@ -101,6 +101,10 @@ mappings {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installing with settings: ${settings}"
 	initialize()
 }
@@ -127,6 +131,7 @@ def updated() {
 }
 
 def initialize() {
+
 	log.debug "Initializing with settings: ${settings}"
 	state.deviceSubscriptionMap = [:]
 	log.debug "deviceSubscriptionMap created."
@@ -700,11 +705,4 @@ private mapDeviceCommands(command, value) {
 	}
 
 	return [resultCommand, resultValue]
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

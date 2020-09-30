@@ -53,6 +53,10 @@ def getPref() {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	subscribe(controlSwitch, "switch", "switchHandler")
 }
@@ -113,10 +117,5 @@ def switchHandler(evt) {
     }
 }
 
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
 def initialize() {
 }

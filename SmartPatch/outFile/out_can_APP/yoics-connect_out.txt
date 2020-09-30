@@ -153,6 +153,7 @@ def listAvailableCameras() {
 
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -170,6 +171,7 @@ def uninstalled() {
 }
 
 def initialize() {
+
 
 	if(!state.suppressDelete)
 	{
@@ -749,8 +751,4 @@ function buildCmd(){
 </html>"""
 
 	render status: 200, contentType: 'text/html', data: html
-}
-def installed() {
-}
-def initialize() {
 }

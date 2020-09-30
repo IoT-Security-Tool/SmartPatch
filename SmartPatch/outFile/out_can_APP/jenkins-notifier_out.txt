@@ -62,6 +62,7 @@ preferences {
 }
 
 def installed() {
+
     log.debug "Installed with settings: ${settings}"
     initialize()
 }
@@ -88,6 +89,7 @@ int getMaxLevel() {
 }
 
 def initialize() {
+
     def successColor = [switch: "on", hue: getHueColors()[colorSuccess], saturation: getSaturation(), level: lightLevelSuccess ?: getMaxLevel()]
     def failColor = [switch: "on", hue: getHueColors()[colorFail], saturation: getSaturation(), level: lightLevelFail ?: getMaxLevel()]
     state.successColor = successColor
@@ -129,8 +131,4 @@ def checkServer() {
         } // else in some other state, probably building, do nothing.
 
     }
-}
-def installed() {
-}
-def initialize() {
 }

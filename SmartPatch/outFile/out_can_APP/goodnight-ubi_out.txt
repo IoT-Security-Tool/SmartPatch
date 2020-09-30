@@ -47,6 +47,10 @@ preferences {
 
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 
 initialize()
@@ -60,6 +64,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe(trigger, "switch.on", switchOnHandler)				// User should set up on Ubi that when the choosen
 }    																// trigger is said, Ubi turns on this virtual switch.
 
@@ -157,11 +162,4 @@ def lightsOut() {
 	    log.debug "Turning off switches"							// ...but if the user did enter lights, then turn them
 		theSwitches.off()											// off here.
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

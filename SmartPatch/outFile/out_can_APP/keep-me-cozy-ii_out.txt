@@ -44,6 +44,11 @@ preferences() {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	log.debug "enter installed, state: $state"
 	subscribeToEvents()
 }
@@ -177,11 +182,6 @@ def coolingSetpointHandler(evt) {
 }
 def heatingSetpointHandler (evt) {
 	log.debug "heatingSetpointHandler ()"
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

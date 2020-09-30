@@ -62,6 +62,10 @@ def selectButton() {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	initialize()
 }
 
@@ -71,6 +75,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe(buttonDevice, "button", buttonEvent)
 }
 
@@ -194,11 +199,4 @@ def changeMode(mode) {
 	if (location.mode != mode && location.modes?.find { it.name == mode }) {
 		setLocationMode(mode)
 	}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

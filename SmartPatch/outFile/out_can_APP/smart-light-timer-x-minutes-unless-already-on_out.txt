@@ -39,6 +39,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	initialize()
 }
 
@@ -50,6 +54,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe(switches, "switch", switchChange)
 	subscribe(motions, "motion", motionHandler)
 	subscribe(contacts, "contact", contactHandler)
@@ -270,11 +275,4 @@ def scheduleCheck() {
     	}
     }
     log.debug "state: " + state.myState
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

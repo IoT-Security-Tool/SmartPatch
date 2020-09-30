@@ -51,6 +51,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	initialize()
 }
 
@@ -61,6 +66,7 @@ def updated()
 }
 
 def initialize() {
+
 	subscribe(sensor1, "acceleration.active", accelerationActiveHandler)
 	subscribe(sensor1, "acceleration.inactive", accelerationInactiveHandler)
 }
@@ -264,11 +270,4 @@ private flashLights() {
 			delay += offFor
 		}
 	}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

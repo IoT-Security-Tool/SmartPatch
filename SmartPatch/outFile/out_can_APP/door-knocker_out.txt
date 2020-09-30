@@ -53,6 +53,10 @@ def mainPage() {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
   init()
 }
 
@@ -204,11 +208,6 @@ private send(kSensor) {
     ]
     sendNotification(msg, options)
   }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

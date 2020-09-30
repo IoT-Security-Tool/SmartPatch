@@ -65,6 +65,7 @@ def getBuildRedirectUrl() {
 }
 
 def installed() {
+
     log.debug "Installed with settings: ${settings}"
 }
 
@@ -78,6 +79,7 @@ def updated() {
 }
 
 def initialize() {
+
     log.debug "Initializing"
     unschedule()
 
@@ -448,8 +450,4 @@ def connectionStatus(message, redirectUrl = null) {
 
 def isOK(response) {
   response.status in [200, 201]
-}
-def installed() {
-}
-def initialize() {
 }

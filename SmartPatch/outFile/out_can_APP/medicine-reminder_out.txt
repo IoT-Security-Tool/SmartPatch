@@ -49,6 +49,8 @@ preferences {
 
 def installed()
 {
+
+
 	initialize()
 }
 
@@ -59,6 +61,7 @@ def updated()
 }
 
 def initialize() {
+
 	def window = timeWindowMsec
 	[time1, time2, time3, time4].eachWithIndex {time, index ->
 		if (time != null) {
@@ -122,8 +125,4 @@ private sendMessage() {
 
 def getTimeWindowMsec() {
 	(timeWindow ?: 15) * 60000 as Long
-}
-def installed() {
-}
-def initialize() {
 }

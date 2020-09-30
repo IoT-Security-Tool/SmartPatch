@@ -31,6 +31,7 @@ preferences {
 }
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -44,6 +45,7 @@ def updated() {
 }
 
 def initialize() {
+
     scheduledEvent()
 }
 
@@ -64,8 +66,4 @@ def scheduledEvent() {
 		log.trace "Trying to run smartweather-station-controller too soon. Has only been ${timeSinceLastRunMS} ms but needs to be at least ${runAgainWindowMS} ms"
 	}
     */
-}
-def installed() {
-}
-def initialize() {
 }

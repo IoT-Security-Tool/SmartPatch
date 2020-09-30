@@ -37,6 +37,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
     log.debug "Installed with settings: ${settings}"
 
     initialize()
@@ -50,6 +54,7 @@ def updated() {
 }
 
 def initialize() {
+
     state.active = false;
     subscribe(sensor, "carbonDioxide", 'handleLevel')
 }
@@ -109,11 +114,4 @@ def handleLevel(evt) {
         state.active = false;
         switches.each { it.off(); }
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

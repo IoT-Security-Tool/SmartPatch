@@ -43,6 +43,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(presence1, "presence", presence)
 }
 
@@ -127,11 +132,6 @@ def sendMessage(msg) {
             sendPush msg
         }
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

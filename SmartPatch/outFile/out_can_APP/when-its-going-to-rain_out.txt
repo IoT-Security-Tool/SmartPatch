@@ -44,6 +44,7 @@ preferences {
 
 
 def installed() {
+
 	log.debug "Installed: $settings"
 	schedule(time, "scheduleCheck")
 }
@@ -88,8 +89,6 @@ private isStormy(json) {
 		log.warn "Did not get a forecast: $json"
 		return false
 	}
-}
-def installed() {
 }
 def initialize() {
 }

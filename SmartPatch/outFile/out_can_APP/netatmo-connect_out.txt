@@ -304,6 +304,7 @@ String toQueryString(Map m) {
 }
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 	initialize()
 }
@@ -316,6 +317,7 @@ def updated() {
 }
 
 def initialize() {
+
 	log.debug "Initialized with settings: ${settings}"
     
 	// Pull the latest device info into state
@@ -552,8 +554,4 @@ private Boolean hasAllHubsOver(String desiredFirmware) {
 
 private List getRealHubFirmwareVersions() {
 	return location.hubs*.firmwareVersionString.findAll { it }
-}
-def installed() {
-}
-def initialize() {
 }

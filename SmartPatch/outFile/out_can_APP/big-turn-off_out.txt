@@ -32,6 +32,8 @@ preferences {
 
 def installed()
 {
+
+
 	subscribe(location, changedLocationMode)
 	subscribe(app, appTouch)
 }
@@ -62,8 +64,6 @@ if (evt.displayName != location.name){
 def appTouch(evt) {
 	log.debug "appTouch: $evt"
 	switches?.off()
-}
-def installed() {
 }
 def initialize() {
 }

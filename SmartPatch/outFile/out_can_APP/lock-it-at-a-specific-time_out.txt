@@ -40,6 +40,7 @@ preferences {
   }
 }
 def installed() {
+
   schedule(time, "setTimeCallback")
 
 }
@@ -83,8 +84,6 @@ def lockMessage() {
   if (phone) {
     sendSms phone, msg
   }
-}
-def installed() {
 }
 def initialize() {
 }

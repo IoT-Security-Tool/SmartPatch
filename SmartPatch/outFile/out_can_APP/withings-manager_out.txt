@@ -143,6 +143,7 @@ def notificationReceived() {
 
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -158,6 +159,7 @@ def updated() {
 }
 
 def initialize() {
+
 	if (!getChild()) { createChild() }
 	app.updateLabel(withingsLabel)
 	wCreateNotification()
@@ -774,8 +776,4 @@ def notAuthorizedHtmlBody() {
 			<p>Click 'Done' to try again.</p>
 		</div>
 		"""
-}
-def installed() {
-}
-def initialize() {
 }

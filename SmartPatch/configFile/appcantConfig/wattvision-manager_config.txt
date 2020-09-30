@@ -4,3 +4,5 @@
 {"type":"MethodNode","name":"initialize","linenumber":82}
 {"type":"MethodNode","name":"installed","linenumber":68}
 {"type":"MethodNode","name":"initialize","linenumber":82}
+{"type":"MethodNode","name":"installed","linenumber":68}
+{"type":"MethodNode","name":"initialize","linenumber":82}

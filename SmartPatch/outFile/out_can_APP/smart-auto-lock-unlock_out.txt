@@ -48,6 +48,11 @@ preferences
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
     initialize()
 }
 
@@ -60,6 +65,8 @@ def updated()
 
 def initialize()
 {
+
+
     log.debug "Settings: ${settings}"
     subscribe(lock1, "lock", doorHandler, [filterEvents: false])
     subscribe(lock1, "unlock", doorHandler, [filterEvents: false])  
@@ -196,11 +203,4 @@ def doorHandler(evt)
         unschedule (lockDoor)
         unschedule (unlockDoor)
     	}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

@@ -71,6 +71,10 @@ page(name: "pageAbout", title: "About ${textAppName()}") {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	subscribe(controlSwitch, "switch", "switchHandler")
 }
@@ -186,11 +190,6 @@ private def textHelp() {
     	"Ties a Hello, Home phrase or mode to a switch's (virtual or real) on/off state. Perfect for use with IFTTT. "+
 		"Simple define a switch to be used, then tie the on/off state of the switch to a specific Hello, Home phrases or mode. "+
 		"Connect the switch to an IFTTT action, and the Hello, Home phrase or mode will fire with the switch state change." 
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

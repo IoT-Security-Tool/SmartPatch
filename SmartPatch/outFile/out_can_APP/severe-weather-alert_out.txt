@@ -58,6 +58,7 @@ def mainPage() {
 }
 
 def installed() {
+
     log.debug "Installed with settings: ${settings}"
     scheduleJob()
 }
@@ -131,8 +132,6 @@ private send(message) {
     if (settings.phone3) {
         sendSms phone3, message
     }
-}
-def installed() {
 }
 def initialize() {
 }

@@ -55,6 +55,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	
 	initialize()
@@ -69,6 +73,7 @@ def updated() {
 }
 
 def initialize() {
+
 	// will notify when temp exceeds max
     subscribe(deviceTemperatureMeasurement, "temperature", tempHandler)
 
@@ -271,11 +276,4 @@ def resetLEDNotification(){
     if (state.ledState == "off") {
     	deviceLight.off()
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

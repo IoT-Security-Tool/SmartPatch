@@ -36,6 +36,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(motion1, "motion.active", motionActiveHandler)
 }
 
@@ -89,11 +94,6 @@ def motionActiveHandler(evt) {
     }
 
 	switch1.on()
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

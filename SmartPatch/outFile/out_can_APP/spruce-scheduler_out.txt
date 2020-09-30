@@ -802,6 +802,10 @@ private String zipString() {
 
 //app install
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
     state.dpwMap =                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     state.tpwMap =                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     state.Rain =                 [0,0,0,0,0,0,0]
@@ -2899,10 +2903,5 @@ def zoneSetPage16(){
     state.app = 16
     zoneSetPage()
     }
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
 def initialize() {
 }

@@ -227,6 +227,10 @@ def subscribeToEvents() {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	atomicState.version = "1.1.0"
 
 	atomicState.isBucketCreated = false
@@ -416,11 +420,6 @@ def tryShipEvents(event) {
 		log.error "shipping events failed: $e"
 	}
 
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

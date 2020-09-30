@@ -49,8 +49,8 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
             eventflag=[]
             notduplicate=[]
             beginnum=0
-            installedLinenumber=0
-            time_init_num=0
+            installedLinenumber=[]
+            time_init_num=[]
 
             String [] sz=files[i].name.split("/")
             filename = sz[sz.length-1].minus(".groovy")
@@ -67,7 +67,7 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
             }
             outfile.createNewFile()
             configlist = configfile.collect {it}
-            entity.getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate)
+            entity.getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedLinenumber,time_init_num)
             entity.solveline(sourcefile,keyline)
             entity.initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num,i+1)
             println(filename+" done")

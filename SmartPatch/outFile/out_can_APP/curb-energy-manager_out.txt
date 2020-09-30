@@ -67,6 +67,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
   resetClocking();
   initialize();
 }
@@ -78,6 +82,7 @@ def updated() {
 }
 
 def initialize() {
+
   subscribe(meter, "power", checkEnergyMonitor);
   runEvery1Minute(runAutomation);
 }
@@ -273,11 +278,4 @@ def stopThrottlingUsage() {
       }
       state[s.id] == "on" ? s.on() : s.off()
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

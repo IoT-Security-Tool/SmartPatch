@@ -40,6 +40,8 @@ preferences {
 
 def installed()
 {
+
+
 	initialize()
 }
 
@@ -50,6 +52,7 @@ def updated()
 }
 
 def initialize() {
+
     /*
 	def tz = location.timeZone
     
@@ -85,8 +88,4 @@ def turnOffCamera()
 {
   log.info "turned off camera"
   switch1.off()
-}
-def installed() {
-}
-def initialize() {
 }

@@ -179,6 +179,7 @@ void updateSwitches() {
 }
 
  def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 }
 
@@ -186,8 +187,6 @@ def updated() {
 	log.debug "Updated with settings: ${settings}"
 
 	unsubscribe()
-}
-def installed() {
 }
 def initialize() {
 }

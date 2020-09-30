@@ -342,6 +342,10 @@ def Settings() {
 }
 
 def installed(){
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	init()
 }
 
@@ -740,11 +744,6 @@ def timeIntervalInput() {
 			input "ending", "time", title: "Ending", multiple: false, required: starting != null, submitOnChange: true
 		}
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

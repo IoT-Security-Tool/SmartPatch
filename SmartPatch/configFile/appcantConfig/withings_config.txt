@@ -13,3 +13,8 @@
 {"type":"sendEvent","linenumber":417,"arguments":["state.childDni"," [name: \"leanRatio\""," value:(100-measurement.value)"," date:dateString"," isStateChange:true"," display:true]"," [dateCreated:secondsToDate(measurementDateSeconds)]"]}
 {"type":"MethodNode","name":"installed","linenumber":510}
 {"type":"MethodNode","name":"initialize","linenumber":521}
+{"type":"sendEvent","linenumber":404,"arguments":["state.childDni"," [name: \"connection\""," value:\"Connection error: ${status}\""," isStateChange:true"," displayed:true]"]}
+{"type":"sendEvent","linenumber":411,"arguments":["state.childDni"," measurement + [date:dateString]"," [dateCreated:secondsToDate(measurementDateSeconds)]"]}
+{"type":"sendEvent","linenumber":417,"arguments":["state.childDni"," [name: \"leanRatio\""," value:(100-measurement.value)"," date:dateString"," isStateChange:true"," display:true]"," [dateCreated:secondsToDate(measurementDateSeconds)]"]}
+{"type":"MethodNode","name":"installed","linenumber":510}
+{"type":"MethodNode","name":"initialize","linenumber":521}

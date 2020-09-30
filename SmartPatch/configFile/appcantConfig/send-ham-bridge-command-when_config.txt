@@ -79,3 +79,30 @@
 {"type":"MethodNode","name":" eventHandler","linenumber":62}
 {"type":"subscribe","linenumber":59,"arguments":["water","water.wet"," eventHandler"]}
 {"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"MethodNode","name":"installed","linenumber":36}
+{"type":"subscribe","linenumber":47,"arguments":[") "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":48,"arguments":["contact","contact.open"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":49,"arguments":["contactClosed","contact.closed"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":50,"arguments":["acceleration","acceleration.active"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":51,"arguments":["motion","motion.active"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":52,"arguments":["mySwitch","switch.on"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":53,"arguments":["mySwitchOff","switch.off"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":54,"arguments":["arrivalPresence","presence.present"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":55,"arguments":["departurePresence","presence.not present"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":56,"arguments":["smoke","smoke.detected"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":57,"arguments":["smoke","smoke.tested"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":58,"arguments":["smoke","carbonMonoxide.detected"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}
+{"type":"subscribe","linenumber":59,"arguments":["water","water.wet"," eventHandler"]}
+{"type":"MethodNode","name":" eventHandler","linenumber":62}

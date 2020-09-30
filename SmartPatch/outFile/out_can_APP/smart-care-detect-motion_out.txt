@@ -99,6 +99,10 @@ def configurationPage(){
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	initialize()
 }
@@ -111,6 +115,7 @@ def updated() {
 }
 
 def initialize() {
+
 	state.active = 0
 	subscribe(bedroomMotion, "motion.active", bedroomActive)
 	subscribe(bathroomMotion, "motion.active", bathroomActive)
@@ -252,11 +257,4 @@ def sendMessage() {
 		}
 	}
 	state.status = null
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

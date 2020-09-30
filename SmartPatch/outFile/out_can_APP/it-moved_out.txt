@@ -37,6 +37,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	subscribe(accelerationSensor, "acceleration.active", accelerationActiveHandler)
 }
 
@@ -107,11 +111,6 @@ def accelerationActiveHandler(evt) {
             sendSms(phone1, "${accelerationSensor.label ?: accelerationSensor.name} moved")
         }
 	}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

@@ -36,6 +36,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(contact1, "contact.closed", contactClosedHandler)
 }
 
@@ -89,11 +94,6 @@ def contactClosedHandler(evt) {
     }
 
 	switch1.off()
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

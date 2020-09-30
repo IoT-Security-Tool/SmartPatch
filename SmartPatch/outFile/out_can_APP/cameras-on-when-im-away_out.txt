@@ -37,6 +37,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	log.debug "Current people = ${people.collect{it.label + ': ' + it.currentPresence}}"
 	subscribe(people, "presence", presence)
@@ -142,10 +146,5 @@ private everyoneIsAway()
 }
 
 
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
 def initialize() {
 }

@@ -62,6 +62,12 @@ preferences {
 }
 
 def installed() {
+state.timePeriod = 5
+state.lastsunrise = null
+state.lastsunset = null
+state.LastsunsetTime = null
+state.LastsunriseTime = null
+
     initialize()
 }
 
@@ -72,6 +78,10 @@ def updated() {
 }
 
 def initialize() {
+subscribe(location, "position", handlerAdded)
+subscribe(location, "sunset", handlerAdded)
+subscribe(location, "sunrise", handlerAdded)
+
     subscribe(location, "position", locationPositionChange)
     subscribe(location, "sunriseTime", sunriseTimeHandler)
     subscribe(location, "sunsetTime", sunsetTimeHandler)
@@ -586,15 +596,3 @@ def issunriseTimeTwice(currentTime){
 
 
 // added codes end - 2
-def installed() {
-state.timePeriod = 5
-state.lastsunrise = null
-state.lastsunset = null
-state.LastsunsetTime = null
-state.LastsunriseTime = null
-}
-def initialize() {
-subscribe(location, "position", handlerAdded)
-subscribe(location, "sunset", handlerAdded)
-subscribe(location, "sunrise", handlerAdded)
-}

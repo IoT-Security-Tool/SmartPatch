@@ -43,6 +43,7 @@ preferences {
 }
 
 def installed() {
+
 	initialize()
 }
 
@@ -52,6 +53,7 @@ def updated() {
 }
 
 def initialize() {
+
 	schedule(time, changeMode)
 }
 
@@ -91,8 +93,4 @@ private send(msg) {
 
 private getLabel() {
 	app.label ?: "SmartThings"
-}
-def installed() {
-}
-def initialize() {
 }

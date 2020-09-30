@@ -131,8 +131,8 @@ if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
             eventflag=[]
             notduplicate=[]
             beginnum=0
-            installedLinenumber=0
-            time_init_num=0
+            installedLinenumber=[]
+            time_init_num=[]
 
             outputpath = "../outFile/out_cant_APP/"+filename+"_out.txt"
             outfile = new File(outputpath)
@@ -141,7 +141,7 @@ if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
             }
             outfile.createNewFile()
             configlist = appconfigfile.collect {it}
-            appentity.getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate)
+            appentity.getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedLinenumber,time_init_num)
             appentity.solveline(after_appsourcefile,keyline)
             appentity.initSource(headfile,headfile_sun,after_appsourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num)
 

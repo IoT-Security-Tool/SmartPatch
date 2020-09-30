@@ -37,6 +37,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	initialize()
 }
@@ -48,6 +52,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe(meter, "power", meterHandler)
 }
 
@@ -100,11 +105,4 @@ def meterHandler(evt) {
 	    log.debug "${meter} reported energy consumption above ${threshold}. Turning of switches."
     	switches.off()
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

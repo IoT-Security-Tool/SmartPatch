@@ -38,6 +38,7 @@ preferences {
 }
 
 def installed() {
+
     log.debug "Installed ${app.label} with address '${settings.theAddr}' on hub '${settings.theHub.name}'"
 
     initialize()
@@ -59,6 +60,7 @@ def updated() {
 }
 
 def initialize() {
+
     def parts = theAddr.split(":")
     def iphex = convertIPtoHex(parts[0])
     def porthex = convertPortToHex(parts[1])
@@ -77,8 +79,4 @@ private String convertIPtoHex(ipAddress) {
 private String convertPortToHex(port) {
     String hexport = port.toString().format( '%04X', port.toInteger() )
     return hexport
-}
-def installed() {
-}
-def initialize() {
 }

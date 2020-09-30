@@ -30,6 +30,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -44,6 +48,7 @@ def updated() {
 }
 
 def initialize() {
+
 	state.changed = false
 	subscribe(sensors, 'contact', "sensorChange")
 }
@@ -123,11 +128,4 @@ def restore() {
     log.debug "Setting thermostat to $state.thermostatMode"
     thermostat.setThermostatMode(state.thermostatMode)
     state.changed = false
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

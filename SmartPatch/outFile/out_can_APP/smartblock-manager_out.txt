@@ -262,6 +262,7 @@ private block(data) {
 }
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -275,6 +276,7 @@ def updated() {
 }
 
 def initialize() {
+
 	// update all children with serverIp.
 	if (serverIp) {
 		getChildDevices().each { block ->
@@ -286,8 +288,4 @@ def initialize() {
 
 public getServerURL() {
 	return "http://${serverIp}:3333"
-}
-def installed() {
-}
-def initialize() {
 }

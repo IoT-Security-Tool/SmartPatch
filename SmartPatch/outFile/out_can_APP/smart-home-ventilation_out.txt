@@ -157,6 +157,7 @@ page(name: "pageAbout", title: "About ${textAppName()}") {
 // Install and initiate
 
 def installed() {
+
     log.debug "Installed with settings: ${settings}"
     init()
 }
@@ -427,8 +428,6 @@ private def textHelp() {
         "that each scenario does not overlap and run in separate modes (i.e. Home, Out of town, etc). Also note that you should  " +
         "avoid scheduling the ventilation fan at exactly midnight; the app resets itself at that time. It is suggested to start any new schedule " +
         "at 12:15 am or later."
-}
-def installed() {
 }
 def initialize() {
 }

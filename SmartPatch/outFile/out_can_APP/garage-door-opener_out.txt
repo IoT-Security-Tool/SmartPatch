@@ -31,6 +31,7 @@ preferences {
 }
 
 def installed() {
+
 	subscribe(app, appTouchHandler)
 	subscribeToCommand(switch1, "on", onCommand)
 }
@@ -49,8 +50,6 @@ def appTouch(evt) {
 def onCommand(evt) {
 	log.debug "onCommand: $evt.value, $evt"
 	switch1?.off(delay: 3000)
-}
-def installed() {
 }
 def initialize() {
 }

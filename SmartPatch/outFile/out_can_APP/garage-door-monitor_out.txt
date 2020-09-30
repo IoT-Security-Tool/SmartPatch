@@ -41,6 +41,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(multisensor, "acceleration", accelerationHandler)
 }
 
@@ -166,11 +171,6 @@ def clearSmsHistory() {
 
 def clearStatus() {
 	state.status = null
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

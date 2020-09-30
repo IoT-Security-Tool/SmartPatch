@@ -36,6 +36,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(presence1, "presence", presenceHandler)
 }
 
@@ -102,11 +107,6 @@ def presenceHandler(evt)
 		switch1.off()
 		log.debug "Everyone's away."
 	}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

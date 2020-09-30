@@ -13,3 +13,8 @@
 {"type":"subscribe","linenumber":572,"arguments":["app"," onAppTouch"]}
 {"type":"MethodNode","name":"","linenumber":0}
 {"type":"sendEvent","linenumber":1176,"arguments":["\"name\":\"debugEventFromParent\""," \"value\":message"," \"description\":message"," displayed: true"," isStateChange: true"]}
+{"type":"MethodNode","name":"installed","linenumber":556}
+{"type":"MethodNode","name":"initialize","linenumber":569}
+{"type":"subscribe","linenumber":572,"arguments":["app"," onAppTouch"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"sendEvent","linenumber":1176,"arguments":["\"name\":\"debugEventFromParent\""," \"value\":message"," \"description\":message"," displayed: true"," isStateChange: true"]}

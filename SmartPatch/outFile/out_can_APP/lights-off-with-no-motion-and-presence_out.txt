@@ -29,6 +29,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
   subscribe(motionSensor, "motion", motionHandler)
   subscribe(presenceSensors, "presence", presenceHandler)
 }
@@ -162,11 +166,6 @@ def scheduleCheck() {
     } else {
       log.debug "Motion is active: do nothing"
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

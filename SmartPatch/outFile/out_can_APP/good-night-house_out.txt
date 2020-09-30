@@ -50,6 +50,8 @@ preferences {
 
 def installed()
 {
+
+
 	log.debug "Installed with settings: ${settings}"
 	log.debug "Current mode = ${location.mode}"
 	subscribe(app, appTouch)
@@ -77,8 +79,6 @@ def appTouch(evt) {
     switcheson.on()
     def delay = (waitfor != null && waitfor != "") ? waitfor * 1000 : 120000
 	switchesoff.off(delay: delay)
-}
-def installed() {
 }
 def initialize() {
 }

@@ -95,7 +95,7 @@ def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notdup
 
 
     for (int i = 0; i < sourcelist.size(); i++) {
-        if( i ==  installedLinenumber - 1 ) {
+        if( i +1 ==  installedLinenumber ) {
             installflag = true
             for (int j = i; j < sourcelist.size(); j++) {
                 if ((sourcelist[j].toString().contains("{")) && sourcelist[j].toString().contains("}")) {
@@ -128,7 +128,7 @@ def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notdup
             }
         }
 
-        if(i == time_init_num -1){
+        if(i +1 == time_init_num[0]){
             initflag = true
             for (int j = i; j < sourcelist.size(); j++) {
                 if ((sourcelist[j].toString().contains("{")) && sourcelist[j].toString().contains("}")) {
@@ -273,7 +273,7 @@ def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notdup
 
 }
 
-def getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate) {
+def getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedLinenumber,time_init_num) {
     for (int i = 0; i < configlist.size(); i++) {
         def json = slurper.parseText(configlist[i])
         if (json.type == "subscribe") {

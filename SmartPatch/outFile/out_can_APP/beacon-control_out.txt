@@ -95,6 +95,10 @@ def mainPage() {
 
 // Lifecycle management
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "<beacon-control> Installed with settings: ${settings}"
 	initialize()
 }
@@ -106,6 +110,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe(beacons, "presence", beaconHandler)
 }
 
@@ -357,11 +362,4 @@ private list(List names) {
 		default:
 			return "${names[0..-2].join(', ')}, and ${names[-1]}"
 	}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

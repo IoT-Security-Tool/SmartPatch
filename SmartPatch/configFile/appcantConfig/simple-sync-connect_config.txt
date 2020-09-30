@@ -34,3 +34,15 @@
 {"type":"MethodNode","name":"","linenumber":0}
 {"type":"subscribe","linenumber":167,"arguments":["\tstate.subscribe = fals"]}
 {"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":48,"arguments":["!state.subscribe"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":50,"arguments":["location"," null"," locationHandler"," [filterEvents:false]"]}
+{"type":"MethodNode","name":" locationHandler","linenumber":205}
+{"type":"subscribe","linenumber":51,"arguments":["       state.subscribe = tru"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"MethodNode","name":"installed","linenumber":152}
+{"type":"MethodNode","name":"initialize","linenumber":162}
+{"type":"subscribe","linenumber":164,"arguments":["state.subscribe"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":167,"arguments":["\tstate.subscribe = fals"]}
+{"type":"MethodNode","name":"","linenumber":0}

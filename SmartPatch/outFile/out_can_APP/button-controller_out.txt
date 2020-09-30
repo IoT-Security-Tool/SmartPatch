@@ -154,6 +154,10 @@ def getButtonSections(buttonNumber) {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	initialize()
 }
 
@@ -163,6 +167,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe(buttonDevice, "button", buttonEvent)
 }
 
@@ -389,11 +394,4 @@ private hideOptionsSection() {
 
 private timeIntervalLabel() {
 	(starting && ending) ? hhmm(starting) + "-" + hhmm(ending, "h:mm a z") : ""
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

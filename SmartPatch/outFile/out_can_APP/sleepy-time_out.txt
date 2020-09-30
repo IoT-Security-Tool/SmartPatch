@@ -48,6 +48,10 @@ def selectPhrases() {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -71,6 +75,7 @@ def updated() {
 }
 
 def initialize() {
+
 	// TODO: subscribe to attributes, devices, locations, etc.
 }
 
@@ -129,11 +134,4 @@ def jawboneHandler(evt) {
 		location.helloHome.execute(settings.wakePhrase)
     }
         
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

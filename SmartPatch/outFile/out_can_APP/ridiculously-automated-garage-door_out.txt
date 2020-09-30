@@ -57,6 +57,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.trace "installed()"
 	subscribe()
 }
@@ -375,11 +379,6 @@ private closeDoor()
 private getCar(evt)
 {
 	cars.find{it.id == evt.deviceId}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

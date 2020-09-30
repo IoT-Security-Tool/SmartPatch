@@ -39,6 +39,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(thermostat, "heatingSetpoint", heatingSetpointHandler)
 	subscribe(thermostat, "coolingSetpoint", coolingSetpointHandler)
 	subscribe(thermostat, "temperature", temperatureHandler)
@@ -230,11 +235,6 @@ def appTouch(evt)
 def event(evt)
 {
 	log.debug "value: $evt.value, event: $evt, settings: $settings, handlerName: ${evt.handlerName}"
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

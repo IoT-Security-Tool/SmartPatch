@@ -38,6 +38,10 @@ preferences {
 
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	subscribe(presence, "presence", presenceHandler)
 }
 
@@ -108,11 +112,6 @@ def presenceHandler(evt) {
             sendSms(phone1, "${presence.label ?: presence.name} has left the ${location}")
         }
 	}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

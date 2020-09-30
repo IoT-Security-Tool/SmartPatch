@@ -41,6 +41,7 @@ preferences {
 }
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -54,6 +55,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe(location, modeChangeHandler)
 }
 
@@ -95,8 +97,4 @@ def chatMessageToMC(message) {
 		log.debug "response: ${content}"
 	}
 
-}
-def installed() {
-}
-def initialize() {
 }

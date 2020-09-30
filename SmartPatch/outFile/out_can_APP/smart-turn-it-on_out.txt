@@ -35,6 +35,7 @@ preferences {
 }
 
 def installed() {
+
 	if (timeOne)
 	{
 		log.debug "scheduling 'Smart turn it on' to run at $timeOne"
@@ -70,8 +71,6 @@ log.debug "Start"
     
 def turnOff() {
 	switchOne.off()
-}
-def installed() {
 }
 def initialize() {
 }

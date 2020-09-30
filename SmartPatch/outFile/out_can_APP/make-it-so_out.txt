@@ -38,6 +38,7 @@ preferences {
 }
 
 def installed() {
+
 	subscribe(location, changedLocationMode)
 	subscribe(app, appTouch)
 	saveState()
@@ -145,8 +146,6 @@ private saveState()
 private getCurrentMode()
 {
 	location.mode ?: "_none_"
-}
-def installed() {
 }
 def initialize() {
 }

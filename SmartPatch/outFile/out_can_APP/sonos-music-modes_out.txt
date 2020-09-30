@@ -133,6 +133,7 @@ def chooseTrack() {
 }
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 	subscribeToEvents()
 }
@@ -278,7 +279,5 @@ private timeIntervalLabel()
 }
 // TODO - End Centralize
 
-def installed() {
-}
 def initialize() {
 }

@@ -50,6 +50,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "installed, current mode = ${location.mode}, state.actionTakenOn = ${state.actionTakenOn}"
 	initialize()
 }
@@ -61,6 +65,7 @@ def updated() {
 }
 
 def initialize() {
+
 	log.trace "timeOfDay: $timeOfDay, endTime: $endTime"
 	subscribe(motionSensors, "motion.active", motionActiveHandler)
 	subscribe(location, modeChangeHandler)
@@ -180,11 +185,4 @@ private send(msg) {
     }
 
 	log.debug msg
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

@@ -51,6 +51,7 @@ preferences {
 }
 
 def installed() {
+
 	log.debug "Installed with settings: ${settings}"
 	schedule(time1, "scheduleCheck")
 }
@@ -140,8 +141,6 @@ private getTimePhrase() {
 	else {
 		return "in the past ${Math.round(interval/3600000)} hours"
 	}
-}
-def installed() {
 }
 def initialize() {
 }

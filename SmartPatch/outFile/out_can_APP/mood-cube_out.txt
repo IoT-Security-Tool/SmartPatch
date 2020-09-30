@@ -129,6 +129,10 @@ def saveStatesPage(params) {
  * Installation & update *
  *************************/
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -142,6 +146,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe cube, "threeAxis", positionHandler
 }
 
@@ -383,10 +388,3 @@ private sceneName(num) {
 
 
 
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
-}

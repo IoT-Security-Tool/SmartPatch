@@ -36,6 +36,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(contacts, "contact.open", contactOpenHandler)
 }
 
@@ -91,11 +96,6 @@ def contactOpenHandler(evt) {
 	log.debug "$evt.value: $evt, $settings"
 	log.trace "The Undead are coming! Turning on the lights: $switches"
 	switches.on()
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

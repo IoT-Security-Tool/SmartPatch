@@ -62,7 +62,9 @@ mappings {
 	}
 }
 
-def installed() {}
+def installed() {
+}
+
 
 def updated() {}
 
@@ -193,8 +195,6 @@ private device(it, name) {
 		def s = it.currentState(name)
 		[id: it.id, label: it.displayName, name: it.displayName, state: s]
     }
-}
-def installed() {
 }
 def initialize() {
 }

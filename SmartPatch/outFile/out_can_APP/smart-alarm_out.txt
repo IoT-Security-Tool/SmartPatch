@@ -1025,6 +1025,10 @@ def pageRestApiOptions() {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
     LOG("installed()")
 
     initialize()
@@ -1060,6 +1064,7 @@ private def setupInit() {
 }
 
 private def initialize() {
+
     log.debug "Smart Alarm. Version ${getVersion()}. ${textCopyright()}"
     LOG("settings: ${settings}")
 
@@ -2118,11 +2123,4 @@ private def LOG(message) {
 
 private def STATE() {
     //log.trace "state: ${state}"
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

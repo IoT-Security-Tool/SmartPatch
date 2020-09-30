@@ -40,6 +40,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	subscribe(bathroom, "humidity", coffeeMaker)
 }
 
@@ -95,11 +99,6 @@ def coffeeMaker(shower) {
 	if (shower.value.toInteger() > relHum) {
 		coffee.on()
     } 
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

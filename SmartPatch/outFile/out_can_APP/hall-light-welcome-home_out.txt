@@ -41,6 +41,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
   init()
 }
 
@@ -159,11 +163,6 @@ def doorOpened(evt) {
     log.info('Welcome home!  Let me get that light for you.')
     lights?.on()
   }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

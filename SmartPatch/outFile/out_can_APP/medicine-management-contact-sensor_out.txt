@@ -50,6 +50,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	
 	initialize()
@@ -64,6 +68,7 @@ def updated() {
 }
 
 def initialize() {
+
 
     // will stop LED notification incase it was set by med reminder
     subscribe(deviceContactSensor, "contact", contactHandler)
@@ -228,11 +233,4 @@ def resetLEDNotification(){
     	deviceLight.off()
     }
 
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

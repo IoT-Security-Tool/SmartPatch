@@ -43,6 +43,10 @@ def mainPage() {
 }
 
 def installed(){
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
     initialize()
 }
 
@@ -53,6 +57,7 @@ def updated(){
 }
 
 def initialize(){
+
     log.debug "Settings: ${settings}"
     subscribe(lock1, "lock", doorHandler, [filterEvents: false])
     subscribe(lock1, "unlock", doorHandler, [filterEvents: false])  
@@ -168,11 +173,4 @@ def doorHandler(evt){
             sendSms( phoneNumber, "${lock1} unlocked after ${contact} was opened or closed when ${lock1} was locked!")
         }
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

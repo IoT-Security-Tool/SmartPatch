@@ -56,6 +56,10 @@ def mainPage() {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
   init()
 }
 
@@ -176,11 +180,6 @@ private isStormy(forecast) {
     }
     state.lastCheck = ["time": now(), "result": result]
     return result
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

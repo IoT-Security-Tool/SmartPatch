@@ -54,6 +54,10 @@ $registerDate"""
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 
 	initialize()
@@ -67,6 +71,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe(hub, "hubInfo", registrationHandler, [filterEvents: false])
 }
 
@@ -120,11 +125,4 @@ def registrationHandler(evt) {
 	state.localip = hubInfo.localip
 	state.lastRegister = new Date()
 	sendNotificationEvent("${hub.name} registered in prod with IP: ${hubInfo.localip}")
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

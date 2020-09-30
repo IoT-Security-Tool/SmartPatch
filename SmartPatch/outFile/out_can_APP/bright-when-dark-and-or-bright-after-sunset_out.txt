@@ -181,6 +181,11 @@ def options()
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	log.debug "Installed with settings: ${settings}."
 	initialize()
 }
@@ -195,6 +200,11 @@ def updated()
 
 def initialize()
 {
+subscribe(location, "position", handlerAdded)
+subscribe(location, "sunset", handlerAdded)
+subscribe(location, "sunrise", handlerAdded)
+
+
 	subscribe(motionSensor, "motion", motionHandler)
     if (lights != null && lights != "" && dimmers != null && dimmers != "")
     	{
@@ -1287,13 +1297,3 @@ def issunriseTimeTwice(currentTime){
 
 
 // added codes end - 2
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
-subscribe(location, "position", handlerAdded)
-subscribe(location, "sunset", handlerAdded)
-subscribe(location, "sunrise", handlerAdded)
-}

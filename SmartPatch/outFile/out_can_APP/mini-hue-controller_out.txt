@@ -35,6 +35,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed with settings: ${settings}"
 	state.colorIndex = -1    
 	initialize()
@@ -47,6 +51,7 @@ def updated() {
 }
 
 def initialize() {
+
 	subscribe controller, "button", buttonHandler
 }
 
@@ -200,11 +205,4 @@ private getCurrentSwitchLevel() {
     	level = Math.max(it.currentValue("level")?.toInteger() ?: 0, level)
     }
     level.toInteger()
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

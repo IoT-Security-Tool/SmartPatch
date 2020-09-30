@@ -727,6 +727,10 @@ section("Help") {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
     initialize()
 }
 
@@ -737,6 +741,7 @@ def updated() {
 }
 
 def initialize() {
+
 
 midNightReset()
 
@@ -1702,10 +1707,3 @@ page(name: "timeIntervalInputD", title: "Only during a certain time", refreshAft
 			input "D_timeEnd", "time", title: "Ending", required: false, refreshAfterSelection:true
 		}
         }
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
-}

@@ -33,6 +33,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
     subscribe(lock1, "lock", checkCode)
 }
 
@@ -98,11 +102,6 @@ def checkCode(evt) {
         	sendSms(phone1, distressMsg)
         }
     }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

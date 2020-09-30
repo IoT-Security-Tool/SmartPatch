@@ -141,6 +141,10 @@ private ifSet(Map options, String name, String capability) {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	subscribeToEvents()
 }
 
@@ -347,11 +351,6 @@ private hhmm(time, fmt = "h:mm a")
 private timeIntervalLabel()
 {
 	(starting && ending) ? hhmm(starting) + "-" + hhmm(ending, "h:mm a z") : ""
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

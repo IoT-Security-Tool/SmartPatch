@@ -52,6 +52,7 @@ def defaultLabel() {
 }
 
 def installed() {
+
     log.debug "Installed with settings: ${settings}"
     state.nextDni = 1
 }
@@ -68,6 +69,7 @@ def updated() {
 }
 
 def initialize() {
+
     def latestDni = state.nextDni
     if (virtualDeviceType) {
         def d = addChildDevice("smartthings", virtualDeviceType, "virtual-$latestDni", theHub?.id, [completedSetup: true, label: deviceName])
@@ -76,8 +78,4 @@ def initialize() {
     } else {
         log.error "Failed creating Virtual Device because the device type was missing"
     }
-}
-def installed() {
-}
-def initialize() {
 }

@@ -45,6 +45,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
   init()
 }
 
@@ -159,11 +163,6 @@ private send(msg) {
   else {
     log.info("Have a message to send, but user requested to not get it.")
   }
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

@@ -41,6 +41,8 @@ preferences {
 
 def installed()
 {
+
+
 	schedule(time1, "scheduleCheck")
 }
 
@@ -73,8 +75,6 @@ def scheduleCheck()
             sendSms(phone1, "No one has fed the dog")
         }
 	}
-}
-def installed() {
 }
 def initialize() {
 }

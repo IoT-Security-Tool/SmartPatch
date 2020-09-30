@@ -80,6 +80,10 @@ import java.text.SimpleDateFormat
     }
     
     def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
       initialize()
     
     }
@@ -90,6 +94,7 @@ import java.text.SimpleDateFormat
     }
     
     def initialize() {
+
     	subscribe(people, "presence", presence)
         runIn(60, checkSun)
     	subscribe(location, "sunrise", setSunrise)
@@ -481,10 +486,3 @@ state.lastEventTime = evt.date.toString()
         	state.lastTime = (new Date() + 31).getTime()
         }
     }
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
-}

@@ -265,6 +265,10 @@ def completionPage() {
 // ========================================================
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installing 'Gentle Wake Up' with settings: ${settings}"
 
 	initialize()
@@ -283,6 +287,7 @@ def updated() {
 }
 
 private initialize() {
+
 	stop("settingsChange")
 
 	if (startTime) {
@@ -1174,11 +1179,4 @@ def hasStartLevel() {
 
 def hasEndLevel() {
 	return (endLevel != null && endLevel != "")
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

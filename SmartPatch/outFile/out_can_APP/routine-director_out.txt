@@ -95,6 +95,10 @@ def selectRoutines() {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Updated with settings: ${settings}"
     initialize()
 }
@@ -106,6 +110,7 @@ def updated() {
 }
 
 def initialize() {
+
     subscribe(people, "presence", presence)
     checkSun()
     subscribe(location, "sunrise", setSunrise)
@@ -495,11 +500,4 @@ private getTimeIntervalLabel() {
 
 private hideOptionsSection() {
     (starting || ending || days || modes) ? false: true
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
 }

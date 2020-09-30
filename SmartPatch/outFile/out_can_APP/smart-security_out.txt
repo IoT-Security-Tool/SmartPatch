@@ -53,6 +53,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "INSTALLED"
 	subscribeToEvents()
 	state.alarmActive = null
@@ -442,11 +446,6 @@ private flashLights(numFlashes) {
 private silentAlarm()
 {
 	silent?.toLowerCase() in ["yes","true","y"]
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

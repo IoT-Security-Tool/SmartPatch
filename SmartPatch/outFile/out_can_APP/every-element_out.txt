@@ -554,6 +554,7 @@ def foo() {
 }
 
 def installed() {
+
     log.debug "Installed with settings: ${settings}"
 
     initialize()
@@ -567,9 +568,6 @@ def updated() {
 }
 
 def initialize() {
+
     // TODO: subscribe to attributes, devices, locations, etc.
-}
-def installed() {
-}
-def initialize() {
 }

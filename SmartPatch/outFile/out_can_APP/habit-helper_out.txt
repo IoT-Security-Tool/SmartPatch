@@ -41,6 +41,8 @@ preferences {
 
 def installed()
 {
+
+
 	schedule(time1, "scheduleCheck")
 }
 
@@ -64,8 +66,6 @@ def scheduleCheck()
         log.debug "Texting reminder"
         sendSms(phone1, message)
     }
-}
-def installed() {
 }
 def initialize() {
 }

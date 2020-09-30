@@ -45,6 +45,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	subscribe(temperatureSensor1, "temperature", temperatureHandler)
 }
 
@@ -142,11 +146,6 @@ private send(msg) {
     }
 
     log.debug msg
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

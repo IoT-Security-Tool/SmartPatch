@@ -211,6 +211,7 @@ def timeIntervalInput() {
 
 
 def installed() {
+
 initialize()
 }
 
@@ -221,6 +222,7 @@ def updated() {
 }
 
 def initialize(){
+
 
 	if (newMode != null) {
 		subscribe(location, modeChangeHandler)
@@ -466,8 +468,4 @@ def greyedOutSettings(){
     	result = "complete"	
     }
     result
-}
-def installed() {
-}
-def initialize() {
 }

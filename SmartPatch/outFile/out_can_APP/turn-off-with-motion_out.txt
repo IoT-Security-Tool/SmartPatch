@@ -40,6 +40,11 @@ preferences {
 
 def installed()
 {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
+
 	subscribe(motion1, "motion", motionHandler)
 	schedule("0 * * * * ?", "scheduleCheck")
 }
@@ -122,11 +127,6 @@ def scheduleCheck() {
 			log.debug "${elapsed / 1000} sec since motion stopped"
 		}
 	}
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

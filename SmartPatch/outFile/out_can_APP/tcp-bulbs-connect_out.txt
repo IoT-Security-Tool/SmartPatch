@@ -47,6 +47,7 @@ Once your credentials are accepted, SmartThings will scan your TCP installation 
 }
 
 def installed() {
+
 	debugOut "Installed with settings: ${settings}"
 
 	unschedule()
@@ -141,6 +142,7 @@ def setupBulbs() {
 }
 
 def initialize() {
+
 
 	atomicState.token = ""
 
@@ -660,8 +662,4 @@ def poll(childDevice) {
 
 	if (( bulbData.state == "0" ) && ( bulbData.other.bulbpower ))
 		sendEvent( dni, [name: "power", value: 0.0] )
-}
-def installed() {
-}
-def initialize() {
 }

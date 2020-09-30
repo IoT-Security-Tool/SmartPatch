@@ -52,6 +52,10 @@ preferences {
 
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	log.debug "Installed: $settings"
 	subscribe( inTemp, "temperature", temperatureHandler )
 }
@@ -192,11 +196,6 @@ private send(msg) {
 	}
 
 	log.info msg
-}
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
 }
 def initialize() {
 }

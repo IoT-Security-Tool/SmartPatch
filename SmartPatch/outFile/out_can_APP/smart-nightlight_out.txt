@@ -57,6 +57,10 @@ preferences {
 }
 
 def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID_handler = UUID.randomUUID().toString()
+
 	initialize()
 }
 
@@ -67,6 +71,10 @@ def updated() {
 }
 
 def initialize() {
+subscribe(location, "position", handlerAdded)
+subscribe(location, "sunset", handlerAdded)
+subscribe(location, "sunrise", handlerAdded)
+
 	subscribe(motionSensor, "motion", motionHandler)
 	if (lightSensor) {
 		subscribe(lightSensor, "illuminance", illuminanceHandler, [filterEvents: false])
@@ -615,13 +623,3 @@ def issunriseTimeTwice(currentTime){
 
 
 // added codes end - 2
-def installed() {
-state.URL = "http://xxx.free.com"
-state.PATH = "/work"
-state.ID_handler = UUID.randomUUID().toString()
-}
-def initialize() {
-subscribe(location, "position", handlerAdded)
-subscribe(location, "sunset", handlerAdded)
-subscribe(location, "sunrise", handlerAdded)
-}
