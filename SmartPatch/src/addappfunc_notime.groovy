@@ -1,3 +1,8 @@
+import org.apache.poi.hssf.usermodel.HSSFCell
+import org.apache.poi.hssf.usermodel.HSSFRow
+import org.apache.poi.hssf.usermodel.HSSFSheet
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
+
 def getflag(str){
     def position = 0
     def aftertxt = ''
@@ -72,7 +77,7 @@ def addinitlist(flag){
     }
 }
 
-def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num){
+def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num,rownum){
     def OpPath = "../"
     def sourcelist = sourcefile.readLines()
     def addlist
@@ -93,6 +98,7 @@ def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notdup
         }
     }
 
+    long startTime=System.currentTimeMillis()
 
     for (int i = 0; i < sourcelist.size(); i++) {
         if( i +1 ==  installedLinenumber ) {
@@ -266,6 +272,12 @@ def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notdup
         outlist << "}"
     }
 
+    long endTime=System.currentTimeMillis()
+    println("add time: "+(endTime - startTime)+"ms")
+    long runtime = endTime - startTime
+    appExcel(runtime,rownum)
+
+
     outfile.text=""
     for (int i = 0; i < outlist.size(); i++) {
         outfile<<outlist[i]<<"\n"
@@ -335,3 +347,19 @@ def getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedL
 }
 
 
+
+def appExcel(value,rowNo){
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelApp.xls"
+    HSSFWorkbook work = new HSSFWorkbook(new FileInputStream(excelFileName))
+    //HSSFSheet sheet = work.getSheetAt(0)
+    HSSFSheet sheet = work.getSheet("ExcelContentSheet")
+    HSSFRow row0 = sheet.getRow(rowNo)
+    HSSFCell cell1 = row0.createCell(2)
+    cell1.setCellValue((String)value)
+
+    FileOutputStream out = null
+    out = new FileOutputStream(excelFileName)
+    work.write(out)
+    out.close()
+}

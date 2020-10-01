@@ -1,3 +1,8 @@
+import org.apache.poi.hssf.usermodel.HSSFCell
+import org.apache.poi.hssf.usermodel.HSSFRow
+import org.apache.poi.hssf.usermodel.HSSFSheet
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
+
 def isGoodBracket(String s){
     Stack<Character> a = new Stack<Character>()
     for(int i=0; i<s.length(); i++)
@@ -253,7 +258,7 @@ def extractBeforeMessage(msg){
     return BeforeTxt
 }
 
-def add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sendEventnumberlist,createEventlist,sendEventlist,outfile){
+def add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sendEventnumberlist,createEventlist,sendEventlist,outfile,row){
 
     def outlist=[]
     def headlist = headfile.readLines()
@@ -272,12 +277,13 @@ def add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sen
     //first line
     outlist << sourcelist[0]
 
+    long devstartTime1 =System.currentTimeMillis()
+
     def bracket_start = 0
     def bracket_end = 0
     def event_num = 0
     for (int i = 0; i < sourcelist.size(); i++) {
 
-        /*添加installed函数*/
         if( i + 1 == (methodMap["installed"]) ){
             installflag = true
             for (int j=i; j < sourcelist.size(); j++){
@@ -442,9 +448,31 @@ def add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sen
         outlist << "}"
     }
 
+    long devendTime1=System.currentTimeMillis()
+    long runtime = devendTime1 - devstartTime1
+    //createExcel(excelContentMap)
+    //println(filename+"add time： "+(endTime - startTime)+"ms")
+    devExcel(runtime,row)
+
     outfile.text=" "
     for (int i = 0; i < outlist.size(); i++) {
         outfile<<outlist[i]<<"\n"
     }
+}
+
+def devExcel(value,rowNo){
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelDev.xls"
+    HSSFWorkbook work = new HSSFWorkbook(new FileInputStream(excelFileName))
+    //HSSFSheet sheet = work.getSheetAt(0)
+    HSSFSheet sheet = work.getSheet("ExcelContentSheet")
+    HSSFRow row0 = sheet.getRow(rowNo)
+    HSSFCell cell1 = row0.createCell(2)
+    cell1.setCellValue((String)value)
+
+    FileOutputStream out = null
+    out = new FileOutputStream(excelFileName)
+    work.write(out)
+    out.close()
 }
 

@@ -82,7 +82,6 @@ class MyASTTransformation implements ASTTransformation {
                     }
                 }
             }
-            /*获取到subscribe与参数*/
             if (sub.methodAsString == "subscribe" ) {
                 ArgumentListExpression arg = sub.getArguments()
                 //  file<<"subscribe "<<statement.lineNumber<<" "<<arg.size()<<" "
@@ -171,7 +170,7 @@ class MyASTTransformation implements ASTTransformation {
         }
         else{
             if(statement.getIfBlock().getClass().getSimpleName()!="EmptyStatement"){
-                print("if获取到了未解析的Expression:")
+                print("if unresolved Expression:")
                 println(statement.getIfBlock().getClass().getSimpleName())
             }
         }
@@ -189,7 +188,7 @@ class MyASTTransformation implements ASTTransformation {
         }
         else{
             if(statement.getElseBlock().getClass().getSimpleName()!="EmptyStatement"){
-                print("else获取到了未解析的Expression:")
+                print("else unresolved Expression:")
                 println(statement.getElseBlock().getClass().getSimpleName())
             }
         }
@@ -253,7 +252,7 @@ class MyASTTransformation implements ASTTransformation {
         def sourcepath = source.name.toString()
 
         println("AST is built up.")
-        long startTime=System.currentTimeMillis()//获取开始时间
+        long startTime=System.currentTimeMillis()
 
         /**
          * Traverse

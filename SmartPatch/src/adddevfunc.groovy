@@ -277,7 +277,7 @@ def add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sen
     //first line
     outlist << sourcelist[0]
 
-    long startTime=System.currentTimeMillis()//获取开始时间
+    long startTime=System.currentTimeMillis()
 
     def bracket_start = 0
     def bracket_end = 0

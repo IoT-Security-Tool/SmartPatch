@@ -1,5 +1,9 @@
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import org.apache.poi.hssf.usermodel.HSSFCell
+import org.apache.poi.hssf.usermodel.HSSFRow
+import org.apache.poi.hssf.usermodel.HSSFSheet
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
 
 OpPath="../"
 headfile = new File(OpPath+"configFile/Head.groovy")
@@ -103,6 +107,8 @@ appdir = new File("../sourceFile/srcAPP")
 if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
     File[] files = appdir.listFiles()
     if(files !=null && files.length > 0){
+        createAppExcel()
+
         for (int i = 0; i < files.size(); i++){
             String [] sz=files[i].name.split("/")
             filename = sz[sz.length-1].minus(".groovy")
@@ -116,6 +122,8 @@ if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
                 appoutputfile.delete()
             }
             appoutputfile.createNewFile()
+
+            long startTime01 =System.currentTimeMillis()
             String str = ReadFileToString(appfilepath)
             appoutputfile << removeCommentsWithQuoteAndDoubleEscape(str)
 
@@ -124,6 +132,12 @@ if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
             appconfigfile = new File(appconfigpath)
             appconfigfile.createNewFile()
             generate(after_appsourcefile,appconfigfile)
+
+            long endTime01 =System.currentTimeMillis()
+//            println(filename+" spends： "+(endTime - startTime)+"ms")
+//            println()
+            long runtime01 = endTime01 - startTime01
+            modifyAppExcel(filename,runtime01)
 
             slurper = new JsonSlurper()
             keyconfig=0
@@ -143,7 +157,7 @@ if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
             configlist = appconfigfile.collect {it}
             appentity.getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedLinenumber,time_init_num)
             appentity.solveline(after_appsourcefile,keyline)
-            appentity.initSource(headfile,headfile_sun,after_appsourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num)
+            appentity.initSource(headfile,headfile_sun,after_appsourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num,i+1)
 
             println(filename+" done")
         }
@@ -160,6 +174,7 @@ devdir = new File("../sourceFile/srcDevice")
 if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
     File[] files = devdir.listFiles()
     if(files !=null && files.length > 0){
+        createDevExcel()
         for (int i = 0; i < files.size(); i++){
             String [] sz=files[i].name.split("/")
             filename = sz[sz.length-1].minus(".groovy")
@@ -173,6 +188,8 @@ if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
                 devoutputfile.delete()
             }
             devoutputfile.createNewFile()
+
+            long devstartTime=System.currentTimeMillis()
             String str = ReadFileToString(devfilepath)
             devoutputfile << removeCommentsWithQuoteAndDoubleEscape(str)
 
@@ -184,7 +201,14 @@ if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
                 devconfigfile.delete()
             }
             devconfigfile.createNewFile()
+
             generate(after_devsourcefile,devconfigfile)
+
+            long devendTime=System.currentTimeMillis()
+//            println(filename+" spends： "+(devendTime - devstartTime)+"ms")
+//            println()
+            long devruntime = devendTime - devstartTime
+            modifyDevExcel(filename,devruntime)
 
             configlist = devconfigfile.collect {it}
             slurper = new JsonSlurper()
@@ -197,7 +221,7 @@ if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
             outputpath = "../outFile/out_cant_device/"+filename+"_out.txt"
             outfile = new File(outputpath)
             deventire.getconfig(configlist,slurper,methodMap,sendEventlist,createEventlist,createEventnumberlist,sendEventnumberlist)
-            deventire.add(filename,headfile,after_devsourcefile,methodMap,slurper,createEventnumberlist,sendEventnumberlist,createEventlist,sendEventlist,outfile)
+            deventire.add(filename,headfile,after_devsourcefile,methodMap,slurper,createEventnumberlist,sendEventnumberlist,createEventlist,sendEventlist,outfile,i+1)
             println(filename+" done")
         }
     } else{
@@ -402,3 +426,70 @@ def generate(sourcefile,output){
 }
 
 
+def createAppExcel(){
+
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelApp.xls"
+    String sheetName = "ExcelContentSheet"
+    HSSFWorkbook hssfWorkbook = new HSSFWorkbook()
+    HSSFSheet excelSheet = hssfWorkbook.createSheet(sheetName)
+    excelSheet.setDefaultColumnWidth(50)
+    HSSFRow hssfRow = null
+    HSSFCell hssfCell = null
+
+    FileOutputStream fileOutputStream = new FileOutputStream(excelFileName)
+    hssfWorkbook.write(fileOutputStream)
+}
+
+def modifyAppExcel(filename, value){
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelApp.xls"
+    HSSFWorkbook work = new HSSFWorkbook(new FileInputStream(excelFileName))
+    HSSFSheet sheet = work.getSheetAt(0)
+    //HSSFSheet sheet = work.getSheet(ExcelContentSheet)
+    int rowNo = sheet.getLastRowNum() + 1
+    HSSFRow row0 = sheet.createRow(rowNo)
+    HSSFCell cell0 = row0.createCell(0)
+    cell0.setCellValue((String)filename)
+    HSSFCell cell1 = row0.createCell(1)
+    cell1.setCellValue((String)value)
+
+    FileOutputStream out = null;
+    out = new FileOutputStream(excelFileName);
+    work.write(out)
+    out.close()
+}
+
+def createDevExcel(){
+
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelDev.xls"
+    String sheetName = "ExcelContentSheet"
+    HSSFWorkbook hssfWorkbook = new HSSFWorkbook()
+    HSSFSheet excelSheet = hssfWorkbook.createSheet(sheetName)
+    excelSheet.setDefaultColumnWidth(50)
+    HSSFRow hssfRow = null
+    HSSFCell hssfCell = null
+
+    FileOutputStream fileOutputStream = new FileOutputStream(excelFileName)
+    hssfWorkbook.write(fileOutputStream)
+}
+
+def modifyDevExcel(filename, value){
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelDev.xls"
+    HSSFWorkbook work = new HSSFWorkbook(new FileInputStream(excelFileName))
+    HSSFSheet sheet = work.getSheetAt(0)
+    //HSSFSheet sheet = work.getSheet(ExcelContentSheet)
+    int rowNo = sheet.getLastRowNum() + 1
+    HSSFRow row0 = sheet.createRow(rowNo)
+    HSSFCell cell0 = row0.createCell(0)
+    cell0.setCellValue((String)filename)
+    HSSFCell cell1 = row0.createCell(1)
+    cell1.setCellValue((String)value)
+
+    FileOutputStream out = null;
+    out = new FileOutputStream(excelFileName);
+    work.write(out)
+    out.close()
+}
