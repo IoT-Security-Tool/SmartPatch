@@ -217,7 +217,7 @@ class MyASTTransformation implements ASTTransformation {
                     for (int j = 0; j < statement.getCaseStatements().size(); j++) {
                         CaseStatement cas = statement.getCaseStatement(j)
                         if(cas.getCode().getClass().getSimpleName() != ""){
-                            BlockStatement cascode = cas.getCode() as BlockStatement//code 保存方法中的所有段落
+                            BlockStatement cascode = cas.getCode() as BlockStatement
                             dealBlockStatement(cas.getCode(),src)
                         }
                     }
