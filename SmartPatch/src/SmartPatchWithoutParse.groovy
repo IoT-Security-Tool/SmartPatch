@@ -102,12 +102,12 @@ def ReadFileToString(String FilePath)
     return sb.toString()
 }
 
-appentity = new addappfunc_notime();
+appentity = new addappfunc();
 appdir = new File("../sourceFile/srcAPP")
 if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
     File[] files = appdir.listFiles()
     if(files !=null && files.length > 0){
-        createAppExcel()
+        //createAppExcel()
 
         for (int i = 0; i < files.size(); i++){
             String [] sz=files[i].name.split("/")
@@ -123,7 +123,8 @@ if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
             }
             appoutputfile.createNewFile()
 
-            long startTime01 =System.currentTimeMillis()
+            //long startTime01 =System.currentTimeMillis()
+
             String str = ReadFileToString(appfilepath)
             appoutputfile << removeCommentsWithQuoteAndDoubleEscape(str)
 
@@ -133,11 +134,10 @@ if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
             appconfigfile.createNewFile()
             generate(after_appsourcefile,appconfigfile)
 
-            long endTime01 =System.currentTimeMillis()
-//            println(filename+" spends： "+(endTime - startTime)+"ms")
-//            println()
+
+            /*long endTime01 =System.currentTimeMillis()
             long runtime01 = endTime01 - startTime01
-            modifyAppExcel(filename,runtime01)
+            modifyAppExcel(filename,runtime01)*/
 
             slurper = new JsonSlurper()
             keyconfig=0
@@ -169,12 +169,14 @@ else {
     println("there is no such directory")
 }
 
-deventire = new adddevfunc_notime();
+deventire = new adddevfunc();
 devdir = new File("../sourceFile/srcDevice")
 if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
     File[] files = devdir.listFiles()
     if(files !=null && files.length > 0){
-        createDevExcel()
+
+        //createDevExcel()
+
         for (int i = 0; i < files.size(); i++){
             String [] sz=files[i].name.split("/")
             filename = sz[sz.length-1].minus(".groovy")
@@ -189,7 +191,8 @@ if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
             }
             devoutputfile.createNewFile()
 
-            long devstartTime=System.currentTimeMillis()
+            //long devstartTime=System.currentTimeMillis()
+
             String str = ReadFileToString(devfilepath)
             devoutputfile << removeCommentsWithQuoteAndDoubleEscape(str)
 
@@ -204,11 +207,11 @@ if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
 
             generate(after_devsourcefile,devconfigfile)
 
+            /*
             long devendTime=System.currentTimeMillis()
-//            println(filename+" spends： "+(devendTime - devstartTime)+"ms")
-//            println()
             long devruntime = devendTime - devstartTime
             modifyDevExcel(filename,devruntime)
+            */
 
             configlist = devconfigfile.collect {it}
             slurper = new JsonSlurper()
@@ -426,9 +429,11 @@ def generate(sourcefile,output){
 }
 
 
+/*
 def createAppExcel(){
 
     def targetFolderPath = "../"
+    //String excelFileName = targetFolderPath + "ExcelApp.xls"
     String excelFileName = targetFolderPath + "ExcelApp.xls"
     String sheetName = "ExcelContentSheet"
     HSSFWorkbook hssfWorkbook = new HSSFWorkbook()
@@ -492,4 +497,4 @@ def modifyDevExcel(filename, value){
     out = new FileOutputStream(excelFileName);
     work.write(out)
     out.close()
-}
+}*/

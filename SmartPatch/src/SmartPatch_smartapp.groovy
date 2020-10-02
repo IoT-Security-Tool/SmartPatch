@@ -25,13 +25,17 @@ candir.eachFile{filepath->
 }
 
 //record time
-createExcel()
+//createExcel()
 
 /*The configuration file generation path is in the MyASTTransformation
 Default is in allconfig*/
 for (int i = 0; i < filelist.size(); i++) {
+    /*long startTime = System.currentTimeMillis();
+    println(startTime)*/
     Class bClass = loader.parseClass(new File(filelist[i]))
     GroovyObject Object = (GroovyObject)bClass.newInstance()
+    /*long endTime = System.currentTimeMillis();
+    println(endTime)*/
 
 }
 
@@ -80,7 +84,7 @@ else {
     println("there is no such directory")
 }
 
-def createExcel(){
+/*def createExcel(){
 
     def targetFolderPath = "../"
     String excelFileName = targetFolderPath + "ExcelTest.xls"
@@ -93,4 +97,4 @@ def createExcel(){
 
     FileOutputStream fileOutputStream = new FileOutputStream(excelFileName)
     hssfWorkbook.write(fileOutputStream)
-}
+}*/

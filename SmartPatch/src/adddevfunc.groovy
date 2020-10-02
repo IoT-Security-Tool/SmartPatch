@@ -454,7 +454,7 @@ def add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sen
     long runtime = endTime - startTime
     //createExcel(excelContentMap)
     println(filename+"add time： "+(endTime - startTime)+"ms")
-    getExcel(runtime,row)
+    //getExcel(runtime,row)
 
     outfile.text=" "
     for (int i = 0; i < outlist.size(); i++) {
@@ -462,6 +462,7 @@ def add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sen
     }
 }
 
+/*
 def getExcel(value,rowNo){
     def targetFolderPath = "../"
     String excelFileName = targetFolderPath + "ExcelTest.xls"
@@ -476,4 +477,4 @@ def getExcel(value,rowNo){
     out = new FileOutputStream(excelFileName)
     work.write(out)
     out.close()
-}
+}*/

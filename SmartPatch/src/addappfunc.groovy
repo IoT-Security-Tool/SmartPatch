@@ -284,7 +284,7 @@ def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notdup
     long endTime=System.currentTimeMillis()
     println("add time: "+(endTime - startTime)+"ms")
     long runtime = endTime - startTime
-    getExcel(runtime,rownum)
+    //getExcel(runtime,rownum)
 
     outfile.text=""
     for (int i = 0; i < outlist.size(); i++) {
@@ -356,6 +356,7 @@ def getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedL
     }
 }
 
+/*
 def getExcel(value,rowNo){
     def targetFolderPath = "../"
     String excelFileName = targetFolderPath + "ExcelTest.xls"
@@ -371,4 +372,5 @@ def getExcel(value,rowNo){
     work.write(out)
     out.close()
 }
+*/
 

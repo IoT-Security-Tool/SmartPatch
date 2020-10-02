@@ -253,6 +253,7 @@ class MyASTTransformation implements ASTTransformation {
 
         println("AST is built up.")
         long startTime=System.currentTimeMillis()
+        //println("AST:" + startTime)
 
         /**
          * Traverse
@@ -328,8 +329,8 @@ class MyASTTransformation implements ASTTransformation {
         long endTime=System.currentTimeMillis()
         println(filename+" spends： "+(endTime - startTime)+"ms")
         println()
-        long runtime = endTime - startTime
-        modifyExcel(filename,runtime)
+        //long runtime = endTime - startTime
+        //modifyExcel(filename,runtime)
 
     }
 
@@ -399,6 +400,7 @@ class MyASTTransformation implements ASTTransformation {
         }
     }
 
+    /*
     def modifyExcel(filename, value){
         def targetFolderPath = "../"
         String excelFileName = targetFolderPath + "ExcelTest.xls"
@@ -417,5 +419,6 @@ class MyASTTransformation implements ASTTransformation {
         work.write(out)
         out.close()
     }
+    */
 
 }

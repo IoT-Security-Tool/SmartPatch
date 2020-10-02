@@ -23,7 +23,7 @@ candir.eachFile{filepath->
 }
 
 //record time
-createExcel()
+//createExcel()
 
 /*The configuration file generation path is in the MyASTTransformation
 Default is in allconfig*/
@@ -78,7 +78,7 @@ else {
     println("there is no such directory")
 }
 
-def createExcel(){
+/*def createExcel(){
 
     def targetFolderPath = "../"
     String excelFileName = targetFolderPath + "ExcelTest.xls"
@@ -91,4 +91,4 @@ def createExcel(){
 
     FileOutputStream fileOutputStream = new FileOutputStream(excelFileName)
     hssfWorkbook.write(fileOutputStream)
-}
+}*/
