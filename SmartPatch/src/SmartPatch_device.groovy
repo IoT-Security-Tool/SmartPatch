@@ -23,14 +23,17 @@ candir.eachFile{filepath->
 }
 
 //record time
-//createExcel()
+createExcel()
 
 /*The configuration file generation path is in the MyASTTransformation
 Default is in allconfig*/
 for (int i = 0; i < filelist.size(); i++) {
+    long startTime = System.currentTimeMillis();
     Class bClass = loader.parseClass(new File(filelist[i]))
     GroovyObject Object = (GroovyObject)bClass.newInstance()
-
+    long endTime = System.currentTimeMillis();
+    long parseTime = endTime - startTime
+    getDevExcel01(parseTime,i+1)
 }
 
 entire = new adddevfunc();
@@ -39,6 +42,8 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
     File[] files = candir.listFiles()
     if(files !=null && files.length > 0){
         for (int i = 0; i < files.size(); i++){
+
+            long runStart = System.currentTimeMillis();
 
             String [] sz=files[i].name.split("/")
             filename = sz[sz.length-1].minus(".groovy")
@@ -67,6 +72,10 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
             entire.getconfig(configlist,slurper,methodMap,sendEventlist,createEventlist,createEventnumberlist,sendEventnumberlist)
             entire.add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sendEventnumberlist,createEventlist,sendEventlist,outfile,i+1)
 
+            long runEnd = System.currentTimeMillis();
+            long runTime = runEnd - runStart
+            getDevExcel02(runTime,i+1)
+
             println(filename+" done")
             println()
         }
@@ -92,3 +101,50 @@ else {
     FileOutputStream fileOutputStream = new FileOutputStream(excelFileName)
     hssfWorkbook.write(fileOutputStream)
 }*/
+def createExcel(){
+
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelFullDevTest.xls"
+    String sheetName = "ExcelContentSheet"
+    HSSFWorkbook hssfWorkbook = new HSSFWorkbook()
+    HSSFSheet excelSheet = hssfWorkbook.createSheet(sheetName)
+    excelSheet.setDefaultColumnWidth(50)
+    HSSFRow hssfRow = null
+    HSSFCell hssfCell = null
+
+    FileOutputStream fileOutputStream = new FileOutputStream(excelFileName)
+    hssfWorkbook.write(fileOutputStream)
+}
+
+def getDevExcel01(value,rowNo){
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelFullDevTest.xls"
+    HSSFWorkbook work = new HSSFWorkbook(new FileInputStream(excelFileName))
+    //HSSFSheet sheet = work.getSheetAt(0)
+    HSSFSheet sheet = work.getSheet("ExcelContentSheet")
+    //HSSFRow row0 = sheet.getRow(rowNo)
+    HSSFRow row0 = sheet.createRow(rowNo)
+    HSSFCell cell1 = row0.createCell(1)
+    cell1.setCellValue((String)value)
+
+    FileOutputStream out = null
+    out = new FileOutputStream(excelFileName)
+    work.write(out)
+    out.close()
+}
+
+def getDevExcel02(value,rowNo){
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelFullDevTest.xls"
+    HSSFWorkbook work = new HSSFWorkbook(new FileInputStream(excelFileName))
+    //HSSFSheet sheet = work.getSheetAt(0)
+    HSSFSheet sheet = work.getSheet("ExcelContentSheet")
+    HSSFRow row0 = sheet.getRow(rowNo)
+    HSSFCell cell1 = row0.createCell(2)
+    cell1.setCellValue((String)value)
+
+    FileOutputStream out = null
+    out = new FileOutputStream(excelFileName)
+    work.write(out)
+    out.close()
+}

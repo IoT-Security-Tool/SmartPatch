@@ -25,18 +25,19 @@ candir.eachFile{filepath->
 }
 
 //record time
-//createExcel()
+createExcel()
 
 /*The configuration file generation path is in the MyASTTransformation
 Default is in allconfig*/
 for (int i = 0; i < filelist.size(); i++) {
-    /*long startTime = System.currentTimeMillis();
-    println(startTime)*/
+    long startTime = System.currentTimeMillis();
+    println(startTime)
     Class bClass = loader.parseClass(new File(filelist[i]))
     GroovyObject Object = (GroovyObject)bClass.newInstance()
-    /*long endTime = System.currentTimeMillis();
-    println(endTime)*/
-
+    long endTime = System.currentTimeMillis();
+    println(endTime)
+    long parseTime = endTime - startTime
+    getExcel01(parseTime,i+1)
 }
 
 entity = new addappfunc();
@@ -45,6 +46,9 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
     File[] files = candir.listFiles()
     if(files !=null && files.length > 0){
         for (int i = 0; i < files.size(); i++){
+
+            long runStart = System.currentTimeMillis();
+
             slurper = new JsonSlurper()
             keyconfig=0
             //The number of rows of functions triggered
@@ -66,6 +70,8 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
             outputpath = "../outFile/out_can_APP/"+filename+"_out.txt"
             outfile = new File(outputpath)
 
+            long runStart01 = System.currentTimeMillis();
+
             if(outfile.exists() && outfile.isFile()){
                 outfile.delete()
             }
@@ -74,6 +80,13 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
             entity.getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedLinenumber,time_init_num)
             entity.solveline(sourcefile,keyline)
             entity.initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num,i+1)
+
+            long runEnd = System.currentTimeMillis();
+            long runTime = runEnd - runStart
+
+            long runTime01 = runEnd - runStart01
+            getExcel02(runTime01,runTime,i+1)
+
             println(filename+" done")
         }
     } else{
@@ -84,10 +97,10 @@ else {
     println("there is no such directory")
 }
 
-/*def createExcel(){
+def createExcel(){
 
     def targetFolderPath = "../"
-    String excelFileName = targetFolderPath + "ExcelTest.xls"
+    String excelFileName = targetFolderPath + "ExcelFullAppTest.xls"
     String sheetName = "ExcelContentSheet"
     HSSFWorkbook hssfWorkbook = new HSSFWorkbook()
     HSSFSheet excelSheet = hssfWorkbook.createSheet(sheetName)
@@ -97,4 +110,40 @@ else {
 
     FileOutputStream fileOutputStream = new FileOutputStream(excelFileName)
     hssfWorkbook.write(fileOutputStream)
-}*/
+}
+
+def getExcel01(value,rowNo){
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelFullAppTest.xls"
+    HSSFWorkbook work = new HSSFWorkbook(new FileInputStream(excelFileName))
+    //HSSFSheet sheet = work.getSheetAt(0)
+    HSSFSheet sheet = work.getSheet("ExcelContentSheet")
+    //HSSFRow row0 = sheet.getRow(rowNo)
+    HSSFRow row0 = sheet.createRow(rowNo)
+    HSSFCell cell1 = row0.createCell(1)
+    cell1.setCellValue((String)value)
+
+    FileOutputStream out = null
+    out = new FileOutputStream(excelFileName)
+    work.write(out)
+    out.close()
+}
+
+def getExcel02(value01,value,rowNo){
+    def targetFolderPath = "../"
+    String excelFileName = targetFolderPath + "ExcelFullAppTest.xls"
+    HSSFWorkbook work = new HSSFWorkbook(new FileInputStream(excelFileName))
+    //HSSFSheet sheet = work.getSheetAt(0)
+    HSSFSheet sheet = work.getSheet("ExcelContentSheet")
+    HSSFRow row0 = sheet.getRow(rowNo)
+    HSSFCell cell1 = row0.createCell(2)
+    cell1.setCellValue((String)value)
+
+    HSSFCell cell2 = row0.createCell(3)
+    cell2.setCellValue((String)value01)
+
+    FileOutputStream out = null
+    out = new FileOutputStream(excelFileName)
+    work.write(out)
+    out.close()
+}

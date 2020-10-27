@@ -107,9 +107,11 @@ appdir = new File("../sourceFile/srcAPP")
 if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
     File[] files = appdir.listFiles()
     if(files !=null && files.length > 0){
-        //createAppExcel()
+        createAppExcel()
 
         for (int i = 0; i < files.size(); i++){
+            long startTime01 =System.currentTimeMillis()
+
             String [] sz=files[i].name.split("/")
             filename = sz[sz.length-1].minus(".groovy")
 
@@ -159,6 +161,10 @@ if (appdir !=null && appdir.exists()&& appdir.isDirectory()){
             appentity.solveline(after_appsourcefile,keyline)
             appentity.initSource(headfile,headfile_sun,after_appsourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num,i+1)
 
+            long endTime01 =System.currentTimeMillis()
+            long runtime01 = endTime01 - startTime01
+            modifyAppExcel(filename,runtime01)
+
             println(filename+" done")
         }
     } else{
@@ -175,9 +181,11 @@ if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
     File[] files = devdir.listFiles()
     if(files !=null && files.length > 0){
 
-        //createDevExcel()
+        createDevExcel()
 
         for (int i = 0; i < files.size(); i++){
+            long devstartTime=System.currentTimeMillis()
+
             String [] sz=files[i].name.split("/")
             filename = sz[sz.length-1].minus(".groovy")
 
@@ -207,12 +215,6 @@ if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
 
             generate(after_devsourcefile,devconfigfile)
 
-            /*
-            long devendTime=System.currentTimeMillis()
-            long devruntime = devendTime - devstartTime
-            modifyDevExcel(filename,devruntime)
-            */
-
             configlist = devconfigfile.collect {it}
             slurper = new JsonSlurper()
             methodMap=[:]
@@ -225,6 +227,11 @@ if (devdir !=null && devdir.exists()&& devdir.isDirectory()){
             outfile = new File(outputpath)
             deventire.getconfig(configlist,slurper,methodMap,sendEventlist,createEventlist,createEventnumberlist,sendEventnumberlist)
             deventire.add(filename,headfile,after_devsourcefile,methodMap,slurper,createEventnumberlist,sendEventnumberlist,createEventlist,sendEventlist,outfile,i+1)
+
+            long devendTime=System.currentTimeMillis()
+            long devruntime = devendTime - devstartTime
+            modifyDevExcel(filename,devruntime)
+
             println(filename+" done")
         }
     } else{
@@ -429,7 +436,7 @@ def generate(sourcefile,output){
 }
 
 
-/*
+
 def createAppExcel(){
 
     def targetFolderPath = "../"
@@ -497,4 +504,4 @@ def modifyDevExcel(filename, value){
     out = new FileOutputStream(excelFileName);
     work.write(out)
     out.close()
-}*/
+}
