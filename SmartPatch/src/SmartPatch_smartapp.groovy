@@ -31,11 +31,9 @@ createExcel()
 Default is in allconfig*/
 for (int i = 0; i < filelist.size(); i++) {
     long startTime = System.currentTimeMillis();
-    println(startTime)
     Class bClass = loader.parseClass(new File(filelist[i]))
     GroovyObject Object = (GroovyObject)bClass.newInstance()
     long endTime = System.currentTimeMillis();
-    println(endTime)
     long parseTime = endTime - startTime
     getExcel01(parseTime,i+1)
 }
@@ -48,7 +46,6 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
         for (int i = 0; i < files.size(); i++){
 
             long runStart = System.currentTimeMillis();
-
             slurper = new JsonSlurper()
             keyconfig=0
             //The number of rows of functions triggered
@@ -70,8 +67,6 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
             outputpath = "../outFile/out_can_APP/"+filename+"_out.txt"
             outfile = new File(outputpath)
 
-            long runStart01 = System.currentTimeMillis();
-
             if(outfile.exists() && outfile.isFile()){
                 outfile.delete()
             }
@@ -84,8 +79,8 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
             long runEnd = System.currentTimeMillis();
             long runTime = runEnd - runStart
 
-            long runTime01 = runEnd - runStart01
-            getExcel02(runTime01,runTime,i+1)
+            getExcel02(runTime,runTime,i+1)
+
 
             println(filename+" done")
         }
