@@ -1,9 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":51,"lastlinenumber":54}
-{"type":"MethodNode","name":"updated","linenumber":56,"lastlinenumber":60}
-{"type":"MethodNode","name":"initialize","linenumber":62,"lastlinenumber":69}
-{"type":"subscribe","linenumber":64,"arguments":["motionSensors","motion.active","motionActiveHandler"]}
-{"type":"subscribe","linenumber":65,"arguments":["location","modeChangeHandler"]}
-{"type":"MethodNode","name":"modeChangeHandler","linenumber":71,"lastlinenumber":73,"arg":["evt"]}
-{"type":"MethodNode","name":"motionActiveHandler","linenumber":75,"lastlinenumber":108,"arg":["evt"]}
-{"type":"subscribe","linenumber":79,"arguments":["location","modeChangeHandler"]}
-{"type":"MethodNode","name":"send","linenumber":110,"lastlinenumber":129,"arg":["msg"]}

@@ -1,4 +1,0 @@
-{"type":"createEvent","linenumber":77,"arguments":[" zwaveEvent(parsedZwEvent) "]}
-{"type":"MethodNode","name":"installed","linenumber":84}
-{"type":"sendEvent","linenumber":86,"arguments":["name: \"checkInterval\""," value: 2 * 4 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":91,"arguments":["name: \"checkInterval\""," value: 2 * 4 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}

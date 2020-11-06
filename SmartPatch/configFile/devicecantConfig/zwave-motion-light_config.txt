@@ -1,9 +1,0 @@
-{"type":"MethodNode","name":"initialize","linenumber":34}
-{"type":"sendEvent","linenumber":35,"arguments":["name: \"checkInterval\""," value: 2 * 4 * 60 * 60 + 24 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":36,"arguments":["name: \"motion\""," value: \"inactive\""," displayed: false"]}
-{"type":"MethodNode","name":"installed","linenumber":39}
-{"type":"createEvent","linenumber":61,"arguments":["descriptionText:description"," isStateChange:true"]}
-{"type":"createEvent","linenumber":94,"arguments":["descriptionText: cmd.toString()"]}
-{"type":"createEvent","linenumber":102,"arguments":["map"]}
-{"type":"createEvent","linenumber":108,"arguments":["name: \"motion\""," value: \"active\""," descriptionText: \"$device.displayName detected motion\""]}
-{"type":"createEvent","linenumber":110,"arguments":["name: \"motion\""," value: \"inactive\""," descriptionText: \"$device.displayName motion has stopped\""]}

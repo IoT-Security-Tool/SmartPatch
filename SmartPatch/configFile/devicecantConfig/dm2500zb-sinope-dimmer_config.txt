@@ -1,5 +1,0 @@
-{"type":"sendEvent","linenumber":66,"arguments":["event"]}
-{"type":"sendEvent","linenumber":67,"arguments":["name: \"checkInterval\""," value: 30*60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":119,"arguments":["name: map.name"," value: map.value"]}
-{"type":"sendEvent","linenumber":201,"arguments":["name: \"checkInterval\""," value: 2 * 10 * 60 + 1 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":335,"arguments":["results"]}

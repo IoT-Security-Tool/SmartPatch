@@ -1,2 +1,0 @@
-{"type":"MethodNode","name":"parse","linenumber":35,"lastlinenumber":46,"arg":["description"]}
-{"type":"createEvent","linenumber":38,"arguments":"(descriptionText:description, displayed:true)"}

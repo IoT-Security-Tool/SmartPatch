@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":45,"lastlinenumber":47}
-{"type":"MethodNode","name":"updated","linenumber":49,"lastlinenumber":52}
-{"type":"MethodNode","name":"initialize","linenumber":54,"lastlinenumber":56}
-{"type":"MethodNode","name":"changeMode","linenumber":58,"lastlinenumber":69}
-{"type":"MethodNode","name":"send","linenumber":71,"lastlinenumber":90,"arg":["msg"]}
-{"type":"MethodNode","name":"getLabel","linenumber":92,"lastlinenumber":94}

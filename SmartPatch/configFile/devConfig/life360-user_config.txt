@@ -1,7 +1,0 @@
-{"type":"MethodNode","name":"generatePresenceEvent","linenumber":41,"lastlinenumber":58,"arg":["present"]}
-{"type":"sendEvent","linenumber":57,"arguments":"(results)"}
-{"type":"MethodNode","name":"setMemberId","linenumber":60,"lastlinenumber":63,"arg":["memberId"]}
-{"type":"MethodNode","name":"getMemberId","linenumber":65,"lastlinenumber":70}
-{"type":"MethodNode","name":"formatValue","linenumber":72,"lastlinenumber":77,"arg":["present"]}
-{"type":"MethodNode","name":"formatDescriptionText","linenumber":79,"lastlinenumber":84,"arg":["linkText","present"]}
-{"type":"MethodNode","name":"getState","linenumber":86,"lastlinenumber":91,"arg":["present"]}

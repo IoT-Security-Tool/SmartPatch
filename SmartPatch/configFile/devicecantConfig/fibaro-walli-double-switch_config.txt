@@ -1,9 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":115}
-{"type":"sendEvent","linenumber":118,"arguments":["name: \"checkInterval\""," value: 30 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
-{"type":"createEvent","linenumber":226,"arguments":["descriptionText:description"," isStateChange:true"]}
-{"type":"createEvent","linenumber":275,"arguments":["descriptionText: cmd.toString()"]}
-{"type":"createEvent","linenumber":302,"arguments":["name: \"switch\""," value: value"," isStateChange: true"," descriptionText: \"Switch ${endpoint} is ${value}\""]}
-{"type":"sendEvent","linenumber":306,"arguments":["name: \"switch\""," value: value"," isStateChange: true"," descriptionText: \"Switch ${endpoint} is ${value}\""]}
-{"type":"createEvent","linenumber":313,"arguments":["createMeterEventMap(cmd)"]}
-{"type":"sendEvent","linenumber":317,"arguments":["createMeterEventMap(cmd)"]}
-{"type":"createEvent","linenumber":319,"arguments":["[isStateChange:  false"," descriptionText: \"Wattage change has been detected. Refreshing each endpoint\"]"]}

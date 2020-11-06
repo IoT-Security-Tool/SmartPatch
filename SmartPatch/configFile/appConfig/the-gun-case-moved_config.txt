@@ -1,5 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":38,"lastlinenumber":40}
-{"type":"subscribe","linenumber":39,"arguments":["accelerationSensor","acceleration.active","accelerationActiveHandler"]}
-{"type":"MethodNode","name":"updated","linenumber":42,"lastlinenumber":45}
-{"type":"subscribe","linenumber":44,"arguments":["accelerationSensor","acceleration.active","accelerationActiveHandler"]}
-{"type":"MethodNode","name":"accelerationActiveHandler","linenumber":47,"lastlinenumber":66,"arg":["evt"]}

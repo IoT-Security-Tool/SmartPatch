@@ -1,9 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":50}
-{"type":"sendEvent","linenumber":53,"arguments":["name: \"checkInterval\""," value: 2 * (reportingInterval as int) + 10 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":55,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":68,"arguments":["name: \"checkInterval\""," value: 2 * (reportingInterval as int)*60 + 10 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":70,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"createEvent","linenumber":115,"arguments":["result"]}
-{"type":"createEvent","linenumber":137,"arguments":["descriptionText: cmd.toString()"]}
-{"type":"createEvent","linenumber":199,"arguments":["map"]}
-{"type":"sendEvent","linenumber":300,"arguments":["name: \"switch\""," value: value"]}

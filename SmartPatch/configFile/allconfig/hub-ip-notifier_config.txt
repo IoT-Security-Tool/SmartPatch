@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"pageWithIp","linenumber":33,"lastlinenumber":53}
-{"type":"MethodNode","name":"installed","linenumber":55,"lastlinenumber":59}
-{"type":"MethodNode","name":"updated","linenumber":61,"lastlinenumber":66}
-{"type":"MethodNode","name":"initialize","linenumber":68,"lastlinenumber":70}
-{"type":"subscribe","linenumber":69,"arguments":["hub","hubInfo","registrationHandler","[filterEvents:false]"]}
-{"type":"MethodNode","name":"registrationHandler","linenumber":72,"lastlinenumber":80,"arg":["evt"]}

@@ -1,3 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":41,"lastlinenumber":43}
-{"type":"MethodNode","name":"uninstalled","linenumber":45,"lastlinenumber":47}
-{"type":"MethodNode","name":"whitelist","linenumber":79,"lastlinenumber":81}

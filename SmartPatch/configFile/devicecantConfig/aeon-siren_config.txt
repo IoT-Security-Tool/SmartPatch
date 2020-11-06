@@ -1,8 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":47}
-{"type":"sendEvent","linenumber":49,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
-{"type":"sendEvent","linenumber":60,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
-{"type":"createEvent","linenumber":103,"arguments":["descriptionText:description"," displayed:false"]}
-{"type":"createEvent","linenumber":105,"arguments":["\t\t\t\t\tdescriptionText: \"This device failed to complete the network security key exchange. If you are unable to control it via SmartThings"," you must remove it from your network and add it again.\"","\t\t\t\t\teventType: \"ALERT\"","\t\t\t\t\tname: \"secureInclusion\"","\t\t\t\t\tvalue: \"failed\"","\t\t\t\t\tdisplayed: true","\t\t\t"]}
-{"type":"createEvent","linenumber":134,"arguments":["[name: \"switch\""," value: cmd.value ? \"on\" : \"off\""," displayed: false])"]}
-{"type":"createEvent","linenumber":135,"arguments":["[name: \"alarm\""," value: cmd.value ? \"both\" : \"off\"]"]}
-{"type":"createEvent","linenumber":140,"arguments":["displayed: false"," descriptionText: \"$device.displayName: $cmd\""]}

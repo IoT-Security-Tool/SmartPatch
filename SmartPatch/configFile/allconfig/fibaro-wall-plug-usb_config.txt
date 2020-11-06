@@ -1,7 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":41,"lastlinenumber":45}
-{"type":"sendEvent","linenumber":42,"arguments":"([name: \"energy\", value: 0, unit: \"kWh\"])"}
-{"type":"sendEvent","linenumber":43,"arguments":"([name: \"power\", value: 0, unit: \"W\"])"}
-{"type":"sendEvent","linenumber":44,"arguments":"(name: \"checkInterval\", value: 1920, displayed: false, data: [protocol: \"zwave\", hubHardwareId: parent.hubID])"}
-{"type":"MethodNode","name":"reset","linenumber":48,"lastlinenumber":50}
-{"type":"MethodNode","name":"refresh","linenumber":52,"lastlinenumber":54}
-{"type":"MethodNode","name":"ping","linenumber":56,"lastlinenumber":58}

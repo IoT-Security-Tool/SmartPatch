@@ -1,9 +1,0 @@
-{"type":"createEvent","linenumber":70,"arguments":["cmd"," item1"]}
-{"type":"createEvent","linenumber":80,"arguments":["physicalgraph.zwave.commands.basicv1.BasicReport cmd"," Map item1) "]}
-{"type":"createEvent","linenumber":88,"arguments":["physicalgraph.zwave.commands.switchmultilevelv1.SwitchMultilevelReport cmd"," Map item1) "]}
-{"type":"createEvent","linenumber":98,"arguments":["physicalgraph.zwave.Command cmd) "]}
-{"type":"createEvent","linenumber":129,"arguments":["physicalgraph.zwave.commands.meterv2.MeterReport cmd"," Map item1"]}
-{"type":"createEvent","linenumber":132,"arguments":["[name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kWh\"]"]}
-{"type":"createEvent","linenumber":134,"arguments":["[name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kVAh\"]"]}
-{"type":"createEvent","linenumber":137,"arguments":["[name: \"power\""," value: Math.round(cmd.scaledMeterValue)"," unit: \"W\"]"]}
-{"type":"createEvent","linenumber":141,"arguments":["physicalgraph.zwave.Command cmd","  Map map) "]}

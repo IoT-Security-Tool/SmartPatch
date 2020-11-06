@@ -1,8 +1,0 @@
-{"type":"MethodNode","name":"mainPage","linenumber":25,"lastlinenumber":55}
-{"type":"MethodNode","name":"installed","linenumber":57,"lastlinenumber":59}
-{"type":"MethodNode","name":"updated","linenumber":61,"lastlinenumber":65}
-{"type":"MethodNode","name":"init","linenumber":67,"lastlinenumber":72}
-{"type":"subscribe","linenumber":71,"arguments":["sensors","contact.open","scheduleCheck"]}
-{"type":"MethodNode","name":"scheduleCheck","linenumber":74,"lastlinenumber":96,"arg":["evt"]}
-{"type":"MethodNode","name":"send","linenumber":98,"lastlinenumber":119,"arg":["msg"]}
-{"type":"MethodNode","name":"isStormy","linenumber":121,"lastlinenumber":136,"arg":["forecast"]}

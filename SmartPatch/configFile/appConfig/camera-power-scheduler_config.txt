@@ -1,5 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":41,"lastlinenumber":44}
-{"type":"MethodNode","name":"updated","linenumber":46,"lastlinenumber":50}
-{"type":"MethodNode","name":"initialize","linenumber":52,"lastlinenumber":76}
-{"type":"MethodNode","name":"turnOnCamera","linenumber":78,"lastlinenumber":82}
-{"type":"MethodNode","name":"turnOffCamera","linenumber":84,"lastlinenumber":88}

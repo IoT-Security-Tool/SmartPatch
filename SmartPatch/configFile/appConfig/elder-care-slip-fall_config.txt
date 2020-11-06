@@ -1,8 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":54,"lastlinenumber":57}
-{"type":"MethodNode","name":"updated","linenumber":59,"lastlinenumber":64}
-{"type":"MethodNode","name":"initialize","linenumber":66,"lastlinenumber":70}
-{"type":"subscribe","linenumber":68,"arguments":["bedroomMotion","motion.active","bedroomActive"]}
-{"type":"subscribe","linenumber":69,"arguments":["bathroomMotion","motion.active","bathroomActive"]}
-{"type":"MethodNode","name":"bedroomActive","linenumber":72,"lastlinenumber":91,"arg":["evt"]}
-{"type":"MethodNode","name":"bathroomActive","linenumber":93,"lastlinenumber":101,"arg":["evt"]}
-{"type":"MethodNode","name":"sendMessage","linenumber":103,"lastlinenumber":124}

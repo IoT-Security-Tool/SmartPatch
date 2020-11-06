@@ -1,3 +1,0 @@
-{"type":"sendEvent","linenumber":59,"arguments":["name: \"checkInterval\""," value: 60 * 12"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"createEvent","linenumber":77,"arguments":["map) : [:"]}
-{"type":"sendEvent","linenumber":93,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 1 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}

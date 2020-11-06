@@ -1,5 +1,0 @@
-{"type":"MethodNode","name":"parse","linenumber":45,"lastlinenumber":66,"arg":["description"]}
-{"type":"MethodNode","name":"parseName","linenumber":68,"lastlinenumber":78,"arg":["description"]}
-{"type":"MethodNode","name":"parseValue","linenumber":80,"lastlinenumber":89,"arg":["description"]}
-{"type":"MethodNode","name":"parseDescriptionText","linenumber":91,"lastlinenumber":100,"arg":["linkText","value","description"]}
-{"type":"MethodNode","name":"getState","linenumber":102,"lastlinenumber":111,"arg":["value"]}

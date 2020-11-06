@@ -1,7 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":42,"lastlinenumber":44}
-{"type":"MethodNode","name":"updated","linenumber":46,"lastlinenumber":49}
-{"type":"MethodNode","name":"init","linenumber":51,"lastlinenumber":55}
-{"type":"subscribe","linenumber":53,"arguments":["people","presence.present","presence"]}
-{"type":"subscribe","linenumber":54,"arguments":["sensors","contact.open","doorOpened"]}
-{"type":"MethodNode","name":"presence","linenumber":57,"lastlinenumber":66,"arg":["evt"]}
-{"type":"MethodNode","name":"doorOpened","linenumber":68,"lastlinenumber":77,"arg":["evt"]}

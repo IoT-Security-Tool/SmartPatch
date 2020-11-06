@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":34,"lastlinenumber":36}
-{"type":"MethodNode","name":"updated","linenumber":38,"lastlinenumber":40}
-{"type":"MethodNode","name":"configure","linenumber":42,"lastlinenumber":45}
-{"type":"MethodNode","name":"ping","linenumber":47,"lastlinenumber":49}
-{"type":"MethodNode","name":"refresh","linenumber":51,"lastlinenumber":53}
-{"type":"MethodNode","name":"uninstalled","linenumber":55,"lastlinenumber":57}

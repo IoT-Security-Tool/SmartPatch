@@ -1,4 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":40}
-{"type":"createEvent","linenumber":60,"arguments":["map) : nul"]}
-{"type":"MethodNode","name":"initialize","linenumber":170}
-{"type":"sendEvent","linenumber":171,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 * 4 + 2 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}

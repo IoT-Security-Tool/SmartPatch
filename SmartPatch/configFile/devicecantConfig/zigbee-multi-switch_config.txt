@@ -1,5 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":59}
-{"type":"sendEvent","linenumber":85,"arguments":["eventMap"]}
-{"type":"sendEvent","linenumber":91,"arguments":["eventMap"]}
-{"type":"sendEvent","linenumber":169,"arguments":["healthEvent"]}
-{"type":"sendEvent","linenumber":171,"arguments":["healthEvent"]}

@@ -1,8 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":38,"lastlinenumber":42}
-{"type":"subscribe","linenumber":41,"arguments":["people","presence","presence"]}
-{"type":"MethodNode","name":"updated","linenumber":44,"lastlinenumber":49}
-{"type":"subscribe","linenumber":48,"arguments":["people","presence","presence"]}
-{"type":"MethodNode","name":"presence","linenumber":51,"lastlinenumber":68,"arg":["evt"]}
-{"type":"MethodNode","name":"turnOff","linenumber":70,"lastlinenumber":77}
-{"type":"MethodNode","name":"turnOn","linenumber":79,"lastlinenumber":86}
-{"type":"MethodNode","name":"everyoneIsAway","linenumber":88,"lastlinenumber":99}

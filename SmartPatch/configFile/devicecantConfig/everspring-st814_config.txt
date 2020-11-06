@@ -1,6 +1,0 @@
-{"type":"createEvent","linenumber":82,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false"]}
-{"type":"createEvent","linenumber":94,"arguments":["descriptionText: \"${device.displayName} battery is low\""," isStateChange: true"]}
-{"type":"createEvent","linenumber":96,"arguments":["descriptionText: \"${device.displayName} powered up\""," isStateChange: false"]}
-{"type":"createEvent","linenumber":119,"arguments":["map"]}
-{"type":"createEvent","linenumber":139,"arguments":["map)"," response(response_cmds)"]}
-{"type":"sendEvent","linenumber":167,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}

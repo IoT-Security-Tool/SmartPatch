@@ -1,5 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":35}
-{"type":"createEvent","linenumber":44,"arguments":["descriptionText:description"," displayed:true"]}
-{"type":"createEvent","linenumber":56,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: true"]}
-{"type":"createEvent","linenumber":68,"arguments":["descriptionText: cmd.toString()"]}
-{"type":"createEvent","linenumber":86,"arguments":["map"]}

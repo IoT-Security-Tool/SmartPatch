@@ -1,9 +1,0 @@
-{"type":"MethodNode","name":"mainPage","linenumber":33,"lastlinenumber":58}
-{"type":"MethodNode","name":"installed","linenumber":60,"lastlinenumber":63}
-{"type":"MethodNode","name":"updated","linenumber":65,"lastlinenumber":69}
-{"type":"MethodNode","name":"scheduleJob","linenumber":71,"lastlinenumber":76}
-{"type":"MethodNode","name":"checkForSevereWeather","linenumber":78,"lastlinenumber":104}
-{"type":"MethodNode","name":"descriptionFilter","linenumber":106,"lastlinenumber":113,"arg":["description"]}
-{"type":"MethodNode","name":"locationIsDefined","linenumber":115,"lastlinenumber":117}
-{"type":"MethodNode","name":"zipcodeIsValid","linenumber":119,"lastlinenumber":121}
-{"type":"MethodNode","name":"send","linenumber":123,"lastlinenumber":134,"arg":["message"]}

@@ -1,4 +1,0 @@
-{"type":"MethodNode","name":"parse","linenumber":32,"lastlinenumber":35,"arg":["description"]}
-{"type":"MethodNode","name":"on","linenumber":37,"lastlinenumber":39}
-{"type":"MethodNode","name":"off","linenumber":41,"lastlinenumber":43}
-{"type":"MethodNode","name":"put","linenumber":45,"lastlinenumber":55,"arg":["action"]}

@@ -1,5 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":36,"lastlinenumber":38}
-{"type":"subscribe","linenumber":37,"arguments":["lightSensor","illuminance","illuminanceHandler"]}
-{"type":"MethodNode","name":"updated","linenumber":40,"lastlinenumber":43}
-{"type":"subscribe","linenumber":42,"arguments":["lightSensor","illuminance","illuminanceHandler"]}
-{"type":"MethodNode","name":"illuminanceHandler","linenumber":46,"lastlinenumber":56,"arg":["evt"]}

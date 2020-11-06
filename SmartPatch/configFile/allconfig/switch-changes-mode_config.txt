@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":44,"lastlinenumber":48}
-{"type":"subscribe","linenumber":47,"arguments":["controlSwitch","switch","switchHandler"]}
-{"type":"MethodNode","name":"updated","linenumber":50,"lastlinenumber":55}
-{"type":"subscribe","linenumber":54,"arguments":["controlSwitch","switch","switchHandler"]}
-{"type":"MethodNode","name":"switchHandler","linenumber":57,"lastlinenumber":63,"arg":["evt"]}
-{"type":"MethodNode","name":"changeMode","linenumber":65,"lastlinenumber":75,"arg":["newMode"]}

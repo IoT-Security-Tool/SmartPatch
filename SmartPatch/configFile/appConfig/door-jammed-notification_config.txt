@@ -1,5 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":36,"lastlinenumber":39}
-{"type":"MethodNode","name":"updated","linenumber":41,"lastlinenumber":45}
-{"type":"MethodNode","name":"initialize","linenumber":47,"lastlinenumber":49}
-{"type":"subscribe","linenumber":48,"arguments":["doorSensor","doorState","coopDoorStateHandler"]}
-{"type":"MethodNode","name":"coopDoorStateHandler","linenumber":51,"lastlinenumber":66,"arg":["evt"]}

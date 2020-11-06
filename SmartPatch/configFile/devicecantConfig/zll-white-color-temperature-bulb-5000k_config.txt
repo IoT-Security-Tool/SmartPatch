@@ -1,3 +1,0 @@
-{"type":"sendEvent","linenumber":83,"arguments":["event"]}
-{"type":"sendEvent","linenumber":136,"arguments":["name: \"checkInterval\""," value: hcIntervalMinutes * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":175,"arguments":["name: \"colorName\""," value: genericName"," displayed: false"]}

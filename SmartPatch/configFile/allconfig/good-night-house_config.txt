@@ -1,5 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":51,"lastlinenumber":56}
-{"type":"subscribe","linenumber":55,"arguments":["app","appTouch"]}
-{"type":"MethodNode","name":"updated","linenumber":59,"lastlinenumber":65}
-{"type":"subscribe","linenumber":64,"arguments":["app","appTouch"]}
-{"type":"MethodNode","name":"appTouch","linenumber":67,"lastlinenumber":80,"arg":["evt"]}

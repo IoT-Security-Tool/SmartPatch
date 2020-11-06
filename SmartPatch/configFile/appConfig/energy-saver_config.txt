@@ -1,5 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":38,"lastlinenumber":41}
-{"type":"MethodNode","name":"updated","linenumber":43,"lastlinenumber":47}
-{"type":"MethodNode","name":"initialize","linenumber":49,"lastlinenumber":51}
-{"type":"subscribe","linenumber":50,"arguments":["meter","power","meterHandler"]}
-{"type":"MethodNode","name":"meterHandler","linenumber":53,"lastlinenumber":60,"arg":["evt"]}

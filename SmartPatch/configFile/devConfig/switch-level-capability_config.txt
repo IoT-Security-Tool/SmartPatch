@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"parse","linenumber":54,"lastlinenumber":64,"arg":["description"]}
-{"type":"createEvent","linenumber":60,"arguments":"(name: pair[0].trim(), value: pair[1].trim())"}
-{"type":"MethodNode","name":"on","linenumber":66,"lastlinenumber":68}
-{"type":"MethodNode","name":"off","linenumber":70,"lastlinenumber":72}
-{"type":"MethodNode","name":"setLevel","linenumber":74,"lastlinenumber":76,"arg":["value","rate"]}
-{"type":"MethodNode","name":"refresh","linenumber":78,"lastlinenumber":80}

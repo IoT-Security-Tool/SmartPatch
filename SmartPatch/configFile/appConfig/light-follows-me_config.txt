@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":40,"lastlinenumber":42}
-{"type":"subscribe","linenumber":41,"arguments":["motion1","motion","motionHandler"]}
-{"type":"MethodNode","name":"updated","linenumber":44,"lastlinenumber":47}
-{"type":"subscribe","linenumber":46,"arguments":["motion1","motion","motionHandler"]}
-{"type":"MethodNode","name":"motionHandler","linenumber":49,"lastlinenumber":57,"arg":["evt"]}
-{"type":"MethodNode","name":"scheduleCheck","linenumber":59,"lastlinenumber":74}

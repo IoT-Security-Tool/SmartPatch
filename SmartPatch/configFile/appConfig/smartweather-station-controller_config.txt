@@ -1,4 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":33,"lastlinenumber":37}
-{"type":"MethodNode","name":"updated","linenumber":39,"lastlinenumber":44}
-{"type":"MethodNode","name":"initialize","linenumber":46,"lastlinenumber":48}
-{"type":"MethodNode","name":"scheduledEvent","linenumber":50,"lastlinenumber":67}

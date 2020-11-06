@@ -1,7 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":35,"lastlinenumber":38}
-{"type":"sendEvent","linenumber":37,"arguments":"(name: \"checkInterval\", value: 1930, displayed: false, data: [protocol: \"zigbee\", hubHardwareId: device.hub.hardwareID])"}
-{"type":"MethodNode","name":"parse","linenumber":40,"lastlinenumber":50,"arg":["description"]}
-{"type":"MethodNode","name":"parseAttrMessage","linenumber":52,"lastlinenumber":56,"arg":["description"]}
-{"type":"createEvent","linenumber":55,"arguments":"(name: \"status\", displayed: true, value: 'online', descriptionText: \"$device.displayName is online\")"}
-{"type":"MethodNode","name":"ping","linenumber":58,"lastlinenumber":60}
-{"type":"MethodNode","name":"getZCL_VERSION_ATTRIBUTE","linenumber":62,"lastlinenumber":62}

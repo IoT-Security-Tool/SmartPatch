@@ -1,7 +1,0 @@
-{"type":"createEvent","linenumber":100,"arguments":["name: switch"," value: value","descriptionText: $device.displayName was turned $value)"]}
-{"type":"createEvent","linenumber":102,"arguments":["name: level"," value: cmd.value == 99 ? 100 : cmd.value ","unit: %"]}
-{"type":"sendEvent","linenumber":177,"arguments":["value.hue) sendEvent(name: hue"," value: value.hue"]}
-{"type":"sendEvent","linenumber":178,"arguments":["value.hex) sendEvent(name: color"," value: value.hex"]}
-{"type":"sendEvent","linenumber":179,"arguments":["value.switch) sendEvent(name: switch"," value: value.switch"]}
-{"type":"sendEvent","linenumber":180,"arguments":["value.saturation) sendEvent(name: saturation"," value: value.saturation"]}
-{"type":"sendEvent","linenumber":209,"arguments":["name: color","value: #ffffff"]}

@@ -1,9 +1,0 @@
-{"type":"sendEvent","linenumber":76,"arguments":["event"]}
-{"type":"sendEvent","linenumber":82,"arguments":["event"]}
-{"type":"sendEvent","linenumber":89,"arguments":["name: \"powerSource\""," value: \"mains\""]}
-{"type":"sendEvent","linenumber":92,"arguments":["name: \"powerSource\""," value: \"battery\""]}
-{"type":"sendEvent","linenumber":95,"arguments":["name: \"powerSource\""," value: \"dc\""]}
-{"type":"sendEvent","linenumber":98,"arguments":["name: \"powerSource\""," value: \"unknown\""]}
-{"type":"sendEvent","linenumber":104,"arguments":["event"]}
-{"type":"MethodNode","name":"installed","linenumber":139}
-{"type":"sendEvent","linenumber":140,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}

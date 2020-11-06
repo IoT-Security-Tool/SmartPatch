@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"getPref","linenumber":37,"lastlinenumber":52}
-{"type":"MethodNode","name":"installed","linenumber":54,"lastlinenumber":57}
-{"type":"subscribe","linenumber":56,"arguments":["controlSwitch","switch","switchHandler"]}
-{"type":"MethodNode","name":"updated","linenumber":59,"lastlinenumber":63}
-{"type":"subscribe","linenumber":62,"arguments":["controlSwitch","switch","switchHandler"]}
-{"type":"MethodNode","name":"switchHandler","linenumber":65,"lastlinenumber":71,"arg":["evt"]}

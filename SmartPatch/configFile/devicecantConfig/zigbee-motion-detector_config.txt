@@ -1,5 +1,0 @@
-{"type":"sendEvent","linenumber":44,"arguments":["getMotionResult(false)"]}
-{"type":"MethodNode","name":"installed","linenumber":47}
-{"type":"createEvent","linenumber":74,"arguments":["map) : [:"]}
-{"type":"sendEvent","linenumber":148,"arguments":["name: \"checkInterval\""," value:2 * 60 * 60 + 5 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
-{"type":"sendEvent","linenumber":151,"arguments":["name: \"checkInterval\""," value:20 * 60 + 2*60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}

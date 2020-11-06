@@ -1,8 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":149}
-{"type":"sendEvent","linenumber":151,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":169,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"createEvent","linenumber":330,"arguments":["name: \"switch\""," value: value"," descriptionText: \"$device.displayName was turned $value\""]}
-{"type":"createEvent","linenumber":333,"arguments":["name: \"level\""," value: cmd.value == 99 ? 100 : cmd.value "," unit: \"%\""]}
-{"type":"createEvent","linenumber":349,"arguments":["name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kWh\""]}
-{"type":"createEvent","linenumber":351,"arguments":["name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kVAh\""]}
-{"type":"createEvent","linenumber":353,"arguments":["name: \"power\""," value: Math.round(cmd.scaledMeterValue)"," unit: \"W\""]}

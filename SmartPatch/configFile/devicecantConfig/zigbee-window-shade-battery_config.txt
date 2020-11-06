@@ -1,9 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":82}
-{"type":"sendEvent","linenumber":84,"arguments":["name: \"supportedWindowShadeCommands\""," value: JsonOutput.toJson([\"open\""," \"close\""," \"pause\"])"]}
-{"type":"sendEvent","linenumber":124,"arguments":["name: \"level\""," value: currentLevel"]}
-{"type":"sendEvent","linenumber":126,"arguments":["name: \"windowShade\""," value: currentLevel == 0 ? \"closed\" : \"open\""]}
-{"type":"sendEvent","linenumber":129,"arguments":["[name:\"windowShade\""," value: \"opening\"]"]}
-{"type":"sendEvent","linenumber":131,"arguments":["[name:\"windowShade\""," value: \"closing\"]"]}
-{"type":"sendEvent","linenumber":142,"arguments":["name: \"windowShade\""," value: \"partially open\""]}
-{"type":"sendEvent","linenumber":149,"arguments":["[name: \"battery\""," value: batteryLevel"," unit: \"%\""," descriptionText: \"{{ device.displayName }} battery was {{ value }}%\"]"]}
-{"type":"sendEvent","linenumber":207,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}

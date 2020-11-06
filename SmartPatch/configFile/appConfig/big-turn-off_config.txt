@@ -1,8 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":33,"lastlinenumber":37}
-{"type":"subscribe","linenumber":35,"arguments":["location","changedLocationMode"]}
-{"type":"subscribe","linenumber":36,"arguments":["app","appTouch"]}
-{"type":"MethodNode","name":"updated","linenumber":39,"lastlinenumber":44}
-{"type":"subscribe","linenumber":42,"arguments":["location","changedLocationMode"]}
-{"type":"subscribe","linenumber":43,"arguments":["app","appTouch"]}
-{"type":"MethodNode","name":"changedLocationMode","linenumber":46,"lastlinenumber":49,"arg":["evt"]}
-{"type":"MethodNode","name":"appTouch","linenumber":51,"lastlinenumber":54,"arg":["evt"]}

@@ -1,9 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":51,"lastlinenumber":54}
-{"type":"MethodNode","name":"updated","linenumber":56,"lastlinenumber":60}
-{"type":"MethodNode","name":"initialize","linenumber":62,"lastlinenumber":65}
-{"type":"subscribe","linenumber":63,"arguments":["sensor1","acceleration.active","accelerationActiveHandler"]}
-{"type":"subscribe","linenumber":64,"arguments":["sensor1","acceleration.inactive","accelerationInactiveHandler"]}
-{"type":"MethodNode","name":"accelerationActiveHandler","linenumber":67,"lastlinenumber":75,"arg":["evt"]}
-{"type":"MethodNode","name":"accelerationInactiveHandler","linenumber":77,"lastlinenumber":87,"arg":["evt"]}
-{"type":"MethodNode","name":"checkRunning","linenumber":89,"lastlinenumber":137}
-{"type":"MethodNode","name":"flashLights","linenumber":139,"lastlinenumber":182}

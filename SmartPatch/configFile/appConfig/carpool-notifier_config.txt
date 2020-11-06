@@ -1,7 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":51,"lastlinenumber":55}
-{"type":"MethodNode","name":"updated","linenumber":57,"lastlinenumber":62}
-{"type":"MethodNode","name":"initialize","linenumber":64,"lastlinenumber":66}
-{"type":"subscribe","linenumber":65,"arguments":["driver","presence.present","presence"]}
-{"type":"MethodNode","name":"presence","linenumber":68,"lastlinenumber":76,"arg":["evt"]}
-{"type":"MethodNode","name":"riderIsHome","linenumber":78,"lastlinenumber":106}
-{"type":"MethodNode","name":"sendText","linenumber":108,"lastlinenumber":115}

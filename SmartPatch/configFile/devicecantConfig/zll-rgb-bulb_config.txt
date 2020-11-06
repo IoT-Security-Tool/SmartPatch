@@ -1,8 +1,0 @@
-{"type":"sendEvent","linenumber":74,"arguments":["finalResult"]}
-{"type":"sendEvent","linenumber":82,"arguments":["name: \"hue\""," value: hueValue"," displayed:false"]}
-{"type":"sendEvent","linenumber":85,"arguments":["name: \"saturation\""," value: saturationValue"," displayed:false"]}
-{"type":"sendEvent","linenumber":109,"arguments":["name: \"hue\""," value: hsv.hue"," displayed:false"]}
-{"type":"sendEvent","linenumber":110,"arguments":["name: \"saturation\""," value: hsv.saturation"," displayed:false"]}
-{"type":"sendEvent","linenumber":186,"arguments":["name: \"checkInterval\""," value: 2 * 10 * 60 + 1 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"MethodNode","name":"installed","linenumber":190}
-{"type":"sendEvent","linenumber":191,"arguments":["name: \"checkInterval\""," value: 2 * 10 * 60 + 1 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}

@@ -1,8 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":105,"lastlinenumber":108}
-{"type":"sendEvent","linenumber":106,"arguments":"(name: \"switch\", value: \"off\")"}
-{"type":"sendEvent","linenumber":107,"arguments":"(name: \"multiLine\", value: \"Line 1\\nLine 2\\nLine 3\")"}
-{"type":"MethodNode","name":"parse","linenumber":110,"lastlinenumber":111,"arg":["description"]}
-{"type":"MethodNode","name":"on","linenumber":113,"lastlinenumber":116}
-{"type":"sendEvent","linenumber":115,"arguments":"(name: \"switch\", value: \"on\")"}
-{"type":"MethodNode","name":"off","linenumber":118,"lastlinenumber":121}
-{"type":"sendEvent","linenumber":120,"arguments":"(name: \"switch\", value: \"off\")"}

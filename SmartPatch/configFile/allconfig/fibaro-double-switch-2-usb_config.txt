@@ -1,7 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":53,"lastlinenumber":56}
-{"type":"sendEvent","linenumber":54,"arguments":"(name: \"checkInterval\", value: 1920, displayed: false, data: [protocol: \"zwave\", hubHardwareId: parent.hubID])"}
-{"type":"MethodNode","name":"ping","linenumber":58,"lastlinenumber":60}
-{"type":"MethodNode","name":"on","linenumber":62,"lastlinenumber":64}
-{"type":"MethodNode","name":"off","linenumber":66,"lastlinenumber":68}
-{"type":"MethodNode","name":"reset","linenumber":70,"lastlinenumber":72}
-{"type":"MethodNode","name":"refresh","linenumber":74,"lastlinenumber":76}

@@ -1,7 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":31,"lastlinenumber":35}
-{"type":"MethodNode","name":"updated","linenumber":37,"lastlinenumber":43}
-{"type":"MethodNode","name":"initialize","linenumber":45,"lastlinenumber":48}
-{"type":"subscribe","linenumber":47,"arguments":["sensors","contact","sensorChange"]}
-{"type":"MethodNode","name":"sensorChange","linenumber":50,"lastlinenumber":69,"arg":["evt"]}
-{"type":"MethodNode","name":"turnOff","linenumber":71,"lastlinenumber":77}
-{"type":"MethodNode","name":"restore","linenumber":79,"lastlinenumber":83}

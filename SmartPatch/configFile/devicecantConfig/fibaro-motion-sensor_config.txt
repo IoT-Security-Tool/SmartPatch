@@ -1,6 +1,0 @@
-{"type":"sendEvent","linenumber":91,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"createEvent","linenumber":129,"arguments":["zwaveEvent(cmd)"]}
-{"type":"createEvent","linenumber":152,"arguments":["physicalgraph.zwave.commands.manufacturerspecificv2.ManufacturerSpecificReport cmd"," Map item1) "]}
-{"type":"createEvent","linenumber":159,"arguments":["physicalgraph.zwave.commands.versionv1.VersionReport cmd"," Map item1) "]}
-{"type":"createEvent","linenumber":168,"arguments":["physicalgraph.zwave.commands.firmwareupdatemdv1.FirmwareMdReport cmd"," Map item1) "]}
-{"type":"createEvent","linenumber":271,"arguments":["descriptionText: \"$device.displayName MSR: $msr\""," isStateChange: false"]}

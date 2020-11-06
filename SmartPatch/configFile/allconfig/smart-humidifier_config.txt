@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":47,"lastlinenumber":49}
-{"type":"subscribe","linenumber":48,"arguments":["humiditySensor1","humidity","humidityHandler"]}
-{"type":"MethodNode","name":"updated","linenumber":51,"lastlinenumber":54}
-{"type":"subscribe","linenumber":53,"arguments":["humiditySensor1","humidity","humidityHandler"]}
-{"type":"MethodNode","name":"humidityHandler","linenumber":56,"lastlinenumber":115,"arg":["evt"]}
-{"type":"MethodNode","name":"send","linenumber":117,"lastlinenumber":129,"arg":["msg"]}

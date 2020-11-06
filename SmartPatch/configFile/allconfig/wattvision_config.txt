@@ -1,8 +1,0 @@
-{"type":"MethodNode","name":"refresh","linenumber":49,"lastlinenumber":52}
-{"type":"MethodNode","name":"parse","linenumber":55,"lastlinenumber":57,"arg":["description"]}
-{"type":"MethodNode","name":"setGraphUrl","linenumber":59,"lastlinenumber":72,"arg":["graphUrl"]}
-{"type":"sendEvent","linenumber":63,"arguments":"([\t\tdate           : new Date(),\t\tvalue          : graphUrl,\t\tname           : \"powerContent\",\t\tdisplayed      : false,\t\tisStateChange  : true,\t\tdescription    : \"Graph updated\",\t\tdescriptionText: \"Graph updated\"\t])"}
-{"type":"MethodNode","name":"addWattvisionData","linenumber":74,"lastlinenumber":88,"arg":["json"]}
-{"type":"MethodNode","name":"sendPowerEvent","linenumber":90,"lastlinenumber":106,"arg":["time","value","units","isLatest"]}
-{"type":"sendEvent","linenumber":104,"arguments":"(eventData)"}
-{"type":"MethodNode","name":"parseJson","linenumber":108,"lastlinenumber":110,"arg":["s"]}

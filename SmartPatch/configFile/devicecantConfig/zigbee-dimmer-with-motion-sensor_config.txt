@@ -1,4 +1,0 @@
-{"type":"sendEvent","linenumber":56,"arguments":["name: \"checkInterval\""," value: 60 * 12"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"createEvent","linenumber":86,"arguments":["map) : [:"]}
-{"type":"sendEvent","linenumber":135,"arguments":["name: \"checkInterval\""," value: 2 * 10 * 60 + 1 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"MethodNode","name":"installed","linenumber":138}

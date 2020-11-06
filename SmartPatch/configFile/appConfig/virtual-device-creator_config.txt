@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"mainPage","linenumber":34,"lastlinenumber":48}
-{"type":"MethodNode","name":"defaultLabel","linenumber":50,"lastlinenumber":52}
-{"type":"MethodNode","name":"installed","linenumber":54,"lastlinenumber":57}
-{"type":"MethodNode","name":"uninstalled","linenumber":59,"lastlinenumber":63}
-{"type":"MethodNode","name":"updated","linenumber":65,"lastlinenumber":68}
-{"type":"MethodNode","name":"initialize","linenumber":70,"lastlinenumber":79}

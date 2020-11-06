@@ -1,6 +1,0 @@
-{"type":"sendEvent","linenumber":136,"arguments":["event"]}
-{"type":"sendEvent","linenumber":143,"arguments":["name: \"checkInterval\""," value: 60 * 12"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
-{"type":"sendEvent","linenumber":157,"arguments":["zigbee.getEventFromAttrData(descMap.clusterInt"," descMap.attrInt"," descMap.encoding"," descMap.value)"]}
-{"type":"MethodNode","name":"installed","linenumber":191}
-{"type":"sendEvent","linenumber":194,"arguments":["name: \"level\""," value: 100"]}
-{"type":"sendEvent","linenumber":203,"arguments":["name: \"checkInterval\""," value: 2 * 10 * 60 + 1 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}

@@ -1,2 +1,0 @@
-{"type":"MethodNode","name":"parse","linenumber":51,"lastlinenumber":53,"arg":["description"]}
-{"type":"MethodNode","name":"poll","linenumber":55,"lastlinenumber":57}

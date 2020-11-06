@@ -1,9 +1,0 @@
-{"type":"MethodNode","name":"disclaimerPage","linenumber":37,"lastlinenumber":75}
-{"type":"MethodNode","name":"configurationPage","linenumber":77,"lastlinenumber":98}
-{"type":"MethodNode","name":"installed","linenumber":100,"lastlinenumber":103}
-{"type":"MethodNode","name":"updated","linenumber":105,"lastlinenumber":110}
-{"type":"MethodNode","name":"scheduleCheck","linenumber":112,"lastlinenumber":132}
-{"type":"MethodNode","name":"noRecentMotion","linenumber":134,"lastlinenumber":150}
-{"type":"MethodNode","name":"noRecentContact","linenumber":152,"lastlinenumber":168}
-{"type":"MethodNode","name":"getSinceTime","linenumber":170,"lastlinenumber":177}
-{"type":"MethodNode","name":"getTimePhrase","linenumber":179,"lastlinenumber":190}

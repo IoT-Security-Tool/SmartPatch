@@ -1,2 +1,0 @@
-{"type":"MethodNode","name":"on","linenumber":35,"lastlinenumber":37}
-{"type":"MethodNode","name":"off","linenumber":39,"lastlinenumber":41}

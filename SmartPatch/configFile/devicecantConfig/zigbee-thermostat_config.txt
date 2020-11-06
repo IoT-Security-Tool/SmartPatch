@@ -1,8 +1,0 @@
-{"type":"createEvent","linenumber":231,"arguments":["map"]}
-{"type":"MethodNode","name":"installed","linenumber":238}
-{"type":"sendEvent","linenumber":239,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
-{"type":"sendEvent","linenumber":246,"arguments":["name: \"supportedThermostatFanModes\""," value: JsonOutput.toJson(state.supportedFanModes)"," displayed: false"]}
-{"type":"sendEvent","linenumber":247,"arguments":["name: \"coolingSetpointRange\""," value: coolingSetpointRange"," displayed: false"]}
-{"type":"sendEvent","linenumber":250,"arguments":["name: \"supportedThermostatModes\""," value: JsonOutput.toJson(state.supportedThermostatModes)"," displayed: false"]}
-{"type":"sendEvent","linenumber":251,"arguments":["name: \"heatingSetpointRange\""," value: heatingSetpointRange"," displayed: false"]}
-{"type":"sendEvent","linenumber":301,"arguments":["name: \"powerSource\""," value: \"mains\""," descriptionText: \"${device.displayName} is connected to mains\""]}

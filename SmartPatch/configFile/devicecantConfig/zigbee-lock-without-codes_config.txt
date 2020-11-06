@@ -1,6 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":63}
-{"type":"sendEvent","linenumber":70,"arguments":["name:\"lockRemoved\""," value:device.id"," isStateChange:true"," displayed:false"]}
-{"type":"MethodNode","name":"initialize","linenumber":113}
-{"type":"sendEvent","linenumber":116,"arguments":["name:\"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed:false"," data: [protocol:\"zigbee\""," hubHardwareId:device.hub.hardwareID"," offlinePingable:\"1\"]"]}
-{"type":"createEvent","linenumber":201,"arguments":["responseMap"]}
-{"type":"createEvent","linenumber":263,"arguments":["responseMap"]}

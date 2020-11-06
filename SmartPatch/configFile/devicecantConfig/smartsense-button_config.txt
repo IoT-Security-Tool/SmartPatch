@@ -1,7 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":69}
-{"type":"sendEvent","linenumber":70,"arguments":["name: \"supportedButtonValues\""," value: [\"pushed\"","\"held\"","\"double\"].encodeAsJSON()"," displayed: false"]}
-{"type":"sendEvent","linenumber":71,"arguments":["name: \"numberOfButtons\""," value: 1"," displayed: false"]}
-{"type":"sendEvent","linenumber":72,"arguments":["name: \"button\""," value: \"pushed\""," data: [buttonNumber: 1]"," displayed: false"]}
-{"type":"sendEvent","linenumber":120,"arguments":["name: \"checkInterval\""," value: 60 * 12"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
-{"type":"createEvent","linenumber":138,"arguments":["map) : [:"]}
-{"type":"sendEvent","linenumber":261,"arguments":["name: \"DeviceWatch-Enroll\""," displayed: false"," value: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," scheme: \"TRACKED\""," checkInterval: 2 * 60 * 60 + 1 * 60"," lowBatteryThresholds: [15"," 7"," 3]"," offlinePingable: \"1\"].encodeAsJSON()"]}

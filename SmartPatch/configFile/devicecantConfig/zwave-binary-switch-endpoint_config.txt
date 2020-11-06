@@ -1,4 +1,0 @@
-{"type":"MethodNode","name":"installed","linenumber":33}
-{"type":"sendEvent","linenumber":43,"arguments":["name: \"checkInterval\""," value: 30 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: parent.hubID"," offlinePingable: \"1\"]"]}
-{"type":"sendEvent","linenumber":61,"arguments":["name: \"switch\""," value: value"," descriptionText: \"$device.displayName was turned $value\""]}
-{"type":"sendEvent","linenumber":65,"arguments":["descriptionText: \"$device.displayName: $cmd\""," isStateChange: true"," displayed: false"]}
