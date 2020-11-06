@@ -1,0 +1,13 @@
+{"type":"MethodNode","name":"installed","linenumber":67}
+{"type":"sendEvent","linenumber":69,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":74,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":84,"arguments":["descriptionText:description"," displayed:false"]}
+{"type":"createEvent","linenumber":86,"arguments":["\t\t\t\t\tdescriptionText: \"Switch failed to complete the network security key exchange. If you are unable to receive data from it"," you must remove it from your network and add it again.\"","\t\t\t\t\teventType: \"ALERT\"","\t\t\t\t\tname: \"secureInclusion\"","\t\t\t\t\tvalue: \"failed\"","\t\t\t\t\tdisplayed: true","\t\t\t"]}
+{"type":"createEvent","linenumber":117,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":137,"arguments":["name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kWh\""]}
+{"type":"createEvent","linenumber":139,"arguments":["name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kVAh\""]}
+{"type":"createEvent","linenumber":141,"arguments":["name: \"power\""," value: Math.round(cmd.scaledMeterValue)"," unit: \"W\""]}
+{"type":"createEvent","linenumber":182,"arguments":["name: \"power\""," value: Math.round(cmd.scaledSensorValue)"," unit: \"W\""]}
+{"type":"createEvent","linenumber":187,"arguments":["name: \"switch\""," value: cmd.value ? \"on\" : \"off\""," type: \"digital\""]}
+{"type":"createEvent","linenumber":198,"arguments":["descriptionText: \"Warning: $device.displayName detected over-current\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":200,"arguments":["descriptionText: \"Warning: $device.displayName detected over-load\""," isStateChange: true"]}

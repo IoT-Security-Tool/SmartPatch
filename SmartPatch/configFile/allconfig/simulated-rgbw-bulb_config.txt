@@ -1,0 +1,51 @@
+{"type":"MethodNode","name":"parse","linenumber":289,"lastlinenumber":304,"arg":["description"]}
+{"type":"createEvent","linenumber":300,"arguments":"(name: name, value: pair[1]?.trim())"}
+{"type":"MethodNode","name":"installed","linenumber":306,"lastlinenumber":309}
+{"type":"MethodNode","name":"updated","linenumber":311,"lastlinenumber":314}
+{"type":"MethodNode","name":"refresh","linenumber":320,"lastlinenumber":328}
+{"type":"MethodNode","name":"configure","linenumber":330,"lastlinenumber":339}
+{"type":"sendEvent","linenumber":335,"arguments":"(name: \"DeviceWatch-Enroll\", value: [protocol: \"cloud\", scheme:\"untracked\"].encodeAsJson(), displayed: false)"}
+{"type":"MethodNode","name":"on","linenumber":341,"lastlinenumber":346}
+{"type":"MethodNode","name":"off","linenumber":348,"lastlinenumber":353}
+{"type":"MethodNode","name":"setLevel","linenumber":355,"lastlinenumber":369,"arg":["levelPercent","rate"]}
+{"type":"sendEvent","linenumber":361,"arguments":"(name: \"level\", value: boundedPercent)"}
+{"type":"MethodNode","name":"setColorTemperature","linenumber":371,"lastlinenumber":378,"arg":["kelvin"]}
+{"type":"sendEvent","linenumber":375,"arguments":"(name: \"colorTemperature\", value: kelvinNorm)"}
+{"type":"MethodNode","name":"setSaturation","linenumber":380,"lastlinenumber":385,"arg":["saturationPercent"]}
+{"type":"MethodNode","name":"setHue","linenumber":387,"lastlinenumber":392,"arg":["huePercent"]}
+{"type":"MethodNode","name":"setColor","linenumber":399,"lastlinenumber":403,"arg":["huePercent","saturationPercent"]}
+{"type":"MethodNode","name":"setColor","linenumber":409,"lastlinenumber":419,"arg":["rgbHex"]}
+{"type":"MethodNode","name":"setColor","linenumber":426,"lastlinenumber":438,"arg":["colorHSMap"]}
+{"type":"sendEvent","linenumber":433,"arguments":"(name: \"hue\", value: boundedHue)"}
+{"type":"sendEvent","linenumber":434,"arguments":"(name: \"saturation\", value: boundedSaturation)"}
+{"type":"sendEvent","linenumber":435,"arguments":"(name: \"color\", value: rgbHex)"}
+{"type":"MethodNode","name":"markDeviceOnline","linenumber":440,"lastlinenumber":442}
+{"type":"MethodNode","name":"markDeviceOffline","linenumber":444,"lastlinenumber":446}
+{"type":"MethodNode","name":"setDeviceHealth","linenumber":448,"lastlinenumber":456,"arg":["healthState"]}
+{"type":"sendEvent","linenumber":454,"arguments":"(name: \"DeviceWatch-DeviceStatus\", value: healthState)"}
+{"type":"sendEvent","linenumber":455,"arguments":"(name: \"healthStatus\", value: healthState)"}
+{"type":"MethodNode","name":"initialize","linenumber":458,"lastlinenumber":475}
+{"type":"sendEvent","linenumber":461,"arguments":"(name: \"colorTemperatureRange\", value: COLOR_TEMP_RANGE)"}
+{"type":"sendEvent","linenumber":462,"arguments":"(name: \"colorTemperature\", value: COLOR_TEMP_DEFAULT)"}
+{"type":"sendEvent","linenumber":464,"arguments":"(name: \"hue\", value: BLACK.h)"}
+{"type":"sendEvent","linenumber":465,"arguments":"(name: \"saturation\", value: BLACK.s)"}
+{"type":"sendEvent","linenumber":467,"arguments":"(name: \"color\", value: BLACK.rgb)"}
+{"type":"sendEvent","linenumber":469,"arguments":"(name: \"level\", value: 100)"}
+{"type":"sendEvent","linenumber":471,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"MethodNode","name":"implicitOn","linenumber":480,"lastlinenumber":484}
+{"type":"MethodNode","name":"turnOn","linenumber":489,"lastlinenumber":491}
+{"type":"sendEvent","linenumber":490,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"MethodNode","name":"turnOff","linenumber":496,"lastlinenumber":498}
+{"type":"sendEvent","linenumber":497,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"MethodNode","name":"buildColorHSMap","linenumber":500,"lastlinenumber":509,"arg":["hue","saturation"]}
+{"type":"MethodNode","name":"simulateBulbState","linenumber":515,"lastlinenumber":547,"arg":["mode"]}
+{"type":"sendEvent","linenumber":544,"arguments":"(name: \"colorIndicator\", value: colorIndicator)"}
+{"type":"sendEvent","linenumber":545,"arguments":"(name: \"bulbMode\", value: mode)"}
+{"type":"sendEvent","linenumber":546,"arguments":"(name: \"bulbValue\", value: valueText)"}
+{"type":"MethodNode","name":"flattenHueSat","linenumber":549,"lastlinenumber":557,"arg":["hue","sat"]}
+{"type":"MethodNode","name":"restoreHueSat","linenumber":559,"lastlinenumber":564,"arg":["flatHueSat"]}
+{"type":"MethodNode","name":"done","linenumber":569,"lastlinenumber":571}
+{"type":"MethodNode","name":"kelvinToHex","linenumber":579,"lastlinenumber":620,"arg":["kelvin"]}
+{"type":"MethodNode","name":"boundInt","linenumber":628,"lastlinenumber":632,"arg":["value","theRange"]}
+{"type":"MethodNode","name":"buildColorTempList","linenumber":641,"lastlinenumber":648,"arg":["kRange","kStep","kExtras"]}
+{"type":"MethodNode","name":"snapToClosest","linenumber":656,"lastlinenumber":658,"arg":["value","validValues"]}

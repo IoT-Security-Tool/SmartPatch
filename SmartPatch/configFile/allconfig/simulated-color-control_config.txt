@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"installed","linenumber":28,"lastlinenumber":31}
+{"type":"MethodNode","name":"updated","linenumber":33,"lastlinenumber":36}
+{"type":"MethodNode","name":"initialize","linenumber":38,"lastlinenumber":44}
+{"type":"sendEvent","linenumber":41,"arguments":"(name: \"DeviceWatch-DeviceStatus\", value: \"online\")"}
+{"type":"sendEvent","linenumber":42,"arguments":"(name: \"healthStatus\", value: \"online\")"}
+{"type":"sendEvent","linenumber":43,"arguments":"(name: \"DeviceWatch-Enroll\", value: [protocol: \"cloud\", scheme:\"untracked\"].encodeAsJson(), displayed: false)"}
+{"type":"MethodNode","name":"parse","linenumber":47,"lastlinenumber":50,"arg":["description"]}
+{"type":"MethodNode","name":"setSaturation","linenumber":52,"lastlinenumber":55,"arg":["percent"]}
+{"type":"sendEvent","linenumber":54,"arguments":"(name: \"saturation\", value: percent)"}
+{"type":"MethodNode","name":"setHue","linenumber":57,"lastlinenumber":60,"arg":["percent"]}
+{"type":"sendEvent","linenumber":59,"arguments":"(name: \"hue\", value: percent)"}

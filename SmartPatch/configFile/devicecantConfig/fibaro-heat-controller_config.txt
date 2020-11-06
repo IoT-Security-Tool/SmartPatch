@@ -1,0 +1,12 @@
+{"type":"MethodNode","name":"installed","linenumber":66}
+{"type":"sendEvent","linenumber":70,"arguments":["name: \"temperature\""," value: 0"," unit: \"C\""," displayed: false"]}
+{"type":"sendEvent","linenumber":71,"arguments":["name: \"supportedThermostatModes\""," value: state.supportedModes"," displayed: false"]}
+{"type":"sendEvent","linenumber":79,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"createEvent","linenumber":103,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":122,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":132,"arguments":["map"]}
+{"type":"createEvent","linenumber":156,"arguments":["name: \"thermostatMode\""," value: mode"," data: [supportedThermostatModes: state.supportedModes]"]}
+{"type":"createEvent","linenumber":160,"arguments":["name: \"heatingSetpoint\""," value: convertTemperatureIfNeeded(cmd.scaledValue"," 'C'"," cmd.precision)"," unit: temperatureScale"]}
+{"type":"createEvent","linenumber":170,"arguments":["map"]}
+{"type":"sendEvent","linenumber":320,"arguments":["event"]}
+{"type":"createEvent","linenumber":324,"arguments":["oChild(createEvent(name: \"DeviceWatch-Enroll\""," value: [protocol: \"zwave\""," scheme:\"untracked\"].encodeAsJson()"," displayed: false)"," true"]}

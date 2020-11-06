@@ -1,0 +1,14 @@
+{"type":"createEvent","linenumber":61,"arguments":["            descriptionText: \"This sensor failed to complete the network security key exchange. If you are unable to control it via SmartThings"," you must remove it from your network and add it again.\"","            eventType: \"ALERT\"","            name: \"secureInclusion\"","            value: \"failed\"","            isStateChange: true","        "]}
+{"type":"MethodNode","name":"installed","linenumber":80}
+{"type":"sendEvent","linenumber":82,"arguments":["name: \"checkInterval\""," value: 2 * 4 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":101,"arguments":["name: \"checkInterval\""," value: 2 * 4 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":115,"arguments":["name: \"contact\""," value: \"open\""," descriptionText: \"$device.displayName is open\""]}
+{"type":"createEvent","linenumber":117,"arguments":["name: \"contact\""," value: \"closed\""," descriptionText: \"$device.displayName is closed\""]}
+{"type":"createEvent","linenumber":151,"arguments":["descriptionText: \"$device.displayName covering was restored\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":157,"arguments":["descriptionText: \"$device.displayName covering was removed\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":161,"arguments":["name: \"notification$cmd.notificationType\""," value: \"$cmd.event\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":164,"arguments":["name: \"alarm $cmd.v1AlarmType\""," value: value"," displayed: false"]}
+{"type":"createEvent","linenumber":171,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":206,"arguments":["map"]}
+{"type":"createEvent","linenumber":221,"arguments":["map"]}
+{"type":"createEvent","linenumber":236,"arguments":["descriptionText: \"$device.displayName: $cmd\""," displayed: false"]}

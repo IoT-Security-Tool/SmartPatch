@@ -1,0 +1,4 @@
+{"type":"createEvent","linenumber":70,"arguments":["cmd"," item1"]}
+{"type":"createEvent","linenumber":132,"arguments":["[name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kWh\"]"]}
+{"type":"createEvent","linenumber":134,"arguments":["[name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kVAh\"]"]}
+{"type":"createEvent","linenumber":137,"arguments":["[name: \"power\""," value: Math.round(cmd.scaledMeterValue)"," unit: \"W\"]"]}

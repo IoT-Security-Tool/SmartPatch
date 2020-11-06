@@ -1,0 +1,18 @@
+{"type":"MethodNode","name":"installed","linenumber":88}
+{"type":"sendEvent","linenumber":96,"arguments":["name: \"lockRemoved\""," value: device.id"," isStateChange: true"," displayed: false"]}
+{"type":"sendEvent","linenumber":146,"arguments":["descriptionText: \"skipping poll\""," isStateChange: true"," displayed: false"]}
+{"type":"sendEvent","linenumber":174,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":208,"arguments":["name: \"scanCodes\""," value: \"Scanning\""," descriptionText: \"Code scan in progress\""," displayed: false"]}
+{"type":"sendEvent","linenumber":210,"arguments":["lockCodesEvent(lockCodes)"]}
+{"type":"sendEvent","linenumber":347,"arguments":["lockCodesEvent(lockCodes)"]}
+{"type":"sendEvent","linenumber":348,"arguments":["name: \"codeChanged\""," value: \"$codeSlot renamed\""," data: [ lockName: deviceName"," notify: false"," notificationText: \"Renamed \\\"$oldCodeName\\\" to \\\"$newCodeName\\\" in $deviceName at ${location.name}\" ]","\t\t\tdescriptionText: \"Renamed \\\"$oldCodeName\\\" to \\\"$newCodeName\\\"\""," displayed: true"," isStateChange: true"]}
+{"type":"createEvent","linenumber":424,"arguments":["responseMap"]}
+{"type":"createEvent","linenumber":570,"arguments":["name: \"lockCodes\""," value: util.toJson([:])"," displayed: false"," descriptionText: \"'lockCodes' attribute updated\""]}
+{"type":"createEvent","linenumber":667,"arguments":["codeReportMap"]}
+{"type":"sendEvent","linenumber":692,"arguments":["name: \"scanCodes\""," value: \"Complete\""," descriptionText: \"Code scan completed\""," displayed: false"]}
+{"type":"createEvent","linenumber":748,"arguments":["responseMap"]}
+{"type":"createEvent","linenumber":767,"arguments":["codeReportMap"]}
+{"type":"createEvent","linenumber":779,"arguments":["codeReportMap"]}
+{"type":"createEvent","linenumber":789,"arguments":["name: \"codeReport\""," value: id"," data: [ code: \"\" ]"," descriptionText: \"code $id was deleted\"","\t\t\t\t\tdisplayed: false"," isStateChange: true"]}
+{"type":"createEvent","linenumber":793,"arguments":["name: \"codeChanged\""," value: \"$id deleted\"","\t\tdata: [ codeName: codeName"," lockName: deviceName"," notify: true","\t\t\tnotificationText: \"Deleted \\\"$codeName\\\" in $deviceName at ${location.name}\" ]","\t\tdescriptionText: \"Deleted \\\"$codeName\\\"\"","\t\tdisplayed: true"," isStateChange: true"]}
+{"type":"createEvent","linenumber":805,"arguments":["name: \"lockCodes\""," value: util.toJson(lockCodes)"," displayed: false"," descriptionText: \"'lockCodes' attribute updated\""]}

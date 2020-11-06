@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":47,"lastlinenumber":49}
+{"type":"subscribe","linenumber":48,"arguments":["sensor","water","waterHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":51,"lastlinenumber":54}
+{"type":"subscribe","linenumber":53,"arguments":["sensor","water","waterHandler"]}
+{"type":"MethodNode","name":"waterHandler","linenumber":56,"lastlinenumber":70,"arg":["evt"]}
+{"type":"MethodNode","name":"sendMessage","linenumber":72,"lastlinenumber":87,"arg":["evt"]}

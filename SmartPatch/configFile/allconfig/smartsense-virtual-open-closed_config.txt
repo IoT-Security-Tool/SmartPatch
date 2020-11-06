@@ -1,0 +1,20 @@
+{"type":"MethodNode","name":"parse","linenumber":95,"lastlinenumber":108,"arg":["description"]}
+{"type":"MethodNode","name":"parseMultiSensorMessage","linenumber":110,"lastlinenumber":126,"arg":["description"]}
+{"type":"MethodNode","name":"parseAccelerationMessage","linenumber":128,"lastlinenumber":148,"arg":["description"]}
+{"type":"MethodNode","name":"parseContactMessage","linenumber":150,"lastlinenumber":176,"arg":["description"]}
+{"type":"MethodNode","name":"parseOrientationMessage","linenumber":178,"lastlinenumber":232,"arg":["description"]}
+{"type":"createEvent","linenumber":221,"arguments":"(name: \"contact\", value: \"open\", unit: \"\")"}
+{"type":"createEvent","linenumber":222,"arguments":"(name: \"status\", value: \"open\", unit: \"\")"}
+{"type":"createEvent","linenumber":226,"arguments":"(name: \"contact\", value: \"closed\", unit: \"\")"}
+{"type":"createEvent","linenumber":227,"arguments":"(name: \"status\", value: \"closed\", unit: \"\")"}
+{"type":"MethodNode","name":"parseRssiLqiMessage","linenumber":234,"lastlinenumber":255,"arg":["description"]}
+{"type":"MethodNode","name":"getAccelerationResult","linenumber":257,"lastlinenumber":274,"arg":["part","description"]}
+{"type":"MethodNode","name":"getTempResult","linenumber":276,"lastlinenumber":299,"arg":["part","description"]}
+{"type":"MethodNode","name":"getXyzResult","linenumber":301,"lastlinenumber":318,"arg":["results","description"]}
+{"type":"MethodNode","name":"getBatteryResult","linenumber":320,"lastlinenumber":339,"arg":["part","description"]}
+{"type":"MethodNode","name":"getRssiResult","linenumber":341,"lastlinenumber":360,"arg":["part","description","lastHop"]}
+{"type":"MethodNode","name":"getLqiResult","linenumber":370,"lastlinenumber":391,"arg":["part","description","lastHop"]}
+{"type":"MethodNode","name":"isAccelerationMessage","linenumber":393,"lastlinenumber":396,"arg":["description"]}
+{"type":"MethodNode","name":"isContactMessage","linenumber":398,"lastlinenumber":401,"arg":["description"]}
+{"type":"MethodNode","name":"isRssiLqiMessage","linenumber":403,"lastlinenumber":406,"arg":["description"]}
+{"type":"MethodNode","name":"isOrientationMessage","linenumber":408,"lastlinenumber":411,"arg":["description"]}

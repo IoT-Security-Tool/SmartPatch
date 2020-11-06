@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"installed","linenumber":47}
+{"type":"createEvent","linenumber":172,"arguments":["descriptionText:description"," isStateChange:true"]}
+{"type":"sendEvent","linenumber":184,"arguments":["name: \"epEvent\""," value: \"delete all\""," isStateChange: true"," displayed: false"," descriptionText: \"Delete endpoint devices\""]}
+{"type":"createEvent","linenumber":188,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange:true"]}
+{"type":"createEvent","linenumber":194,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"createEvent","linenumber":196,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"createEvent","linenumber":198,"arguments":["name: \"switch\""," value: \"on\")"," createEvent(name: \"switchLevel\""," value: cmd.value"]}
+{"type":"createEvent","linenumber":222,"arguments":["name: \"epInfo\""," value: util.toJson(state.endpointInfo)"," displayed: false"," descriptionText:\"\""]}
+{"type":"createEvent","linenumber":236,"arguments":["name: \"epInfo\""," value: util.toJson(state.endpointInfo)"," displayed: false"," descriptionText:\"\""]}
+{"type":"createEvent","linenumber":277,"arguments":["name: \"epEvent\""," value: \"$cmd.sourceEndPoint:$formatCmd\""," isStateChange: true"," displayed: false"," descriptionText: \"(fwd to ep $cmd.sourceEndPoint)\""]}
+{"type":"createEvent","linenumber":315,"arguments":["descriptionText: \"$device.displayName: $cmd\""," isStateChange: true"]}

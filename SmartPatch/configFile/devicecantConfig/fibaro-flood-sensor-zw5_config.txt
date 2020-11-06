@@ -1,0 +1,23 @@
+{"type":"MethodNode","name":"installed","linenumber":85}
+{"type":"sendEvent","linenumber":86,"arguments":["name: \"checkInterval\""," value: (21600*2)+10*60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":136,"arguments":["name: \"syncStatus\""," value: \"pending\""]}
+{"type":"sendEvent","linenumber":145,"arguments":["name: \"syncStatus\""," value: \"force\""]}
+{"type":"sendEvent","linenumber":148,"arguments":["name: \"syncStatus\""," value: state.prevSyncState"]}
+{"type":"sendEvent","linenumber":150,"arguments":["name: \"syncStatus\""," value: \"synced\""]}
+{"type":"createEvent","linenumber":157,"arguments":["descriptionText: \"${device.displayName} woke up\""," displayed: false"]}
+{"type":"createEvent","linenumber":162,"arguments":["descriptionText: \"$device.displayName woke up\""," isStateChange: true"]}
+{"type":"sendEvent","linenumber":182,"arguments":["name: \"syncStatus\""," value: \"inProgress\""]}
+{"type":"sendEvent","linenumber":212,"arguments":["name: \"batteryStatus\""," value: \"Sync incomplited! Check parameter nr. ${notSynced[0].num}\""]}
+{"type":"sendEvent","linenumber":219,"arguments":["name: \"syncStatus\""," value: \"synced\""]}
+{"type":"sendEvent","linenumber":223,"arguments":["name: \"syncStatus\""," value: \"incomplete\""]}
+{"type":"sendEvent","linenumber":260,"arguments":["name: \"battery\""," value: 1"," descriptionText: \"${device.displayName} has a low battery\""," isStateChange: true"]}
+{"type":"sendEvent","linenumber":262,"arguments":["name: \"battery\""," value: cmd.batteryLevel"," descriptionText: \"Current battery level\""]}
+{"type":"sendEvent","linenumber":264,"arguments":["name: \"batteryStatus\""," value: \"Battery: $cmd.batteryLevel%\\n($timeDate)\""]}
+{"type":"sendEvent","linenumber":295,"arguments":["name: \"batteryStatus\""," value: \"Tamper alarm inactive\""]}
+{"type":"sendEvent","linenumber":302,"arguments":["name: \"batteryStatus\""," value: \"Tamper alarm activated\""]}
+{"type":"createEvent","linenumber":306,"arguments":["map"]}
+{"type":"sendEvent","linenumber":311,"arguments":["name: \"multiStatus\""," value: statusValue"," descriptionText: statusValue"," displayed: display"]}
+{"type":"createEvent","linenumber":326,"arguments":["map"]}
+{"type":"createEvent","linenumber":345,"arguments":["\t\t\t\tdescriptionText: \"Failed to complete the network security key exchange. If you are unable to receive data from it"," you must remove it from your network and add it again.\"","\t\t\t\teventType: \"ALERT\"","\t\t\t\tname: \"secureInclusion\"","\t\t\t\tvalue: \"failed\"","\t\t\t\tdisplayed: true","\t\t"]}
+{"type":"sendEvent","linenumber":477,"arguments":["name: \"syncStatus\""," value: \"failed\""]}
+{"type":"sendEvent","linenumber":503,"arguments":["name: \"water\""," value: \"dry\""," displayed: \"true\""]}

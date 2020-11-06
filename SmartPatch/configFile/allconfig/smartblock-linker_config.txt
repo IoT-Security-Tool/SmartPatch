@@ -1,0 +1,14 @@
+{"type":"MethodNode","name":"linkerPage","linenumber":34,"lastlinenumber":100,"arg":["params"]}
+{"type":"MethodNode","name":"installed","linenumber":102,"lastlinenumber":106}
+{"type":"MethodNode","name":"updated","linenumber":108,"lastlinenumber":113}
+{"type":"MethodNode","name":"initialize","linenumber":115,"lastlinenumber":129}
+{"type":"subscribe","linenumber":119,"arguments":["linkedSmartBlock","level","updateSwitchLevel"]}
+{"type":"subscribe","linenumber":120,"arguments":["linkedSmartBlock","switch","updateSwitchState"]}
+{"type":"subscribe","linenumber":125,"arguments":["linkedSwitch","level","updateBlockLevel"]}
+{"type":"subscribe","linenumber":126,"arguments":["linkedSwitch","switch","updateBlockState"]}
+{"type":"MethodNode","name":"updateSwitchLevel","linenumber":131,"lastlinenumber":135,"arg":["evt"]}
+{"type":"MethodNode","name":"updateBlockLevel","linenumber":137,"lastlinenumber":141,"arg":["evt"]}
+{"type":"MethodNode","name":"updateSwitchState","linenumber":143,"lastlinenumber":146,"arg":["evt"]}
+{"type":"MethodNode","name":"updateBlockState","linenumber":148,"lastlinenumber":151,"arg":["evt"]}
+{"type":"MethodNode","name":"getBlockId","linenumber":153,"lastlinenumber":155}
+{"type":"MethodNode","name":"getLinkerDescription","linenumber":157,"lastlinenumber":178}

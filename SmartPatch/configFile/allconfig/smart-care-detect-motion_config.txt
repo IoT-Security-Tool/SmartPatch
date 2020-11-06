@@ -1,0 +1,10 @@
+{"type":"MethodNode","name":"disclaimerPage","linenumber":34,"lastlinenumber":72}
+{"type":"MethodNode","name":"configurationPage","linenumber":74,"lastlinenumber":98}
+{"type":"MethodNode","name":"installed","linenumber":100,"lastlinenumber":103}
+{"type":"MethodNode","name":"updated","linenumber":105,"lastlinenumber":110}
+{"type":"MethodNode","name":"initialize","linenumber":112,"lastlinenumber":116}
+{"type":"subscribe","linenumber":114,"arguments":["bedroomMotion","motion.active","bedroomActive"]}
+{"type":"subscribe","linenumber":115,"arguments":["bathroomMotion","motion.active","bathroomActive"]}
+{"type":"MethodNode","name":"bedroomActive","linenumber":118,"lastlinenumber":137,"arg":["evt"]}
+{"type":"MethodNode","name":"bathroomActive","linenumber":139,"lastlinenumber":147,"arg":["evt"]}
+{"type":"MethodNode","name":"sendMessage","linenumber":149,"lastlinenumber":170}

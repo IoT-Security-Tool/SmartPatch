@@ -1,0 +1,629 @@
+ import java.util.UUID
+"License"
+"AS IS"
+metadata {
+	definition (name: "Z-Wave Smoke Alarm", namespace: "smartthings", author: "SmartThings", runLocally: true, minHubCoreVersion: '000.017.0012', executeCommandsLocally: false) {
+		capability "Smoke Detector"
+		capability "Carbon Monoxide Detector"
+		capability "Sensor"
+		capability "Battery"
+		capability "Health Check"
+
+		fingerprint mfr:"0138", prod:"0001", model:"0002", deviceJoinName: "First Alert Smoke Detector and Carbon Monoxide Alarm (ZCOMBO)"
+		fingerprint mfr:"0138", prod:"0001", model:"0003", deviceJoinName: "First Alert Smoke Detector and Carbon Monoxide Alarm (ZCOMBO)"
+		fingerprint mfr:"0154", prod:"0004", model:"0003", deviceJoinName: "POPP Co Detector", mnmn: "SmartThings", vid: "generic-carbon-monoxide-3"
+	}
+
+	simulator {
+		status "smoke": "command: 7105, payload: 01 FF"
+		status "clear": "command: 7105, payload: 01 00"
+		status "test": "command: 7105, payload: 0C FF"
+		status "carbonMonoxide": "command: 7105, payload: 02 FF"
+		status "carbonMonoxide clear": "command: 7105, payload: 02 00"
+		status "battery 100%": "command: 8003, payload: 64"
+		status "battery 5%": "command: 8003, payload: 05"
+	}
+
+	tiles (scale: 2){
+		multiAttributeTile(name:"smoke", type: "lighting", width: 6, height: 4){
+			tileAttribute ("device.smoke", key: "PRIMARY_CONTROL") {
+				attributeState("clear", label:"clear", icon:"st.alarm.smoke.clear", backgroundColor:"#ffffff")
+				attributeState("detected", label:"SMOKE", icon:"st.alarm.smoke.smoke", backgroundColor:"#e86d13")
+				attributeState("tested", label:"TEST", icon:"st.alarm.smoke.test", backgroundColor:"#e86d13")
+			}
+		}
+		standardTile("co", "device.carbonMonoxide", width:6, height:4, inactiveLabel: false, decoration: "flat") {
+			state("clear", label:"clear", icon:"st.alarm.smoke.clear", backgroundColor:"#ffffff")
+			state("detected", label:"SMOKE", icon:"st.alarm.smoke.smoke", backgroundColor:"#e86d13")
+			state("tested", label:"TEST", icon:"st.alarm.smoke.test", backgroundColor:"#e86d13")
+		}
+		valueTile("battery", "device.battery", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "battery", label:'${currentValue}% battery', unit:""
+		}
+
+		main "smoke"
+		details(["smoke", "co", "battery"])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+
+//	sendEvent(name: "checkInterval", value: 2 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 2 * 60 * 60 + 2 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 2 * 60 * 60 + 2 * 60,  displayed: false,  data: [ sign: "${signatureResult1}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID])
+
+	def cmds = []
+	createSmokeOrCOEvents("allClear", cmds) 
+//	cmds.each { cmd -> sendEvent(cmd) }
+		def signatureResult2= null
+		signatureResult2 = 	cmds.each { cmd -> getSignature(cmd.name,cmd.value)
+cmd.put('data',[sign: "${signatureResult2}"])
+	cmds.each { cmd -> sendEvent(cmd) }
+}
+
+def updated() {
+
+//	sendEvent(name: "checkInterval", value: 2 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 2 * 60 * 60 + 2 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 2 * 60 * 60 + 2 * 60,  displayed: false,  data: [ sign: "${signatureResult3}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID])
+}
+
+def parse(String description) {
+	def results = []
+	if (description.startsWith("Err")) {
+//	    results << createEvent(descriptionText:description, displayed:true)
+def params4 = null
+def signatureResult4 = null
+params4 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText:description,  displayed:true]
+]
+signatureResult4 = null
+  try {
+        httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	    results << createEvent(descriptionText:description,  displayed:true, data: [sign: "${signatureResult4}"])
+	} else {
+		def cmd = zwave.parse(description, [ 0x80: 1, 0x84: 1, 0x71: 2, 0x72: 1 ])
+		if (cmd) {
+			zwaveEvent(cmd, results)
+		}
+	}
+	log.debug "'$description' parsed to ${results.inspect()}"
+	return results
+}
+
+def createSmokeOrCOEvents(name, results) {
+	def text = null
+	switch (name) {
+		case "smoke":
+			text = "$device.displayName smoke was detected!"
+			
+//			results << createEvent(name: "smoke",          value: "detected", descriptionText: text, displayed: false)
+def params5 = null
+def signatureResult5 = null
+params5 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "smoke",           value: "detected",  descriptionText: text,  displayed: false]
+]
+signatureResult5 = null
+  try {
+        httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "smoke",           value: "detected",  descriptionText: text,  displayed: false, data: [sign: "${signatureResult5}"])
+			break
+		case "carbonMonoxide":
+			text = "$device.displayName carbon monoxide was detected!"
+//			results << createEvent(name: "carbonMonoxide", value: "detected", descriptionText: text, displayed: false)
+def params6 = null
+def signatureResult6 = null
+params6 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "carbonMonoxide",  value: "detected",  descriptionText: text,  displayed: false]
+]
+signatureResult6 = null
+  try {
+        httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "carbonMonoxide",  value: "detected",  descriptionText: text,  displayed: false, data: [sign: "${signatureResult6}"])
+			break
+		case "tested":
+			text = "$device.displayName was tested"
+//			results << createEvent(name: "smoke",          value: "tested", descriptionText: text, displayed: false)
+def params7 = null
+def signatureResult7 = null
+params7 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "smoke",           value: "tested",  descriptionText: text,  displayed: false]
+]
+signatureResult7 = null
+  try {
+        httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "smoke",           value: "tested",  descriptionText: text,  displayed: false, data: [sign: "${signatureResult7}"])
+//			results << createEvent(name: "carbonMonoxide", value: "tested", descriptionText: text, displayed: false)
+def params8 = null
+def signatureResult8 = null
+params8 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "carbonMonoxide",  value: "tested",  descriptionText: text,  displayed: false]
+]
+signatureResult8 = null
+  try {
+        httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "carbonMonoxide",  value: "tested",  descriptionText: text,  displayed: false, data: [sign: "${signatureResult8}"])
+			break
+		case "smokeClear":
+			text = "$device.displayName smoke is clear"
+//			results << createEvent(name: "smoke",          value: "clear", descriptionText: text, displayed: false)
+def params9 = null
+def signatureResult9 = null
+params9 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "smoke",           value: "clear",  descriptionText: text,  displayed: false]
+]
+signatureResult9 = null
+  try {
+        httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "smoke",           value: "clear",  descriptionText: text,  displayed: false, data: [sign: "${signatureResult9}"])
+			name = "clear"
+			break
+		case "carbonMonoxideClear":
+			text = "$device.displayName carbon monoxide is clear"
+//			results << createEvent(name: "carbonMonoxide", value: "clear", descriptionText: text, displayed: false)
+def params10 = null
+def signatureResult10 = null
+params10 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "carbonMonoxide",  value: "clear",  descriptionText: text,  displayed: false]
+]
+signatureResult10 = null
+  try {
+        httpGet(params10) { resp ->
+        signatureResult10 = resp.data
+        log.debug "response data: ${signatureResult10}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "carbonMonoxide",  value: "clear",  descriptionText: text,  displayed: false, data: [sign: "${signatureResult10}"])
+			name = "clear"
+			break
+		case "allClear":
+			text = "$device.displayName all clear"
+//			results << createEvent(name: "smoke",          value: "clear", descriptionText: text, displayed: false)
+def params11 = null
+def signatureResult11 = null
+params11 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "smoke",           value: "clear",  descriptionText: text,  displayed: false]
+]
+signatureResult11 = null
+  try {
+        httpGet(params11) { resp ->
+        signatureResult11 = resp.data
+        log.debug "response data: ${signatureResult11}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "smoke",           value: "clear",  descriptionText: text,  displayed: false, data: [sign: "${signatureResult11}"])
+//			results << createEvent(name: "carbonMonoxide", value: "clear", displayed: false)
+def params12 = null
+def signatureResult12 = null
+params12 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "carbonMonoxide",  value: "clear",  displayed: false]
+]
+signatureResult12 = null
+  try {
+        httpGet(params12) { resp ->
+        signatureResult12 = resp.data
+        log.debug "response data: ${signatureResult12}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "carbonMonoxide",  value: "clear",  displayed: false, data: [sign: "${signatureResult12}"])
+			name = "clear"
+			break
+		case "testClear":
+			text = "$device.displayName test cleared"
+//			results << createEvent(name: "smoke",          value: "clear", descriptionText: text, displayed: false)
+def params13 = null
+def signatureResult13 = null
+params13 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "smoke",           value: "clear",  descriptionText: text,  displayed: false]
+]
+signatureResult13 = null
+  try {
+        httpGet(params13) { resp ->
+        signatureResult13 = resp.data
+        log.debug "response data: ${signatureResult13}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "smoke",           value: "clear",  descriptionText: text,  displayed: false, data: [sign: "${signatureResult13}"])
+//			results << createEvent(name: "carbonMonoxide", value: "clear", displayed: false)
+def params14 = null
+def signatureResult14 = null
+params14 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "carbonMonoxide",  value: "clear",  displayed: false]
+]
+signatureResult14 = null
+  try {
+        httpGet(params14) { resp ->
+        signatureResult14 = resp.data
+        log.debug "response data: ${signatureResult14}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(name: "carbonMonoxide",  value: "clear",  displayed: false, data: [sign: "${signatureResult14}"])
+			name = "clear"
+			break
+	}
+	results
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.alarmv2.AlarmReport cmd, results) {
+	if (cmd.zwaveAlarmType == physicalgraph.zwave.commands.alarmv2.AlarmReport.ZWAVE_ALARM_TYPE_SMOKE) {
+		if (cmd.zwaveAlarmEvent == 3) {
+			createSmokeOrCOEvents("tested", results)
+		} else {
+			createSmokeOrCOEvents((cmd.zwaveAlarmEvent == 1 || cmd.zwaveAlarmEvent == 2) ? "smoke" : "smokeClear", results)
+		}
+	} else if (cmd.zwaveAlarmType == physicalgraph.zwave.commands.alarmv2.AlarmReport.ZWAVE_ALARM_TYPE_CO) {
+		createSmokeOrCOEvents((cmd.zwaveAlarmEvent == 1 || cmd.zwaveAlarmEvent == 2) ? "carbonMonoxide" : "carbonMonoxideClear", results)
+	} else switch(cmd.alarmType) {
+		case 1:
+			createSmokeOrCOEvents(cmd.alarmLevel ? "smoke" : "smokeClear", results)
+			break
+		case 2:
+			createSmokeOrCOEvents(cmd.alarmLevel ? "carbonMonoxide" : "carbonMonoxideClear", results)
+			break
+		case 12:  
+			createSmokeOrCOEvents(cmd.alarmLevel ? "tested" : "testClear", results)
+			break
+		case 13:  
+			if (cmd.alarmLevel == 255) {
+//				results << createEvent(descriptionText: "$device.displayName checked in", isStateChange: false)
+def params15 = null
+def signatureResult15 = null
+params15 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: "$device.displayName checked in",  isStateChange: false]
+]
+signatureResult15 = null
+  try {
+        httpGet(params15) { resp ->
+        signatureResult15 = resp.data
+        log.debug "response data: ${signatureResult15}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+				results << createEvent(descriptionText: "$device.displayName checked in",  isStateChange: false, data: [sign: "${signatureResult15}"])
+			} else {
+//				results << createEvent(descriptionText: "$device.displayName code 13 is $cmd.alarmLevel", isStateChange:true, displayed:false)
+def params16 = null
+def signatureResult16 = null
+params16 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: "$device.displayName code 13 is $cmd.alarmLevel",  isStateChange:true,  displayed:false]
+]
+signatureResult16 = null
+  try {
+        httpGet(params16) { resp ->
+        signatureResult16 = resp.data
+        log.debug "response data: ${signatureResult16}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+				results << createEvent(descriptionText: "$device.displayName code 13 is $cmd.alarmLevel",  isStateChange:true,  displayed:false, data: [sign: "${signatureResult16}"])
+			}
+			
+			
+			if(device.currentValue("smoke") != "clear") {
+				createSmokeOrCOEvents("smokeClear", results)
+			}
+			
+			
+			if (!state.lastbatt || (now() - state.lastbatt) >= 48*60*60*1000) {
+				results << response(zwave.batteryV1.batteryGet())
+			}
+			break
+		default:
+//			results << createEvent(displayed: true, descriptionText: "Alarm $cmd.alarmType ${cmd.alarmLevel == 255 ? 'activated' : cmd.alarmLevel ?: 'deactivated'}".toString())
+def params17 = null
+def signatureResult17 = null
+params17 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",displayed: true,  descriptionText: "Alarm $cmd.alarmType ${cmd.alarmLevel == 255 ? 'activated' : cmd.alarmLevel ?: 'deactivated'}".toString()]
+]
+signatureResult17 = null
+  try {
+        httpGet(params17) { resp ->
+        signatureResult17 = resp.data
+        log.debug "response data: ${signatureResult17}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			results << createEvent(displayed: true,  descriptionText: "Alarm $cmd.alarmType ${cmd.alarmLevel == 255 ? 'activated' : cmd.alarmLevel ?: 'deactivated'}".toString(), data: [sign: "${signatureResult17}"])
+			break
+	}
+}
+
+
+
+def zwaveEvent(physicalgraph.zwave.commands.sensorbinaryv2.SensorBinaryReport cmd, results) {
+	if (cmd.sensorType == physicalgraph.zwave.commandclasses.SensorBinaryV2.SENSOR_TYPE_SMOKE) {
+		createSmokeOrCOEvents(cmd.sensorValue ? "smoke" : "smokeClear", results)
+	} else if (cmd.sensorType == physicalgraph.zwave.commandclasses.SensorBinaryV2.SENSOR_TYPE_CO) {
+		createSmokeOrCOEvents(cmd.sensorValue ? "carbonMonoxide" : "carbonMonoxideClear", results)
+	}
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.sensoralarmv1.SensorAlarmReport cmd, results) {
+	if (cmd.sensorType == 1) {
+		createSmokeOrCOEvents(cmd.sensorState ? "smoke" : "smokeClear", results)
+	} else if (cmd.sensorType == 2) {
+		createSmokeOrCOEvents(cmd.sensorState ? "carbonMonoxide" : "carbonMonoxideClear", results)
+	}
+	
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd, results) {
+//	results << createEvent(descriptionText: "$device.displayName woke up", isStateChange: false)
+def params18 = null
+def signatureResult18 = null
+params18 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: "$device.displayName woke up",  isStateChange: false]
+]
+signatureResult18 = null
+  try {
+        httpGet(params18) { resp ->
+        signatureResult18 = resp.data
+        log.debug "response data: ${signatureResult18}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	results << createEvent(descriptionText: "$device.displayName woke up",  isStateChange: false, data: [sign: "${signatureResult18}"])
+	if (!state.lastbatt || (now() - state.lastbatt) >= 56*60*60*1000) {
+		results << response([
+				zwave.batteryV1.batteryGet().format(),
+				"delay 2000",
+				zwave.wakeUpV1.wakeUpNoMoreInformation().format()
+			])
+	} else {
+		results << response(zwave.wakeUpV1.wakeUpNoMoreInformation())
+	}
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd, results) {
+	def map = [ name: "battery", unit: "%", isStateChange: true ]
+	state.lastbatt = now()
+	if (cmd.batteryLevel == 0xFF) {
+		map.value = 1
+		map.descriptionText = "$device.displayName battery is low!"
+	} else {
+		map.value = cmd.batteryLevel
+	}
+//	results << createEvent(map)
+def params19 = null
+def signatureResult19 = null
+params19 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult19 = null
+  try {
+        httpGet(params19) { resp ->
+        signatureResult19 = resp.data
+        log.debug "response data: ${signatureResult19}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue19= ''
+if(map.containsKey('data') ){
+datavalue19 = map['data']
+datavalue19 = "[" + datavalue19+ "," +"sign: " + "${signatureResult19}" + "]"
+map.put('data',"${datavalue19}")
+ }else{
+datavalue19=  "[sign: " + "${signatureResult19}" +"]"
+map.put('data',"${datavalue19}")
+}
+	results << createEvent(map)
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityMessageEncapsulation cmd, results) {
+	def encapsulatedCommand = cmd.encapsulatedCommand([ 0x80: 1, 0x84: 1, 0x71: 2, 0x72: 1 ])
+	state.sec = 1
+	log.debug "encapsulated: ${encapsulatedCommand}"
+	if (encapsulatedCommand) {
+		zwaveEvent(encapsulatedCommand, results)
+	} else {
+		log.warn "Unable to extract encapsulated cmd from $cmd"
+//		results << createEvent(descriptionText: cmd.toString())
+def params20 = null
+def signatureResult20 = null
+params20 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: cmd.toString()]
+]
+signatureResult20 = null
+  try {
+        httpGet(params20) { resp ->
+        signatureResult20 = resp.data
+        log.debug "response data: ${signatureResult20}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+		results << createEvent(descriptionText: cmd.toString(), data: [sign: "${signatureResult20}"])
+	}
+}
+
+def zwaveEvent(physicalgraph.zwave.Command cmd, results) {
+	def event = [ displayed: false ]
+	event.linkText = device.label ?: device.name
+	event.descriptionText = "$event.linkText: $cmd"
+//	results << createEvent(event)
+def params21 = null
+def signatureResult21 = null
+params21 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${event?.name}", value: "${event?.value}"]
+]
+signatureResult21 = null
+  try {
+        httpGet(params21) { resp ->
+        signatureResult21 = resp.data
+        log.debug "response data: ${signatureResult21}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue21= ''
+if(event.containsKey('data') ){
+datavalue21 = event['data']
+datavalue21 = "[" + datavalue21+ "," +"sign: " + "${signatureResult21}" + "]"
+event.put('data',"${datavalue21}")
+ }else{
+datavalue21=  "[sign: " + "${signatureResult21}" +"]"
+event.put('data',"${datavalue21}")
+}
+	results << createEvent(event)
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

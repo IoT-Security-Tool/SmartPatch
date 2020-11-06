@@ -1,0 +1,349 @@
+ import java.util.UUID
+"License"
+"AS IS"
+import physicalgraph.zigbee.clusters.iaszone.ZoneStatus
+
+metadata {
+	definition (name: "Tyco Door/Window Sensor", namespace: "smartthings", author: "SmartThings") {
+		capability "Battery"
+		capability "Configuration"
+		capability "Contact Sensor"
+		capability "Refresh"
+		capability "Temperature Measurement"
+		capability "Health Check"
+		capability "Sensor"
+
+		fingerprint inClusters: "0000,0001,0003,0402,0500,0020,0B05", outClusters: "0019", manufacturer: "Visonic", model: "MCT-340 SMA"
+	}
+
+	simulator {
+
+	}
+
+	preferences {
+		input "tempOffset", "number", title: "Temperature offset", description: "Select how many degrees to adjust the temperature.", range: "*..*", displayDuringSetup: false
+	}
+
+	tiles(scale: 2) {
+		multiAttributeTile(name:"contact", type: "generic", width: 6, height: 4){
+			tileAttribute ("device.contact", key: "PRIMARY_CONTROL") {
+				attributeState("open", label: '${name}', icon: "st.contact.contact.open", backgroundColor: "#e86d13")
+				attributeState("closed", label: '${name}', icon: "st.contact.contact.closed", backgroundColor: "#00A0DC")
+			}
+		}
+
+		valueTile("temperature", "device.temperature", inactiveLabel: false, width: 2, height: 2) {
+			state "temperature", label:'${currentValue}°',
+				backgroundColors:[
+					[value: 31, color: "#153591"],
+					[value: 44, color: "#1e9cbb"],
+					[value: 59, color: "#90d2a7"],
+					[value: 74, color: "#44b621"],
+					[value: 84, color: "#f1d801"],
+					[value: 95, color: "#d04e00"],
+					[value: 96, color: "#bc2323"]
+				]
+		}
+		valueTile("battery", "device.battery", decoration: "flat", inactiveLabel: false, width: 2, height: 2) {
+			state "battery", label:'${currentValue}% battery', unit:""
+		}
+
+       		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
+		}
+
+		standardTile("configure", "device.configure", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "configure", label:'', action:"configuration.configure", icon:"st.secondary.configure"
+		}
+
+		main (["contact", "temperature"])
+		details(["contact","temperature","battery","refresh","configure"])
+	}
+}
+
+def parse(String description) {
+	log.debug "description: $description"
+
+	Map map = [:]
+	if (description?.startsWith('catchall:')) {
+		map = parseCatchAllMessage(description)
+	}
+	else if (description?.startsWith('read attr -')) {
+		map = parseReportAttributeMessage(description)
+	}
+	else if (description?.startsWith('temperature: ')) {
+		map = parseCustomMessage(description)
+	}
+    else if (description?.startsWith('zone status')) {
+    	map = parseIasMessage(description)
+    }
+
+	log.debug "Parse returned $map"
+//	def result = map ? createEvent(map) : null
+def params1 = null
+def signatureResult1 = null
+params1 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult1 = null
+  try {
+        httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue1= ''
+if(map.containsKey('data') ){
+datavalue1 = map['data']
+datavalue1 = "[" + datavalue1+ "," +"sign: " + "${signatureResult1}" + "]"
+map.put('data',"${datavalue1}")
+ }else{
+datavalue1=  "[sign: " + "${signatureResult1}" +"]"
+map.put('data',"${datavalue1}")
+}
+	def result = map ? createEvent(map): null
+
+    if (description?.startsWith('enroll request')) {
+        List cmds = zigbee.enrollResponse()
+        log.debug "enroll response: ${cmds}"
+        result = cmds?.collect { new physicalgraph.device.HubAction(it) }
+    }
+    return result
+}
+
+private Map parseCatchAllMessage(String description) {
+    Map resultMap = [:]
+    def cluster = zigbee.parse(description)
+    if (shouldProcessMessage(cluster)) {
+        switch(cluster.clusterId) {
+			case 0x0500:
+				Map descMap = zigbee.parseDescriptionAsMap(description)
+				
+				if (descMap?.attrInt == 0x0002) {
+                    def zs = new ZoneStatus(zigbee.convertToInt(descMap.value, 16))
+                    resultMap = getContactResult(zs.isAlarm1Set() ? "open" : "closed")
+                }
+				break
+            case 0x0001:
+            	resultMap = getBatteryResult(cluster.data.last())
+                break
+
+            case 0x0402:
+                log.debug 'TEMP'
+                
+                String temp = cluster.data[-2..-1].reverse().collect { cluster.hex1(it) }.join()
+                def value = getTemperature(temp)
+                resultMap = getTemperatureResult(value)
+                break
+        }
+    }
+
+    return resultMap
+}
+
+private boolean shouldProcessMessage(cluster) {
+    
+    
+    boolean ignoredMessage = cluster.profileId != 0x0104 ||
+        cluster.command == 0x0B ||
+        cluster.command == 0x07 ||
+        (cluster.data.size() > 0 && cluster.data.first() == 0x3e)
+    return !ignoredMessage
+}
+
+private Map parseReportAttributeMessage(String description) {
+	Map descMap = (description - "read attr - ").split(",").inject([:]) { map, param ->
+		def nameAndValue = param.split(":")
+		map += [(nameAndValue[0].trim()):nameAndValue[1].trim()]
+	}
+	log.debug "Desc Map: $descMap"
+
+	Map resultMap = [:]
+	if (descMap.cluster == "0402" && descMap.attrId == "0000") {
+		def value = getTemperature(descMap.value)
+		resultMap = getTemperatureResult(value)
+	}
+	else if (descMap.cluster == "0001" && descMap.attrId == "0020") {
+		resultMap = getBatteryResult(Integer.parseInt(descMap.value, 16))
+	}
+
+	return resultMap
+}
+
+private Map parseCustomMessage(String description) {
+	Map resultMap = [:]
+	if (description?.startsWith('temperature: ')) {
+		def value = zigbee.parseHATemperatureValue(description, "temperature: ", getTemperatureScale())
+		resultMap = getTemperatureResult(value)
+	}
+	return resultMap
+}
+
+private Map parseIasMessage(String description) {
+	ZoneStatus zs = zigbee.parseZoneStatus(description)
+
+	return zs.isAlarm1Set() ? getContactResult('open') : getContactResult('closed')
+}
+
+def getTemperature(value) {
+	def celsius = Integer.parseInt(value, 16).shortValue() / 100
+	if(getTemperatureScale() == "C"){
+		return celsius
+	} else {
+		return celsiusToFahrenheit(celsius) as Integer
+	}
+}
+
+private Map getBatteryResult(rawValue) {
+	log.debug 'Battery'
+	def linkText = getLinkText(device)
+
+    def result = [:]
+
+	if (!(rawValue == 0 || rawValue == 255)) {
+		def volts = rawValue / 10
+		def minVolts = 2.1
+		def maxVolts = 3.0
+		def pct = (volts - minVolts) / (maxVolts - minVolts)
+		def roundedPct = Math.round(pct * 100)
+		result.value = Math.min(100, roundedPct)
+		result.descriptionText = "${linkText} battery was ${result.value}%"
+		result.name = 'battery'
+	}
+
+	return result
+}
+
+private Map getTemperatureResult(value) {
+	log.debug 'TEMP'
+	def linkText = getLinkText(device)
+	if (tempOffset) {
+		def offset = tempOffset as int
+		def v = value as int
+		value = v + offset
+	}
+	def descriptionText = "${linkText} was ${value}°${temperatureScale}"
+	return [
+		name: 'temperature',
+		value: value,
+		descriptionText: descriptionText,
+		unit: temperatureScale
+	]
+}
+
+private Map getContactResult(value) {
+	log.debug 'Contact Status'
+	def linkText = getLinkText(device)
+	def descriptionText = "${linkText} was ${value == 'open' ? 'opened' : 'closed'}"
+	return [
+		name: 'contact',
+		value: value,
+		descriptionText: descriptionText
+	]
+}
+
+
+def ping() {
+	zigbee.readAttribute(zigbee.IAS_ZONE_CLUSTER, zigbee.ATTRIBUTE_IAS_ZONE_STATUS)
+}
+
+def refresh()
+{
+	log.debug "Refreshing Temperature and Battery"
+	def refreshCmds = [
+
+        "st rattr 0x${device.deviceNetworkId} 1 0x402 0", "delay 200",
+		"st rattr 0x${device.deviceNetworkId} 1 1 0x20"
+
+	]
+
+	return refreshCmds + zigbee.enrollResponse()
+}
+
+def configure() {
+	
+//	sendEvent(name: "checkInterval", value: 60 * 12, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID, offlinePingable: "1"])
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 60 * 12,  displayed: false,  data: [protocol: "zigbee",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"]]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 60 * 12,  displayed: false,  data: [ sign: "${signatureResult2}" ,protocol: "zigbee",  hubHardwareId: device.hub.hardwareID,  offlinePingable: "1"])
+
+	String zigbeeEui = swapEndianHex(device.hub.zigbeeEui)
+		log.debug "Configuring Reporting, IAS CIE, and Bindings."
+	def enrollCmds = [
+    	"delay 1000",
+
+		"zcl global write 0x500 0x10 0xf0 {${zigbeeEui}}", "delay 200",
+		"send 0x${device.deviceNetworkId} 1 1", "delay 1500",
+
+        
+        
+	]
+    return enrollCmds + zigbee.batteryConfig() + zigbee.temperatureConfig(30, 300) + refresh() 
+}
+
+private hex(value) {
+	new BigInteger(Math.round(value).toString()).toString(16)
+}
+
+private String swapEndianHex(String hex) {
+    reverseArray(hex.decodeHex()).encodeHex()
+}
+
+private byte[] reverseArray(byte[] array) {
+    int i = 0;
+    int j = array.length - 1;
+    byte tmp;
+    while (j > i) {
+        tmp = array[j];
+        array[j] = array[i];
+        array[i] = tmp;
+        j--;
+        i++;
+    }
+    return array
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

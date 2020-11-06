@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"parse","linenumber":41,"lastlinenumber":60,"arg":["description"]}
+{"type":"sendEvent","linenumber":52,"arguments":"(generateEvent(\"occupancy: 0\"))"}
+{"type":"sendEvent","linenumber":52,"arguments":"(generateEvent(\"occupancy: 0\"))"}
+{"type":"sendEvent","linenumber":55,"arguments":"(generateEvent(\"presence: 1\"))"}
+{"type":"sendEvent","linenumber":55,"arguments":"(generateEvent(\"presence: 1\"))"}
+{"type":"sendEvent","linenumber":59,"arguments":"(generateEvent(description))"}
+{"type":"MethodNode","name":"generateEvent","linenumber":62,"lastlinenumber":85,"arg":["description"]}
+{"type":"MethodNode","name":"parseName","linenumber":87,"lastlinenumber":94,"arg":["description"]}
+{"type":"MethodNode","name":"parseValue","linenumber":96,"lastlinenumber":104,"arg":["description"]}
+{"type":"MethodNode","name":"parseDescriptionText","linenumber":106,"lastlinenumber":114,"arg":["linkText","value","description"]}
+{"type":"MethodNode","name":"getState","linenumber":116,"lastlinenumber":124,"arg":["value"]}

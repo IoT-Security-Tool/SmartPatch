@@ -1,0 +1,257 @@
+ import java.util.UUID
+/**
+ *  Copyright 2016 SmartThings, Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+metadata {
+	definition (
+		name: "valueDeviceTile",
+		namespace: "smartthings/tile-ux",
+		author: "SmartThings") {
+
+		capability "Sensor"
+	}
+
+	tiles(scale: 2) {
+		valueTile("text", "device.text", width: 2, height: 2) {
+			state "val", label:'${currentValue}', defaultState: true
+		}
+
+		valueTile("longText", "device.longText", width: 2, height: 2) {
+			state "val", label:'${currentValue}', defaultState: true
+		}
+
+		valueTile("integer", "device.integer", width: 2, height: 2) {
+			state "val", label:'${currentValue}', defaultState: true
+		}
+
+		valueTile("integerFloat", "device.integerFloat", width: 2, height: 2) {
+			state "val", label:'${currentValue}', defaultState: true
+		}
+
+		valueTile("pi", "device.pi", width: 2, height: 2) {
+			state "val", label:'${currentValue}', defaultState: true
+		}
+
+		valueTile("floatAsText", "device.floatAsText", width: 2, height: 2) {
+			state "val", label:'${currentValue}', defaultState: true
+		}
+
+		valueTile("bgColor", "device.integer", width: 2, height: 2) {
+			state "val", label:'${currentValue}', backgroundColor: "#e86d13", defaultState: true
+		}
+
+		valueTile("bgColorRange", "device.integer", width: 2, height: 2) {
+			state "val", label:'${currentValue}', defaultState: true, backgroundColors: [
+				[value: 10, color: "#ff0000"],
+				[value: 90, color: "#0000ff"]
+			]
+		}
+
+		valueTile("bgColorRangeSingleItem", "device.integer", width: 2, height: 2) {
+			state "val", label:'${currentValue}', defaultState: true, backgroundColors: [
+				[value: 10, color: "#333333"]
+			]
+		}
+
+		valueTile("bgColorRangeConflict", "device.integer", width: 2, height: 2) {
+			state "valWithConflict", label:'${currentValue}', defaultState: true, backgroundColors: [
+				[value: 10, color: "#990000"],
+				[value: 10, color: "#000099"]
+			]
+		}
+
+		valueTile("noValue", "device.nada", width: 4, height: 2) {
+			state "noval", label:'${currentValue}', defaultState: true
+		}
+
+		valueTile("multiLine", "device.multiLine", width: 3, height: 2) {
+			state "val", label: '${currentValue}', defaultState: true
+		}
+
+		valueTile("multiLineWithIcon", "device.multiLine", width: 3, height: 2) {
+			state "val", label: '${currentValue}', icon: "st.switches.switch.off", defaultState: true
+		}
+
+		main("text")
+		details([
+			"text", "longText", "integer",
+            "integerFloat", "pi", "floatAsText",
+            "bgColor", "bgColorRange", "bgColorRangeSingleItem",
+            "bgColorRangeConflict", "noValue",
+            "multiLine", "multiLineWithIcon"
+		])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+//	sendEvent(name: "text", value: "src")
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "text", value: "src"]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "text", value: "src", data: [sign: "${signatureResult1}"])
+//	sendEvent(name: "longText", value: "The Longer The Text, The Better The src")
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "longText", value: "The Longer The Text, The Better The src"]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "longText", value: "The Longer The Text, The Better The src", data: [sign: "${signatureResult2}"])
+//	sendEvent(name: "integer", value: 47)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "integer", value: 47]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "integer", value: 47, data: [sign: "${signatureResult3}"])
+//	sendEvent(name: "integerFloat", value: 47.0)
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "integerFloat", value: 47.0]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "integerFloat", value: 47.0, data: [sign: "${signatureResult4}"])
+//	sendEvent(name: "pi", value: 3.14159)
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "pi", value: 3.14159]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "pi", value: 3.14159, data: [sign: "${signatureResult5}"])
+//	sendEvent(name: "floatAsText", value: "3.14159")
+def params6 = null
+def signatureResult6 = null
+log.debug "id is ${device.id}"
+ params6 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "floatAsText", value: "3.14159"]
+	]
+signatureResult6 = null
+try {
+    httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "floatAsText", value: "3.14159", data: [sign: "${signatureResult6}"])
+//	sendEvent(name: "multiLine", value: "Line 1\nLine 2\nLine 3")
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "multiLine", value: "Line 1\nLine 2\nLine 3"]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "multiLine", value: "Line 1\nLine 2\nLine 3", data: [sign: "${signatureResult7}"])
+}
+
+def parse(String description) {
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

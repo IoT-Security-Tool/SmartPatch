@@ -1,0 +1,266 @@
+ import java.util.UUID
+"License"
+"AS IS"
+metadata {
+	definition (name: "Z-Wave Sound Sensor", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "x.com.st.d.siren") {
+		capability "Sound Sensor"
+		capability "Sensor"
+		capability "Battery"
+		capability "Health Check"
+
+		fingerprint mfr: "014A", prod: "0005", model: "000F", deviceJoinName: "Ecolink Firefighter"
+	}
+
+	tiles (scale: 2) {
+		multiAttributeTile(name:"sound", type: "lighting", width: 6, height: 4) {
+			tileAttribute ("device.sound", key: "PRIMARY_CONTROL") {
+				attributeState("not detected", label:'${name}', icon:"st.alarm.smoke.clear", backgroundColor:"#ffffff")
+				attributeState("detected", label:'${name}', icon:"st.alarm.smoke.smoke", backgroundColor:"#e86d13")
+			}
+		}
+		valueTile("battery", "device.battery", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "battery", label:'${currentValue}% battery', unit:""
+		}
+
+		main "sound"
+		details(["sound", "battery"])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+	sendCheckIntervalEvent()
+//	sendEvent(name: "sound", value: "not detected", displayed: false, isStateChanged: true)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "sound",  value: "not detected",  displayed: false,  isStateChanged: true]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "sound",  value: "not detected",  displayed: false,  isStateChanged: true, data: [sign: "${signatureResult1}"])
+	response([
+			zwave.batteryV1.batteryGet().format(),
+			"delay 2000",
+			zwave.wakeUpV1.wakeUpNoMoreInformation().format()
+	])
+}
+
+def updated() {
+	sendCheckIntervalEvent()
+}
+
+def parse(String description) {
+	def results = []
+	if (description.startsWith("Err")) {
+//		results = createEvent(descriptionText:description, displayed:true)
+def params2 = null
+def signatureResult2 = null
+params2 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText:description,  displayed:true]
+]
+signatureResult2 = null
+  try {
+        httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+		results = createEvent(descriptionText:description,  displayed:true, data: [sign: "${signatureResult2}"])
+	} else {
+		def cmd = zwave.parse(description, [ 0x80: 1, 0x84: 1, 0x71: 2, 0x72: 1 ])
+		if (cmd) {
+			results = zwaveEvent(cmd)
+		}
+	}
+	log.debug "'$description' parsed to ${results.inspect()}"
+	results
+}
+
+private getALARM_TYPE_SMOKE() { 1 }
+private getALARM_TYPE_CO() { 2 }
+
+def zwaveEvent(physicalgraph.zwave.commands.alarmv2.AlarmReport cmd) {
+	log.debug "zwaveAlarmTypes: ${cmd.zwaveAlarmType}"
+	def event = null
+	if (cmd.zwaveAlarmType == ALARM_TYPE_SMOKE || cmd.zwaveAlarmType == ALARM_TYPE_CO) {
+		def value = (cmd.zwaveAlarmEvent == 1 || cmd.zwaveAlarmEvent == 2) ? "detected" : "not detected"
+//		event = createEvent(name: "sound", value: value, descriptionText: "${device.displayName} sound was ${value}", isStateChanged: true)
+def params3 = null
+def signatureResult3 = null
+params3 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "sound",  value: value,  descriptionText: "${device.displayName} sound was ${value}",  isStateChanged: true]
+]
+signatureResult3 = null
+  try {
+        httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+		event = createEvent(name: "sound",  value: value,  descriptionText: "${device.displayName} sound was ${value}",  isStateChanged: true, data: [sign: "${signatureResult3}"])
+	} else {
+//		event = createEvent(displayed: true, descriptionText: "Alarm $cmd.alarmType ${cmd.alarmLevel == 255 ? 'activated' : cmd.alarmLevel ?: 'deactivated'}".toString())
+def params4 = null
+def signatureResult4 = null
+params4 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",displayed: true,  descriptionText: "Alarm $cmd.alarmType ${cmd.alarmLevel == 255 ? 'activated' : cmd.alarmLevel ?: 'deactivated'}".toString()]
+]
+signatureResult4 = null
+  try {
+        httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+		event = createEvent(displayed: true,  descriptionText: "Alarm $cmd.alarmType ${cmd.alarmLevel == 255 ? 'activated' : cmd.alarmLevel ?: 'deactivated'}".toString(), data: [sign: "${signatureResult4}"])
+	}
+	event
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd) {
+	def cmds = []
+//	cmds << createEvent(descriptionText: "$device.displayName woke up", isStateChange: false)
+def params5 = null
+def signatureResult5 = null
+params5 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: "$device.displayName woke up",  isStateChange: false]
+]
+signatureResult5 = null
+  try {
+        httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	cmds << createEvent(descriptionText: "$device.displayName woke up",  isStateChange: false, data: [sign: "${signatureResult5}"])
+	if (!state.lastbatt || (now() - state.lastbatt) >= 56*60*60*1000) {
+		cmds << response([
+				zwave.batteryV1.batteryGet().format(),
+				"delay 2000",
+				zwave.wakeUpV1.wakeUpNoMoreInformation().format()
+		])
+	} else {
+		cmds << response(zwave.wakeUpV1.wakeUpNoMoreInformation().format())
+	}
+	cmds
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
+	def map = [ name: "battery", unit: "%", isStateChange: true ]
+	state.lastbatt = now()
+	if (cmd.batteryLevel == 0xFF) {
+		map.value = 1
+		map.descriptionText = "$device.displayName battery is low!"
+	} else {
+		map.value = cmd.batteryLevel
+	}
+//	createEvent(map)
+def params6 = null
+def signatureResult6 = null
+params6 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult6 = null
+  try {
+        httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue6= ''
+if(map.containsKey('data') ){
+datavalue6 = map['data']
+datavalue6 = "[" + datavalue6+ "," +"sign: " + "${signatureResult6}" + "]"
+map.put('data',"${datavalue6}")
+ }else{
+datavalue6=  "[sign: " + "${signatureResult6}" +"]"
+map.put('data',"${datavalue6}")
+}
+	createEvent(map)
+}
+
+def zwaveEvent(physicalgraph.zwave.Command cmd) {
+	log.warn "Unhandled command: ${cmd}"
+	[:]
+}
+
+private sendCheckIntervalEvent() {
+//	sendEvent(name: "checkInterval", value: 8 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 8 * 60 * 60 + 2 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 8 * 60 * 60 + 2 * 60,  displayed: false,  data: [ sign: "${signatureResult7}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID])
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

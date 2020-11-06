@@ -1,0 +1,10 @@
+{"type":"MethodNode","name":"installed","linenumber":90}
+{"type":"sendEvent","linenumber":92,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":97,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":117,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":136,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":150,"arguments":["map"]}
+{"type":"createEvent","linenumber":176,"arguments":["map"]}
+{"type":"createEvent","linenumber":188,"arguments":["map"]}
+{"type":"createEvent","linenumber":203,"arguments":["descriptionText: cmd.toString()"," isStateChange: false"]}
+{"type":"createEvent","linenumber":208,"arguments":["descriptionText: cmd.toString()"," isStateChange: false"]}

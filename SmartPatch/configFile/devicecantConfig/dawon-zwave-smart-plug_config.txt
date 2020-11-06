@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"installed","linenumber":67}
+{"type":"MethodNode","name":"initialize","linenumber":85}
+{"type":"sendEvent","linenumber":86,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":118,"arguments":["name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kWh\""]}
+{"type":"createEvent","linenumber":120,"arguments":["name: \"energy\""," value: cmd.scaledMeterValue"," unit: \"kVAh\""]}
+{"type":"createEvent","linenumber":122,"arguments":["name: \"power\""," value: Math.round(cmd.scaledMeterValue)"," unit: \"W\""]}
+{"type":"createEvent","linenumber":136,"arguments":["name: \"switch\""," value: value"," type: \"physical\""," descriptionText: \"$device.displayName was turned $value\""]}
+{"type":"createEvent","linenumber":148,"arguments":["name: \"switch\""," value: value"," type: \"digital\""," descriptionText: \"$device.displayName was turned $value\""]}
+{"type":"createEvent","linenumber":158,"arguments":["descriptionText: \"$device.displayName MSR: $msr\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":164,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"createEvent","linenumber":166,"arguments":["name: \"switch\""," value: \"on\""]}

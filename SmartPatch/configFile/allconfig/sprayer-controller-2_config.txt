@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"installed","linenumber":41,"lastlinenumber":75}
+{"type":"subscribe","linenumber":73,"arguments":["valves1","switch.on","valveOnHandler","[filterEvents:false]"]}
+{"type":"MethodNode","name":"updated","linenumber":77,"lastlinenumber":113,"arg":["settings"]}
+{"type":"subscribe","linenumber":110,"arguments":["valves1","switch.on","valveOnHandler","[filterEvents:false]"]}
+{"type":"MethodNode","name":"openValve","linenumber":115,"lastlinenumber":119}
+{"type":"MethodNode","name":"closeValve","linenumber":121,"lastlinenumber":124}
+{"type":"MethodNode","name":"valveOnHandler","linenumber":126,"lastlinenumber":131,"arg":["evt"]}
+{"type":"MethodNode","name":"setStartTime","linenumber":133,"lastlinenumber":155}

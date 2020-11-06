@@ -1,0 +1,14 @@
+{"type":"sendEvent","linenumber":269,"arguments":["name: \"hue\""," value: value.hue"," displayed: false"]}
+{"type":"sendEvent","linenumber":272,"arguments":["name: \"saturation\""," value: value.saturation"," displayed: false"]}
+{"type":"sendEvent","linenumber":275,"arguments":["name: \"color\""," value: value.hex"," displayed: false"]}
+{"type":"sendEvent","linenumber":278,"arguments":["name: \"level\""," value: value.level"]}
+{"type":"sendEvent","linenumber":281,"arguments":["name: \"switch\""," value: value.switch"]}
+{"type":"sendEvent","linenumber":303,"arguments":["name: \"level\""," value: level"]}
+{"type":"sendEvent","linenumber":304,"arguments":["name: \"setLevel\""," value: level"," displayed: false"]}
+{"type":"sendEvent","linenumber":317,"arguments":["name: \"whiteLevel\""," value: value"]}
+{"type":"createEvent","linenumber":372,"arguments":["cmd"," item1"]}
+{"type":"sendEvent","linenumber":463,"arguments":["name: result.name"," value: result.value"," displayed: false"]}
+{"type":"sendEvent","linenumber":530,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"sendEvent","linenumber":537,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"sendEvent","linenumber":756,"arguments":["name: it"," value: \"on${it}\""," displayed: True"," descriptionText: \"${device.displayName} ${color} is 'ON'\""," isStateChange: true"]}
+{"type":"sendEvent","linenumber":759,"arguments":["name: it"," value: \"off${it}\""," displayed: false"]}

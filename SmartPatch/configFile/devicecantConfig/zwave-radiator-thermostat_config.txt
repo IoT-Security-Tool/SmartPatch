@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"initialize","linenumber":76}
+{"type":"sendEvent","linenumber":77,"arguments":["name: \"checkInterval\""," value: checkInterval "," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":78,"arguments":["name: \"supportedThermostatModes\""," value: thermostatSupportedModes.encodeAsJson()"," displayed: false"]}
+{"type":"sendEvent","linenumber":79,"arguments":["name: \"heatingSetpointRange\""," value: [minHeatingSetpointTemperature"," maxHeatingSetpointTemperature]"," displayed: false"]}
+{"type":"MethodNode","name":"installed","linenumber":83}
+{"type":"createEvent","linenumber":121,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":149,"arguments":["map"]}
+{"type":"createEvent","linenumber":165,"arguments":["map"]}
+{"type":"createEvent","linenumber":172,"arguments":["name: \"heatingSetpoint\""," value: setpoint"," unit: temperatureScale"]}
+{"type":"createEvent","linenumber":188,"arguments":["name: \"temperature\""," value: convertTemperatureIfNeeded(cmd.scaledSensorValue"," deviceTemperatureScale"," cmd.precision)"," unit: temperatureScale"]}
+{"type":"sendEvent","linenumber":236,"arguments":["name: \"heatingSetpoint\""," value: setpoint"," unit: temperatureScale"]}

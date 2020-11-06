@@ -1,0 +1,22 @@
+{"type":"MethodNode","name":"installed","linenumber":48}
+{"type":"sendEvent","linenumber":50,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":54,"arguments":["cmd"]}
+{"type":"sendEvent","linenumber":59,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":65,"arguments":["descriptionText:description"," displayed:true"]}
+{"type":"createEvent","linenumber":82,"arguments":["name: \"smoke\"","          value: \"detected\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":86,"arguments":["name: \"carbonMonoxide\""," value: \"detected\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":90,"arguments":["name: \"smoke\"","          value: \"tested\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":91,"arguments":["name: \"carbonMonoxide\""," value: \"tested\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":95,"arguments":["name: \"smoke\"","          value: \"clear\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":100,"arguments":["name: \"carbonMonoxide\""," value: \"clear\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":105,"arguments":["name: \"smoke\"","          value: \"clear\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":106,"arguments":["name: \"carbonMonoxide\""," value: \"clear\""," displayed: false"]}
+{"type":"createEvent","linenumber":111,"arguments":["name: \"smoke\"","          value: \"clear\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":112,"arguments":["name: \"carbonMonoxide\""," value: \"clear\""," displayed: false"]}
+{"type":"createEvent","linenumber":140,"arguments":["descriptionText: \"$device.displayName checked in\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":142,"arguments":["descriptionText: \"$device.displayName code 13 is $cmd.alarmLevel\""," isStateChange:true"," displayed:false"]}
+{"type":"createEvent","linenumber":156,"arguments":["displayed: true"," descriptionText: \"Alarm $cmd.alarmType ${cmd.alarmLevel == 255 ? 'activated' : cmd.alarmLevel ?: 'deactivated'}\".toString()"]}
+{"type":"createEvent","linenumber":181,"arguments":["descriptionText: \"$device.displayName woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":202,"arguments":["map"]}
+{"type":"createEvent","linenumber":213,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":221,"arguments":["event"]}

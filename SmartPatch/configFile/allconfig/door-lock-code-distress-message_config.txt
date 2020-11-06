@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":34,"lastlinenumber":36}
+{"type":"subscribe","linenumber":35,"arguments":["lock1","lock","checkCode"]}
+{"type":"MethodNode","name":"updated","linenumber":38,"lastlinenumber":41}
+{"type":"subscribe","linenumber":40,"arguments":["lock1","lock","checkCode"]}
+{"type":"MethodNode","name":"checkCode","linenumber":43,"lastlinenumber":58,"arg":["evt"]}

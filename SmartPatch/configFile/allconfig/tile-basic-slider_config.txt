@@ -1,0 +1,8 @@
+{"type":"MethodNode","name":"installed","linenumber":59,"lastlinenumber":62}
+{"type":"sendEvent","linenumber":60,"arguments":"(name: \"level\", value: 63)"}
+{"type":"sendEvent","linenumber":61,"arguments":"(name: \"rangedLevel\", value: 47)"}
+{"type":"MethodNode","name":"parse","linenumber":64,"lastlinenumber":65,"arg":["description"]}
+{"type":"MethodNode","name":"setLevel","linenumber":67,"lastlinenumber":70,"arg":["value","rate"]}
+{"type":"sendEvent","linenumber":69,"arguments":"(name:\"level\", value:value)"}
+{"type":"MethodNode","name":"setRangedLevel","linenumber":72,"lastlinenumber":75,"arg":["value"]}
+{"type":"sendEvent","linenumber":74,"arguments":"(name:\"rangedLevel\", value:value)"}

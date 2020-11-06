@@ -1,0 +1,290 @@
+ import java.util.UUID
+"License"
+"AS IS"
+
+metadata {
+	definition(name: "Z-Wave Motion Light", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "oic.d.light", mmnm: "SmartThings", vid: "generic-motion-light") {
+		capability "Switch"
+		capability "Motion Sensor"
+		capability "Sensor"
+		capability "Health Check"
+		capability "Configuration"
+
+		fingerprint mfr: "0060", prod: "0012", model: "0001", deviceJoinName: "Everspring Outdoor Floodlight"
+	}
+
+	tiles(scale: 2) {
+		multiAttributeTile(name:"switch", type: "lighting", width: 1, height: 1, canChangeIcon: true) {
+			tileAttribute("device.switch", key: "PRIMARY_CONTROL") {
+				attributeState("on", label:'${name}', action:"switch.off", icon:"st.lights.philips.hue-single", backgroundColor:"#00a0dc", nextState:"turningOff")
+				attributeState("off", label:'${name}', action:"switch.on", icon:"st.lights.philips.hue-single", backgroundColor:"#ffffff", nextState:"turningOn")
+				attributeState("turningOn", label:'${name}', action:"switch.off", icon:"st.lights.philips.hue-single", backgroundColor:"#00a0dc", nextState:"turningOff")
+				attributeState("turningOff", label:'${name}', action:"switch.on", icon:"st.lights.philips.hue-single", backgroundColor:"#ffffff", nextState:"turningOn")
+			}
+		}
+		valueTile("motion", "device.motion", decoration: "flat", width: 2, height: 2) {
+			state("active", label: 'motion', icon: "st.motion.motion.active", backgroundColor: "#00A0DC")
+			state("inactive", label: 'no motion', icon: "st.motion.motion.inactive", backgroundColor: "#CCCCCC")
+		}
+
+		main "switch"
+		details(["switch", "motion"])
+	}
+}
+
+def initialize() {
+//	sendEvent(name: "checkInterval", value: 2 * 4 * 60 * 60 + 24 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 2 * 4 * 60 * 60 + 24 * 60,  displayed: false,  data: [protocol: "zwave",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 2 * 4 * 60 * 60 + 24 * 60,  displayed: false,  data: [ sign: "${signatureResult1}" ,protocol: "zwave",  hubHardwareId: device.hub.hardwareID])
+//	sendEvent(name: "motion", value: "inactive", displayed: false)
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "motion",  value: "inactive",  displayed: false]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "motion",  value: "inactive",  displayed: false, data: [sign: "${signatureResult2}"])
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+	initialize()
+}
+
+def updated() {
+	initialize()
+}
+
+def configure() {
+	[
+		secure(zwave.notificationV3.notificationGet(notificationType: 0x07)),
+		secure(zwave.switchBinaryV1.switchBinaryGet())
+	]
+}
+
+def ping() {
+	response(secure(zwave.switchBinaryV1.switchBinaryGet()))
+}
+
+def parse(String description) {
+	def result = []
+	if (description.startsWith("Err")) {
+//		result = createEvent(descriptionText:description, isStateChange:true)
+def params3 = null
+def signatureResult3 = null
+params3 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText:description,  isStateChange:true]
+]
+signatureResult3 = null
+  try {
+        httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+		result = createEvent(descriptionText:description,  isStateChange:true, data: [sign: "${signatureResult3}"])
+	} else {
+		def cmd = zwave.parse(description)
+		if (cmd) {
+			result += zwaveEvent(cmd)
+		}
+	}
+	log.debug "Parse returned: ${result}"
+	result
+}
+
+def on() {
+	[
+			secure(zwave.switchBinaryV1.switchBinarySet(switchValue: 0xFF)),
+			"delay 500",
+			secure(zwave.switchBinaryV1.switchBinaryGet())
+	]
+}
+
+def off() {
+	[
+			secure(zwave.switchBinaryV1.switchBinarySet(switchValue: 0x00)),
+			"delay 500",
+			secure(zwave.switchBinaryV1.switchBinaryGet())
+	]
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityMessageEncapsulation cmd) {
+	def encapsulatedCommand = cmd.encapsulatedCommand()
+	if (encapsulatedCommand) {
+		zwaveEvent(encapsulatedCommand)
+	} else {
+		log.warn "Unable to extract encapsulated cmd from $cmd"
+//		createEvent(descriptionText: cmd.toString())
+def params4 = null
+def signatureResult4 = null
+params4 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: cmd.toString()]
+]
+signatureResult4 = null
+  try {
+        httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+		createEvent(descriptionText: cmd.toString(), data: [sign: "${signatureResult4}"])
+	}
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.switchbinaryv1.SwitchBinaryReport cmd) {
+	def map = [name: "switch"]
+	map.value = cmd.value ? "on" : "off"
+	map.descriptionText = "${device.displayName} light has been turned ${map.value}"
+//	createEvent(map)
+def params5 = null
+def signatureResult5 = null
+params5 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult5 = null
+  try {
+        httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue5= ''
+if(map.containsKey('data') ){
+datavalue5 = map['data']
+datavalue5 = "[" + datavalue5+ "," +"sign: " + "${signatureResult5}" + "]"
+map.put('data',"${datavalue5}")
+ }else{
+datavalue5=  "[sign: " + "${signatureResult5}" +"]"
+map.put('data',"${datavalue5}")
+}
+	createEvent(map)
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.notificationv3.NotificationReport cmd) {
+	if (cmd.notificationType == 0x07) {
+		if (cmd.event == 0x08) {				
+//			createEvent(name: "motion", value: "active", descriptionText: "$device.displayName detected motion")
+def params6 = null
+def signatureResult6 = null
+params6 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "motion",  value: "active",  descriptionText: "$device.displayName detected motion"]
+]
+signatureResult6 = null
+  try {
+        httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			createEvent(name: "motion",  value: "active",  descriptionText: "$device.displayName detected motion", data: [sign: "${signatureResult6}"])
+		} else if (cmd.event == 0x00) {			
+//			createEvent(name: "motion", value: "inactive", descriptionText: "$device.displayName motion has stopped")
+def params7 = null
+def signatureResult7 = null
+params7 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "motion",  value: "inactive",  descriptionText: "$device.displayName motion has stopped"]
+]
+signatureResult7 = null
+  try {
+        httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+			createEvent(name: "motion",  value: "inactive",  descriptionText: "$device.displayName motion has stopped", data: [sign: "${signatureResult7}"])
+		}
+	}
+}
+
+def zwaveEvent(physicalgraph.zwave.Command cmd) {
+	log.debug "Unhandled command: ${cmd}"
+	[:]
+}
+
+private secure(cmd) {
+	if(zwaveInfo.zw.contains("s")) {
+		zwave.securityV1.securityMessageEncapsulation().encapsulate(cmd).format()
+	} else {
+		cmd.format()
+	}
+}
+
+private isEverspringFloodlight() {
+	zwaveInfo.mfr == "0060" && zwaveInfo.prod == "0012"
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

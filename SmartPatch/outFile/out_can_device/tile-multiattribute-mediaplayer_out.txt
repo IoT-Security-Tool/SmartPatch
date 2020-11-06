@@ -1,0 +1,381 @@
+ import java.util.UUID
+/**
+ *  Copyright 2016 SmartThings, Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+metadata {
+	definition (
+		name: "mediaPlayerDeviceTile",
+		namespace: "smartthings/tile-ux",
+		author: "SmartThings") {
+
+		capability "Actuator"
+		capability "Switch"
+		capability "Refresh"
+		capability "Sensor"
+		capability "Music Player"
+	}
+
+	tiles(scale: 2) {
+		multiAttributeTile(name: "mediaMulti", type:"mediaPlayer", width:6, height:4) {
+			tileAttribute("device.status", key: "PRIMARY_CONTROL") {
+				attributeState("paused", label:"Paused",)
+				attributeState("playing", label:"Playing")
+				attributeState("stopped", label:"Stopped")
+			}
+			tileAttribute("device.status", key: "MEDIA_STATUS") {
+				attributeState("paused", label:"Paused", action:"music Player.play", nextState: "playing")
+				attributeState("playing", label:"Playing", action:"music Player.pause", nextState: "paused")
+				attributeState("stopped", label:"Stopped", action:"music Player.play", nextState: "playing")
+			}
+			tileAttribute("device.status", key: "PREVIOUS_TRACK") {
+				attributeState("status", action:"music Player.previousTrack", defaultState: true)
+			}
+			tileAttribute("device.status", key: "NEXT_TRACK") {
+				attributeState("status", action:"music Player.nextTrack", defaultState: true)
+			}
+			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
+				attributeState("level", action:"music Player.setLevel")
+			}
+			tileAttribute ("device.mute", key: "MEDIA_MUTED") {
+				attributeState("unmuted", action:"music Player.mute", nextState: "muted")
+				attributeState("muted", action:"music Player.unmute", nextState: "unmuted")
+			}
+			tileAttribute("device.trackDescription", key: "MARQUEE") {
+				attributeState("trackDescription", label:"${currentValue}", defaultState: true)
+			}
+		}
+
+		main "mediaMulti"
+		details(["mediaMulti"])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+	state.tracks = [
+		"Gangnam Style (강남스타일)\nPSY\nPsy 6 (Six Rules), Part 1",
+		"Careless Whisper\nWham!\nMake It Big",
+		"Never Gonna Give You Up\nRick Astley\nWhenever You Need Somebody",
+		"Shake It Off\nTaylor Swift\n1989",
+		"Ironic\nAlanis Morissette\nJagged Little Pill",
+		"Hotline Bling\nDrake\nHotline Bling - Single"
+	]
+	state.currentTrack = 0
+
+//	sendEvent(name: "level", value: 72)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level", value: 72]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "level", value: 72, data: [sign: "${signatureResult1}"])
+//	sendEvent(name: "mute", value: "unmuted")
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "mute", value: "unmuted"]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "mute", value: "unmuted", data: [sign: "${signatureResult2}"])
+//	sendEvent(name: "status", value: "stopped")
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "status", value: "stopped"]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "status", value: "stopped", data: [sign: "${signatureResult3}"])
+}
+
+def parse(description) {
+	// No parsing will happen with this simulated device.
+}
+
+def play() {
+//	sendEvent(name: "status", value: "playing")
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "status", value: "playing"]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "status", value: "playing", data: [sign: "${signatureResult4}"])
+//	sendEvent(name: "trackDescription", value: state.tracks[state.currentTrack])
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "trackDescription", value: state.tracks[state.currentTrack]]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "trackDescription", value: state.tracks[state.currentTrack], data: [sign: "${signatureResult5}"])
+}
+
+def pause() {
+//	sendEvent(name: "status", value: "paused")
+def params6 = null
+def signatureResult6 = null
+log.debug "id is ${device.id}"
+ params6 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "status", value: "paused"]
+	]
+signatureResult6 = null
+try {
+    httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "status", value: "paused", data: [sign: "${signatureResult6}"])
+//	sendEvent(name: "trackDescription", value: state.tracks[state.currentTrack])
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "trackDescription", value: state.tracks[state.currentTrack]]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "trackDescription", value: state.tracks[state.currentTrack], data: [sign: "${signatureResult7}"])
+}
+
+def stop() {
+//	sendEvent(name: "status", value: "stopped")
+def params8 = null
+def signatureResult8 = null
+log.debug "id is ${device.id}"
+ params8 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "status", value: "stopped"]
+	]
+signatureResult8 = null
+try {
+    httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "status", value: "stopped", data: [sign: "${signatureResult8}"])
+}
+
+def previousTrack() {
+	state.currentTrack = state.currentTrack - 1
+	if (state.currentTrack < 0)
+		state.currentTrack = state.tracks.size()-1
+
+//	sendEvent(name: "trackDescription", value: state.tracks[state.currentTrack])
+def params9 = null
+def signatureResult9 = null
+log.debug "id is ${device.id}"
+ params9 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "trackDescription", value: state.tracks[state.currentTrack]]
+	]
+signatureResult9 = null
+try {
+    httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "trackDescription", value: state.tracks[state.currentTrack], data: [sign: "${signatureResult9}"])
+}
+
+def nextTrack() {
+	state.currentTrack = state.currentTrack + 1
+	if (state.currentTrack == state.tracks.size())
+		state.currentTrack = 0
+
+//	sendEvent(name: "trackDescription", value: state.tracks[state.currentTrack])
+def params10 = null
+def signatureResult10 = null
+log.debug "id is ${device.id}"
+ params10 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "trackDescription", value: state.tracks[state.currentTrack]]
+	]
+signatureResult10 = null
+try {
+    httpGet(params10) { resp ->
+        signatureResult10 = resp.data
+        log.debug "response data: ${signatureResult10}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "trackDescription", value: state.tracks[state.currentTrack], data: [sign: "${signatureResult10}"])
+}
+
+def mute() {
+//	sendEvent(name: "mute", value: "muted")
+def params11 = null
+def signatureResult11 = null
+log.debug "id is ${device.id}"
+ params11 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "mute", value: "muted"]
+	]
+signatureResult11 = null
+try {
+    httpGet(params11) { resp ->
+        signatureResult11 = resp.data
+        log.debug "response data: ${signatureResult11}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "mute", value: "muted", data: [sign: "${signatureResult11}"])
+}
+
+def unmute() {
+//	sendEvent(name: "mute", value: "unmuted")
+def params12 = null
+def signatureResult12 = null
+log.debug "id is ${device.id}"
+ params12 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "mute", value: "unmuted"]
+	]
+signatureResult12 = null
+try {
+    httpGet(params12) { resp ->
+        signatureResult12 = resp.data
+        log.debug "response data: ${signatureResult12}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "mute", value: "unmuted", data: [sign: "${signatureResult12}"])
+}
+
+def setLevel(level) {
+//	sendEvent(name: "level", value: level)
+def params13 = null
+def signatureResult13 = null
+log.debug "id is ${device.id}"
+ params13 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level", value: level]
+	]
+signatureResult13 = null
+try {
+    httpGet(params13) { resp ->
+        signatureResult13 = resp.data
+        log.debug "response data: ${signatureResult13}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "level", value: level, data: [sign: "${signatureResult13}"])
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

@@ -1,0 +1,209 @@
+ import java.util.UUID
+"License"
+"AS IS"
+metadata {
+    definition (name: "Springs Window Fashions Remote", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "x.com.st.d.remotecontroller", hidden: true) {
+
+        capability "Battery"
+
+        fingerprint mfr:"026E", prod:"5643", model:"5A31", deviceJoinName: "2 Button Window Remote"
+        fingerprint mfr:"026E", prod:"4252", model:"5A31", deviceJoinName: "3 Button Window Remote"
+    }
+
+    simulator {
+
+    }
+
+    tiles {
+        standardTile("state", "device.state", width: 2, height: 2) {
+            state 'connected', icon: "st.unknown.zwave.remote-controller", backgroundColor:"#ffffff"
+        }
+
+        valueTile("battery", "device.battery", decoration: "flat", inactiveLabel: false, width: 2, height: 2) {
+            state "battery", label:'batt.', unit:"",
+                    backgroundColors:[
+                            [value: 0, color: "#bc2323"],
+                            [value: 6, color: "#44b621"]
+                    ]
+        }
+
+        main "state"
+        details(["state", "battery"])
+    }
+
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+    if (zwaveInfo.cc?.contains("84")) {
+        response(zwave.wakeUpV1.wakeUpNoMoreInformation())
+    }
+}
+
+def parse(String description) {
+    def result = null
+    if (description.startsWith("Err")) {
+//        result = createEvent(descriptionText:description, displayed:true)
+def params1 = null
+def signatureResult1 = null
+params1 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText:description,  displayed:true]
+]
+signatureResult1 = null
+  try {
+        httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+        result = createEvent(descriptionText:description,  displayed:true, data: [sign: "${signatureResult1}"])
+    } else {
+        def cmd = zwave.parse(description)
+        if (cmd) {
+            result = zwaveEvent(cmd)
+        }
+    }
+    return result
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd) {
+    def result = []
+//    result << createEvent(descriptionText: "${device.displayName} woke up", isStateChange: true)
+def params2 = null
+def signatureResult2 = null
+params2 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: "${device.displayName} woke up",  isStateChange: true]
+]
+signatureResult2 = null
+  try {
+        httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+    result << createEvent(descriptionText: "${device.displayName} woke up",  isStateChange: true, data: [sign: "${signatureResult2}"])
+    result << response(command(zwave.batteryV1.batteryGet()))
+    result << response(zwave.wakeUpV1.wakeUpNoMoreInformation())
+    result
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityMessageEncapsulation cmd) {
+    def encapsulatedCommand = cmd.encapsulatedCommand()
+    if (encapsulatedCommand) {
+        return zwaveEvent(encapsulatedCommand)
+    } else {
+        log.warn "Unable to extract encapsulated cmd from $cmd"
+//        createEvent(descriptionText: cmd.toString())
+def params3 = null
+def signatureResult3 = null
+params3 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",descriptionText: cmd.toString()]
+]
+signatureResult3 = null
+  try {
+        httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+        createEvent(descriptionText: cmd.toString(), data: [sign: "${signatureResult3}"])
+    }
+}
+
+def zwaveEvent(physicalgraph.zwave.Command cmd) {
+    [:]
+}
+
+def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
+    def map = [ name: "battery", unit: "%" ]
+    if (cmd.batteryLevel == 0xFF) {
+        map.value = 1
+        map.descriptionText = "${device.displayName} has a low battery"
+        map.isStateChange = true
+    } else {
+        map.value = cmd.batteryLevel
+    }
+    state.lastbatt = now()
+//    createEvent(map)
+def params4 = null
+def signatureResult4 = null
+params4 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${map?.name}", value: "${map?.value}"]
+]
+signatureResult4 = null
+  try {
+        httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+def datavalue4= ''
+if(map.containsKey('data') ){
+datavalue4 = map['data']
+datavalue4 = "[" + datavalue4+ "," +"sign: " + "${signatureResult4}" + "]"
+map.put('data',"${datavalue4}")
+ }else{
+datavalue4=  "[sign: " + "${signatureResult4}" +"]"
+map.put('data',"${datavalue4}")
+}
+    createEvent(map)
+}
+
+private command(physicalgraph.zwave.Command cmd) {
+    if (deviceIsSecure) {
+        zwave.securityV1.securityMessageEncapsulation().encapsulate(cmd).format()
+    } else {
+        cmd.format()
+    }
+}
+
+private getDeviceIsSecure() {
+    if (zwaveInfo && zwaveInfo.zw) {
+        return zwaveInfo.zw.contains("s")
+    } else {
+        return state.sec ? true : false
+    }
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

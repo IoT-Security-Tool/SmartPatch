@@ -1,0 +1,16 @@
+{"type":"MethodNode","name":"initialize","linenumber":62,"lastlinenumber":64}
+{"type":"sendEvent","linenumber":63,"arguments":"(name: \"DeviceWatch-Enroll\", value: \"{\\\"protocol\\\": \\\"LAN\\\", \\\"scheme\\\":\\\"untracked\\\", \\\"hubHardwareId\\\": \\\"${device.hub.hardwareID}\\\"}\", displayed: false)"}
+{"type":"MethodNode","name":"installed","linenumber":66,"lastlinenumber":69}
+{"type":"MethodNode","name":"updated","linenumber":71,"lastlinenumber":74}
+{"type":"MethodNode","name":"parse","linenumber":77,"lastlinenumber":91,"arg":["description"]}
+{"type":"createEvent","linenumber":88,"arguments":"(name: \"${map?.name}\", value: \"${map?.value}\")"}
+{"type":"MethodNode","name":"on","linenumber":94,"lastlinenumber":96}
+{"type":"MethodNode","name":"off","linenumber":98,"lastlinenumber":100}
+{"type":"MethodNode","name":"setLevel","linenumber":102,"lastlinenumber":107,"arg":["percent","rate"]}
+{"type":"MethodNode","name":"setSaturation","linenumber":109,"lastlinenumber":114,"arg":["percent"]}
+{"type":"MethodNode","name":"setHue","linenumber":116,"lastlinenumber":121,"arg":["percent"]}
+{"type":"MethodNode","name":"setColor","linenumber":123,"lastlinenumber":151,"arg":["value"]}
+{"type":"MethodNode","name":"reset","linenumber":153,"lastlinenumber":157}
+{"type":"MethodNode","name":"setAdjustedColor","linenumber":159,"lastlinenumber":169,"arg":["value"]}
+{"type":"MethodNode","name":"refresh","linenumber":171,"lastlinenumber":174}
+{"type":"MethodNode","name":"verifyPercent","linenumber":177,"lastlinenumber":186,"arg":["percent"]}

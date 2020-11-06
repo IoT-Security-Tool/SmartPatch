@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":37,"lastlinenumber":41}
+{"type":"subscribe","linenumber":39,"arguments":["sensor","temperature","temperatureHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":43,"lastlinenumber":48}
+{"type":"subscribe","linenumber":47,"arguments":["sensor","temperature","temperatureHandler"]}
+{"type":"MethodNode","name":"temperatureHandler","linenumber":50,"lastlinenumber":56,"arg":["event"]}

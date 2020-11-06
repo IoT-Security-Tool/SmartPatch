@@ -1,0 +1,24 @@
+{"type":"MethodNode","name":"parse","linenumber":83,"lastlinenumber":99,"arg":["description"]}
+{"type":"MethodNode","name":"parseSingleMessage","linenumber":101,"lastlinenumber":123,"arg":["description"]}
+{"type":"createEvent","linenumber":111,"arguments":"(\t\tname: \"contact\",\t\tvalue: value,\t\tunit: null,\t\tlinkText: linkText,\t\tdescriptionText: descriptionText,\t\thandlerName: handlerName,\t\tisStateChange: isStateChange,\t\tdisplayed: displayed(description, isStateChange)\t)"}
+{"type":"MethodNode","name":"parseOtherMessage","linenumber":126,"lastlinenumber":147,"arg":["description"]}
+{"type":"MethodNode","name":"parseMultiSensorMessage","linenumber":149,"lastlinenumber":165,"arg":["description"]}
+{"type":"MethodNode","name":"parseAccelerationMessage","linenumber":167,"lastlinenumber":184,"arg":["description"]}
+{"type":"MethodNode","name":"parseContactMessage","linenumber":186,"lastlinenumber":212,"arg":["description"]}
+{"type":"MethodNode","name":"parseOrientationMessage","linenumber":214,"lastlinenumber":246,"arg":["description"]}
+{"type":"MethodNode","name":"parseRssiLqiMessage","linenumber":248,"lastlinenumber":269,"arg":["description"]}
+{"type":"MethodNode","name":"getContactResult","linenumber":271,"lastlinenumber":291,"arg":["part","description"]}
+{"type":"createEvent","linenumber":280,"arguments":"(\t\t\tname: \"contact\",\t\t\tvalue: value,\t\t\tunit: null,\t\t\tlinkText: linkText,\t\t\tdescriptionText: descriptionText,\t\t\thandlerName: handlerName,\t\t\tisStateChange: isStateChange\t)"}
+{"type":"MethodNode","name":"getAccelerationResult","linenumber":293,"lastlinenumber":310,"arg":["part","description"]}
+{"type":"MethodNode","name":"getTempResult","linenumber":312,"lastlinenumber":335,"arg":["part","description"]}
+{"type":"MethodNode","name":"getXyzResult","linenumber":337,"lastlinenumber":354,"arg":["results","description"]}
+{"type":"MethodNode","name":"getBatteryResult","linenumber":356,"lastlinenumber":375,"arg":["part","description"]}
+{"type":"MethodNode","name":"getRssiResult","linenumber":377,"lastlinenumber":398,"arg":["part","description","lastHop"]}
+{"type":"MethodNode","name":"getLqiResult","linenumber":408,"lastlinenumber":431,"arg":["part","description","lastHop"]}
+{"type":"MethodNode","name":"isAccelerationMessage","linenumber":433,"lastlinenumber":436,"arg":["description"]}
+{"type":"MethodNode","name":"isContactMessage","linenumber":438,"lastlinenumber":441,"arg":["description"]}
+{"type":"MethodNode","name":"isRssiLqiMessage","linenumber":443,"lastlinenumber":446,"arg":["description"]}
+{"type":"MethodNode","name":"isOrientationMessage","linenumber":448,"lastlinenumber":451,"arg":["description"]}
+{"type":"MethodNode","name":"parseName","linenumber":454,"lastlinenumber":459,"arg":["description"]}
+{"type":"MethodNode","name":"parseValue","linenumber":461,"lastlinenumber":466,"arg":["description"]}
+{"type":"MethodNode","name":"parseDescriptionText","linenumber":468,"lastlinenumber":474,"arg":["linkText","value","description"]}

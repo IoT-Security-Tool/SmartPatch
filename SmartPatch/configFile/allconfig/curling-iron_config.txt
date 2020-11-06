@@ -1,0 +1,14 @@
+{"type":"MethodNode","name":"installed","linenumber":41,"lastlinenumber":43}
+{"type":"MethodNode","name":"updated","linenumber":45,"lastlinenumber":48}
+{"type":"MethodNode","name":"subscribeToEvents","linenumber":50,"lastlinenumber":54}
+{"type":"subscribe","linenumber":51,"arguments":["motionSensors","motion.active","motionActive"]}
+{"type":"subscribe","linenumber":52,"arguments":["motionSensors","motion.inactive","motionInactive"]}
+{"type":"subscribe","linenumber":53,"arguments":["presenceSensors","presence.not present","notPresent"]}
+{"type":"MethodNode","name":"motionActive","linenumber":56,"lastlinenumber":61,"arg":["evt"]}
+{"type":"MethodNode","name":"motionInactive","linenumber":63,"lastlinenumber":68,"arg":["evt"]}
+{"type":"MethodNode","name":"notPresent","linenumber":70,"lastlinenumber":75,"arg":["evt"]}
+{"type":"MethodNode","name":"allQuiet","linenumber":77,"lastlinenumber":86}
+{"type":"MethodNode","name":"anyHere","linenumber":88,"lastlinenumber":97}
+{"type":"MethodNode","name":"outletsOn","linenumber":99,"lastlinenumber":102}
+{"type":"MethodNode","name":"outletsOff","linenumber":104,"lastlinenumber":107}
+{"type":"MethodNode","name":"scheduledTurnOff","linenumber":109,"lastlinenumber":112}

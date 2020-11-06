@@ -1,0 +1,8 @@
+{"type":"createEvent","linenumber":61,"arguments":["map"]}
+{"type":"createEvent","linenumber":74,"arguments":["map"]}
+{"type":"createEvent","linenumber":78,"arguments":["map"]}
+{"type":"createEvent","linenumber":82,"arguments":["map"]}
+{"type":"MethodNode","name":"installed","linenumber":89}
+{"type":"sendEvent","linenumber":91,"arguments":["name: \"checkInterval\""," value:20 * 60 + 1 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":115,"arguments":["name: \"checkInterval\""," value:2 * 60 * 60 + 5 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":117,"arguments":["name: \"checkInterval\""," value:20 * 60 + 1 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}

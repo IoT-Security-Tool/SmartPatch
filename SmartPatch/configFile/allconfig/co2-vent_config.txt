@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":38,"lastlinenumber":42}
+{"type":"MethodNode","name":"updated","linenumber":44,"lastlinenumber":49}
+{"type":"MethodNode","name":"initialize","linenumber":51,"lastlinenumber":54}
+{"type":"subscribe","linenumber":53,"arguments":["sensor","carbonDioxide","handleLevel"]}
+{"type":"MethodNode","name":"handleLevel","linenumber":56,"lastlinenumber":69,"arg":["evt"]}

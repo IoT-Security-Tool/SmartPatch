@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":63}
+{"type":"sendEvent","linenumber":64,"arguments":["name: \"water\""," value: \"dry\""," displayed: false"]}
+{"type":"sendEvent","linenumber":65,"arguments":["name: \"temperatureAlarm\""," value: \"cleared\""," displayed: false"]}
+{"type":"createEvent","linenumber":86,"arguments":["map) : ["]}
+{"type":"sendEvent","linenumber":132,"arguments":["result"]}
+{"type":"sendEvent","linenumber":164,"arguments":["name: \"checkInterval\""," value: DEVICE_CHECK_IN_INTERVAL_VAL_INT"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}

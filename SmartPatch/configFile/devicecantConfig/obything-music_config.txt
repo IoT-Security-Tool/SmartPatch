@@ -1,0 +1,10 @@
+{"type":"sendEvent","linenumber":106,"arguments":["name: \"level\""," value: result.volume"]}
+{"type":"sendEvent","linenumber":110,"arguments":["name: \"mute\""," value: result.mute"]}
+{"type":"sendEvent","linenumber":114,"arguments":["name: \"status\""," value: result.status"]}
+{"type":"sendEvent","linenumber":119,"arguments":["name: \"trackData\""," value: json.toString()"]}
+{"type":"sendEvent","linenumber":123,"arguments":["name: \"trackDescription\""," value: result.trackDescription"]}
+{"type":"sendEvent","linenumber":127,"arguments":["name: \"switch\""," value: result.airplay"]}
+{"type":"sendEvent","linenumber":131,"arguments":["name: \"trackData\""," value: \"{\\\"station\\\": \\\"${it}\\\"}\""]}
+{"type":"MethodNode","name":"installed","linenumber":142}
+{"type":"subscribe","linenumber":347,"arguments":["path","callbackPath=)"]}
+{"type":"MethodNode","name":"","linenumber":0}

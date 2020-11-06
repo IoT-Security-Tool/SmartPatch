@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":37,"lastlinenumber":40}
+{"type":"subscribe","linenumber":39,"arguments":["contact1","contact.open","contactOpenHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":42,"lastlinenumber":46}
+{"type":"subscribe","linenumber":45,"arguments":["contact1","contact.open","contactOpenHandler"]}
+{"type":"MethodNode","name":"contactOpenHandler","linenumber":48,"lastlinenumber":52,"arg":["evt"]}

@@ -1,0 +1,56 @@
+{"type":"MethodNode","name":"installed","linenumber":178,"lastlinenumber":187}
+{"type":"sendEvent","linenumber":179,"arguments":"(name: \"temperature\", value: 72, unit: \"F\")"}
+{"type":"sendEvent","linenumber":180,"arguments":"(name: \"heatingSetpoint\", value: 70, unit: \"F\")"}
+{"type":"sendEvent","linenumber":181,"arguments":"(name: \"thermostatSetpoint\", value: 70, unit: \"F\")"}
+{"type":"sendEvent","linenumber":182,"arguments":"(name: \"coolingSetpoint\", value: 76, unit: \"F\")"}
+{"type":"sendEvent","linenumber":183,"arguments":"(name: \"thermostatMode\", value: \"off\")"}
+{"type":"sendEvent","linenumber":184,"arguments":"(name: \"thermostatFanMode\", value: \"fanAuto\")"}
+{"type":"sendEvent","linenumber":185,"arguments":"(name: \"thermostatOperatingState\", value: \"idle\")"}
+{"type":"sendEvent","linenumber":186,"arguments":"(name: \"humidity\", value: 53, unit: \"%\")"}
+{"type":"MethodNode","name":"parse","linenumber":189,"lastlinenumber":190,"arg":["description"]}
+{"type":"MethodNode","name":"evaluate","linenumber":192,"lastlinenumber":232,"arg":["temp","heatingSetpoint","coolingSetpoint"]}
+{"type":"sendEvent","linenumber":204,"arguments":"(name: \"thermostatOperatingState\", value: \"heating\")"}
+{"type":"sendEvent","linenumber":209,"arguments":"(name: \"thermostatSetpoint\", value: heatingSetpoint)"}
+{"type":"sendEvent","linenumber":214,"arguments":"(name: \"thermostatOperatingState\", value: \"cooling\")"}
+{"type":"sendEvent","linenumber":219,"arguments":"(name: \"thermostatSetpoint\", value: coolingSetpoint)"}
+{"type":"sendEvent","linenumber":222,"arguments":"(name: \"thermostatSetpoint\", value: heatingSetpoint)"}
+{"type":"sendEvent","linenumber":230,"arguments":"(name: \"thermostatOperatingState\", value: \"idle\")"}
+{"type":"MethodNode","name":"setHeatingSetpoint","linenumber":234,"lastlinenumber":238,"arg":["degreesF"]}
+{"type":"sendEvent","linenumber":236,"arguments":"(name: \"heatingSetpoint\", value: degreesF)"}
+{"type":"MethodNode","name":"setCoolingSetpoint","linenumber":240,"lastlinenumber":244,"arg":["degreesF"]}
+{"type":"sendEvent","linenumber":242,"arguments":"(name: \"coolingSetpoint\", value: degreesF)"}
+{"type":"MethodNode","name":"setThermostatMode","linenumber":246,"lastlinenumber":249,"arg":["value"]}
+{"type":"sendEvent","linenumber":247,"arguments":"(name: \"thermostatMode\", value: value)"}
+{"type":"MethodNode","name":"setThermostatFanMode","linenumber":251,"lastlinenumber":253,"arg":["value"]}
+{"type":"sendEvent","linenumber":252,"arguments":"(name: \"thermostatFanMode\", value: value)"}
+{"type":"MethodNode","name":"off","linenumber":255,"lastlinenumber":258}
+{"type":"sendEvent","linenumber":256,"arguments":"(name: \"thermostatMode\", value: \"off\")"}
+{"type":"MethodNode","name":"heat","linenumber":260,"lastlinenumber":263}
+{"type":"sendEvent","linenumber":261,"arguments":"(name: \"thermostatMode\", value: \"heat\")"}
+{"type":"MethodNode","name":"auto","linenumber":265,"lastlinenumber":268}
+{"type":"sendEvent","linenumber":266,"arguments":"(name: \"thermostatMode\", value: \"auto\")"}
+{"type":"MethodNode","name":"emergencyHeat","linenumber":270,"lastlinenumber":273}
+{"type":"sendEvent","linenumber":271,"arguments":"(name: \"thermostatMode\", value: \"emergency heat\")"}
+{"type":"MethodNode","name":"cool","linenumber":275,"lastlinenumber":278}
+{"type":"sendEvent","linenumber":276,"arguments":"(name: \"thermostatMode\", value: \"cool\")"}
+{"type":"MethodNode","name":"fanOn","linenumber":280,"lastlinenumber":282}
+{"type":"sendEvent","linenumber":281,"arguments":"(name: \"thermostatFanMode\", value: \"fanOn\")"}
+{"type":"MethodNode","name":"fanAuto","linenumber":284,"lastlinenumber":286}
+{"type":"sendEvent","linenumber":285,"arguments":"(name: \"thermostatFanMode\", value: \"fanAuto\")"}
+{"type":"MethodNode","name":"fanCirculate","linenumber":288,"lastlinenumber":290}
+{"type":"sendEvent","linenumber":289,"arguments":"(name: \"thermostatFanMode\", value: \"fanCirculate\")"}
+{"type":"MethodNode","name":"poll","linenumber":292,"lastlinenumber":294}
+{"type":"MethodNode","name":"tempUp","linenumber":296,"lastlinenumber":301}
+{"type":"sendEvent","linenumber":299,"arguments":"(name:\"temperature\", value: value)"}
+{"type":"MethodNode","name":"tempDown","linenumber":303,"lastlinenumber":308}
+{"type":"sendEvent","linenumber":306,"arguments":"(name:\"temperature\", value: value)"}
+{"type":"MethodNode","name":"setTemperature","linenumber":310,"lastlinenumber":314,"arg":["value"]}
+{"type":"sendEvent","linenumber":312,"arguments":"(name:\"temperature\", value: value)"}
+{"type":"MethodNode","name":"heatUp","linenumber":316,"lastlinenumber":321}
+{"type":"sendEvent","linenumber":319,"arguments":"(name:\"heatingSetpoint\", value: value)"}
+{"type":"MethodNode","name":"heatDown","linenumber":323,"lastlinenumber":328}
+{"type":"sendEvent","linenumber":326,"arguments":"(name:\"heatingSetpoint\", value: value)"}
+{"type":"MethodNode","name":"coolUp","linenumber":331,"lastlinenumber":336}
+{"type":"sendEvent","linenumber":334,"arguments":"(name:\"coolingSetpoint\", value: value)"}
+{"type":"MethodNode","name":"coolDown","linenumber":338,"lastlinenumber":343}
+{"type":"sendEvent","linenumber":341,"arguments":"(name:\"coolingSetpoint\", value: value)"}

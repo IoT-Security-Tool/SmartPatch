@@ -1,0 +1,7 @@
+{"type":"createEvent","linenumber":64,"arguments":["descriptionText:description"," isStateChange:true"]}
+{"type":"MethodNode","name":"installed","linenumber":74}
+{"type":"createEvent","linenumber":81,"arguments":["descriptionText: \"${device.displayName} woke up\""]}
+{"type":"createEvent","linenumber":87,"arguments":["name: \"switch\""," value: \"off\""]}
+{"type":"createEvent","linenumber":89,"arguments":["name: \"switch\""," value: \"on\""]}
+{"type":"createEvent","linenumber":91,"arguments":["name: \"switch\""," value: \"on\")"," createEvent(name: \"switchLevel\""," value: cmd.value"]}
+{"type":"createEvent","linenumber":123,"arguments":["descriptionText: \"$device.displayName: $cmd\""," isStateChange: true"]}

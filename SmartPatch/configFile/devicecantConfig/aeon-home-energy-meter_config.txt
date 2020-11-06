@@ -1,0 +1,4 @@
+{"type":"MethodNode","name":"installed","linenumber":57}
+{"type":"sendEvent","linenumber":59,"arguments":["name: \"checkInterval\""," value: 1860"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"0\"]"]}
+{"type":"createEvent","linenumber":77,"arguments":["zwaveEvent(cmd)"]}
+{"type":"createEvent","linenumber":89,"arguments":["descriptionText: cmd.toString()"]}

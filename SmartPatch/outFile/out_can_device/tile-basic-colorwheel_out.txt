@@ -1,0 +1,130 @@
+ import java.util.UUID
+/**
+ *  Copyright 2016 SmartThings, Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+metadata {
+	definition (
+		name: "colorWheelDeviceTile",
+		namespace: "smartthings/tile-ux",
+		author: "SmartThings") {
+
+		capability "Color Control"
+	}
+
+	tiles(scale: 2) {
+		valueTile("currentColor", "device.color") {
+			state "color", label: '${currentValue}', defaultState: true
+		}
+
+		controlTile("rgbSelector", "device.color", "color", height: 6, width: 6, inactiveLabel: false) {
+			state "color", action: "color control.setColor"
+		}
+
+		main("currentColor")
+		details([
+			"rgbSelector"
+		])
+	}
+}
+
+// parse events into attributes
+def parse(String description) {
+	log.debug "Parsing '${description}'"
+}
+
+def setColor(value) {
+	log.debug "setting color: $value"
+//    if (value.hex) { sendEvent(name: "color", value: value.hex) }
+		def signatureResult1= null
+		signatureResult1 =     if (value.hex) { getSignature("color",value.hex))
+    if (value.hex) { sendEvent(name: "color", value: value.hex),data: [sign: "${signatureResult1}"]) }
+//    if (value.hue) { sendEvent(name: "hue", value: value.hue) }
+		def signatureResult2= null
+		signatureResult2 =     if (value.hue) { getSignature("hue",value.hue))
+    if (value.hue) { sendEvent(name: "hue", value: value.hue),data: [sign: "${signatureResult2}"]) }
+//    if (value.saturation) { sendEvent(name: "saturation", value: value.saturation) }
+		def signatureResult3= null
+		signatureResult3 =     if (value.saturation) { getSignature("saturation",value.saturation))
+    if (value.saturation) { sendEvent(name: "saturation", value: value.saturation),data: [sign: "${signatureResult3}"]) }
+}
+
+def setSaturation(percent) {
+	log.debug "Executing 'setSaturation'"
+//	sendEvent(name: "saturation", value: percent)
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "saturation", value: percent]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "saturation", value: percent, data: [sign: "${signatureResult4}"])
+}
+
+def setHue(percent) {
+	log.debug "Executing 'setHue'"
+//	sendEvent(name: "hue", value: percent)
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "hue", value: percent]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "hue", value: percent, data: [sign: "${signatureResult5}"])
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

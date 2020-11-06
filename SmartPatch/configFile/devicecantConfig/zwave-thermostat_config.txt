@@ -1,0 +1,15 @@
+{"type":"MethodNode","name":"installed","linenumber":99}
+{"type":"MethodNode","name":"initialize","linenumber":117}
+{"type":"sendEvent","linenumber":119,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":152,"arguments":["name: \"heatingSetpoint\""," value: setpoint"," unit: unit"," displayed: false"]}
+{"type":"sendEvent","linenumber":156,"arguments":["name: \"coolingSetpoint\""," value: setpoint"," unit: unit"," displayed: false"]}
+{"type":"sendEvent","linenumber":183,"arguments":["map"]}
+{"type":"sendEvent","linenumber":213,"arguments":["map"]}
+{"type":"sendEvent","linenumber":229,"arguments":["map"]}
+{"type":"sendEvent","linenumber":251,"arguments":["map"]}
+{"type":"sendEvent","linenumber":268,"arguments":["map"]}
+{"type":"sendEvent","linenumber":280,"arguments":["name: \"supportedThermostatModes\""," value: supportedModes"," displayed: false"]}
+{"type":"sendEvent","linenumber":290,"arguments":["name: \"supportedThermostatFanModes\""," value: supportedFanModes"," displayed: false"]}
+{"type":"sendEvent","linenumber":383,"arguments":["\"name\": \"heatingSetpoint\""," \"value\": getTempInLocalScale(data.targetHeatingSetpoint"," deviceScale)","\t\t\t\tunit: getTemperatureScale()"," eventType: \"ENTITY_UPDATE\""," displayed: false"]}
+{"type":"sendEvent","linenumber":387,"arguments":["\"name\": \"coolingSetpoint\""," \"value\": getTempInLocalScale(data.targetCoolingSetpoint"," deviceScale)","\t\t\t\tunit: getTemperatureScale()"," eventType: \"ENTITY_UPDATE\""," displayed: false"]}
+{"type":"sendEvent","linenumber":500,"arguments":["name: \"thermostatSetpoint\""," value: thermostatSetpoint"," unit: getTemperatureScale()"]}

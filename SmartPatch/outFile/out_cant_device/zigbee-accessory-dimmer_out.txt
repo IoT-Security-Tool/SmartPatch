@@ -1,0 +1,569 @@
+ import java.util.UUID
+"License"
+"AS IS"
+
+import physicalgraph.zigbee.zcl.DataType
+
+metadata {
+	definition (name: "ZigBee Accessory Dimmer", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "x.com.st.d.remotecontroller") {
+		capability "Actuator"
+		capability "Switch"
+		capability "Button"
+		capability "Switch Level"
+		capability "Configuration"
+		capability "Health Check"
+
+		fingerprint profileId: "0104", inClusters: "0000,1000,0003", outClusters: "0003,0004,0005,0006,0008,1000,0019", manufacturer: "Aurora", model: "Remote50AU", deviceJoinName: "Aurora Wireless Wall Remote"
+		fingerprint profileId: "0104", inClusters: "0000,1000,0003", outClusters: "0003,0004,0005,0006,0008,1000,0019", manufacturer: "LDS", model: "ZBT-DIMController-D0800", deviceJoinName: "Müller Licht Tint Mobile Switch"
+	}
+
+	tiles(scale: 2) {
+		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true){
+			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
+				attributeState "on", label:'${name}', action:"switch.off", icon:"st.switches.light.on", backgroundColor:"#00A0DC", nextState:"turningOff"
+				attributeState "off", label:'${name}', action:"switch.on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+				attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.light.on", backgroundColor:"#00A0DC", nextState:"turningOff"
+				attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+			}
+			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
+				attributeState "level", action:"switch level.setLevel"
+			}
+		}
+		main "switch"
+		details(["switch"])
+	}
+}
+
+def getSTEP() {10}
+
+
+def parse(String description) {
+	log.debug "description is $description"
+
+	def event = zigbee.getEvent(description)
+	if (event) {
+		if (event.name=="level" && event.value==0) {}
+		else {
+//			sendEvent(event)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${event?.name}", value: "${event?.value}"]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue1= ''
+if(event.containsKey('data') ){
+datavalue1 = event['data']
+datavalue1 = "[" + datavalue1+ "," +"sign: " + "${signatureResult1}" + "]"
+event.put('data',"${datavalue1}")
+ }else{
+datavalue1=  "[sign: " + "${signatureResult1}" +"]"
+event.put('data',"${datavalue1}")
+}
+			sendEvent(event)
+		}
+	} else {
+		def descMap = zigbee.parseDescriptionAsMap(description)
+		if (descMap && descMap.clusterInt == 0x0006) {
+			if (descMap.commandInt == 0x01 || descMap.commandInt == 0x00) {
+				if (device.currentValue("level") == 0) {
+//					sendEvent(name: "level", value: STEP)
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level",  value: STEP]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+					sendEvent(name: "level",  value: STEP, data: [sign: "${signatureResult2}"])
+				}
+//				sendEvent(name: "switch", value: device.currentValue("switch") == "on" ? "off" : "on")
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: device.currentValue("switch") == "on" ? "off" : "on"]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+				sendEvent(name: "switch",  value: device.currentValue("switch") == "on" ? "off" : "on", data: [sign: "${signatureResult3}"])
+			}
+		} else if (descMap && descMap.clusterInt == 0x0008) {
+			def currentLevel = device.currentValue("level") as Integer ?: 0
+			if (descMap.commandInt == 0x02) {
+				def value = Math.min(currentLevel + STEP, 100)
+				log.debug "move to ${descMap.data}"
+				if (descMap.data[0] == "00") {
+					log.debug "move up"
+//					sendEvent(name: "switch", value: "on")
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "on"]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+					sendEvent(name: "switch",  value: "on", data: [sign: "${signatureResult4}"])
+//					sendEvent(name: "level", value: value)
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level",  value: value]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+					sendEvent(name: "level",  value: value, data: [sign: "${signatureResult5}"])
+				} else if (descMap.data[0] == "01") {
+					log.debug "move down"
+					value = Math.max(currentLevel - STEP, 0)
+					
+					if (value == 0) {
+//						sendEvent(name: "switch", value: "off")
+def params6 = null
+def signatureResult6 = null
+log.debug "id is ${device.id}"
+ params6 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "off"]
+	]
+signatureResult6 = null
+try {
+    httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+						sendEvent(name: "switch",  value: "off", data: [sign: "${signatureResult6}"])
+					} else {
+//						sendEvent(name: "level", value: value)
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level",  value: value]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+						sendEvent(name: "level",  value: value, data: [sign: "${signatureResult7}"])
+					}
+				}
+			} else if (descMap.commandInt == 0x01) {
+//				sendEvent(name: "level", value: descMap.data[0] == "00" ? 100 : STEP)
+def params8 = null
+def signatureResult8 = null
+log.debug "id is ${device.id}"
+ params8 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level",  value: descMap.data[0] == "00" ? 100 : STEP]
+	]
+signatureResult8 = null
+try {
+    httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+				sendEvent(name: "level",  value: descMap.data[ sign: "${signatureResult8}" ,0] == "00" ? 100 : STEP)
+//				sendEvent(name: "switch", value: "on" )
+def params9 = null
+def signatureResult9 = null
+log.debug "id is ${device.id}"
+ params9 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "on"]
+	]
+signatureResult9 = null
+try {
+    httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+				sendEvent(name: "switch",  value: "on", data: [sign: "${signatureResult9}"])
+				log.debug "step to ${descMap.data}"
+			} else if (descMap.commandInt == 0x03) {
+				log.debug "stop move"
+			}
+		} else if (descMap && descMap.clusterInt == 0x0005) {
+			if (descMap.commandInt == 0x05) {
+//				sendEvent(name: "button", value: "pushed", data: [buttonNumber: 1], isStateChange: true)
+def params10 = null
+def signatureResult10 = null
+log.debug "id is ${device.id}"
+ params10 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "button",  value: "pushed",  data: [buttonNumber: 1],  isStateChange: true]
+	]
+signatureResult10 = null
+try {
+    httpGet(params10) { resp ->
+        signatureResult10 = resp.data
+        log.debug "response data: ${signatureResult10}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+				sendEvent(name: "button",  value: "pushed",  data: [ sign: "${signatureResult10}" ,buttonNumber: 1],  isStateChange: true)
+			} else if (descMap.commandInt == 0x04) {
+//				sendEvent(name: "button", value: "held", data: [buttonNumber: 1], isStateChange: true)
+def params11 = null
+def signatureResult11 = null
+log.debug "id is ${device.id}"
+ params11 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "button",  value: "held",  data: [buttonNumber: 1],  isStateChange: true]
+	]
+signatureResult11 = null
+try {
+    httpGet(params11) { resp ->
+        signatureResult11 = resp.data
+        log.debug "response data: ${signatureResult11}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+				sendEvent(name: "button",  value: "held",  data: [ sign: "${signatureResult11}" ,buttonNumber: 1],  isStateChange: true)
+			}
+		} else {
+			log.warn "DID NOT PARSE MESSAGE for description : $description"
+			log.debug "${descMap}"
+		}
+	}
+}
+
+def off() {
+//	sendEvent(name: "switch", value: "off", isStateChange: true)
+def params12 = null
+def signatureResult12 = null
+log.debug "id is ${device.id}"
+ params12 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "off",  isStateChange: true]
+	]
+signatureResult12 = null
+try {
+    httpGet(params12) { resp ->
+        signatureResult12 = resp.data
+        log.debug "response data: ${signatureResult12}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "switch",  value: "off",  isStateChange: true, data: [sign: "${signatureResult12}"])
+}
+
+def on() {
+//	sendEvent(name: "switch", value: "on", isStateChange: true)
+def params13 = null
+def signatureResult13 = null
+log.debug "id is ${device.id}"
+ params13 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "on",  isStateChange: true]
+	]
+signatureResult13 = null
+try {
+    httpGet(params13) { resp ->
+        signatureResult13 = resp.data
+        log.debug "response data: ${signatureResult13}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "switch",  value: "on",  isStateChange: true, data: [sign: "${signatureResult13}"])
+}
+
+def setLevel(value, rate = null) {
+	if (value == 0) {
+//		sendEvent(name: "switch", value: "off")
+def params14 = null
+def signatureResult14 = null
+log.debug "id is ${device.id}"
+ params14 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "off"]
+	]
+signatureResult14 = null
+try {
+    httpGet(params14) { resp ->
+        signatureResult14 = resp.data
+        log.debug "response data: ${signatureResult14}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+		sendEvent(name: "switch",  value: "off", data: [sign: "${signatureResult14}"])
+		
+		value = device.currentValue("level")
+	} else {
+//		sendEvent(name: "switch", value: "on")
+def params15 = null
+def signatureResult15 = null
+log.debug "id is ${device.id}"
+ params15 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "on"]
+	]
+signatureResult15 = null
+try {
+    httpGet(params15) { resp ->
+        signatureResult15 = resp.data
+        log.debug "response data: ${signatureResult15}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+		sendEvent(name: "switch",  value: "on", data: [sign: "${signatureResult15}"])
+	}
+//	runIn(1, delayedSend, [data: createEvent(name: "level", value: value), overwrite: true])
+def params16 = null
+def signatureResult16 = null
+params16 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level",  value: value),  overwrite: true]]
+]
+signatureResult16 = null
+  try {
+        httpGet(params16) { resp ->
+        signatureResult16 = resp.data
+        log.debug "response data: ${signatureResult16}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	runIn(1, delayedSend, [data: createEvent(name: "level",  value: value),  overwrite: true], data: [sign: "${signatureResult16}"]), overwrite: true])
+}
+
+def delayedSend(data) {
+//	sendEvent(data)
+def params17 = null
+def signatureResult17 = null
+log.debug "id is ${device.id}"
+ params17 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${data?.name}", value: "${data?.value}"]
+	]
+signatureResult17 = null
+try {
+    httpGet(params17) { resp ->
+        signatureResult17 = resp.data
+        log.debug "response data: ${signatureResult17}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue17= ''
+if(data.containsKey('data') ){
+datavalue17 = data['data']
+datavalue17 = "[" + datavalue17+ "," +"sign: " + "${signatureResult17}" + "]"
+data.put('data',"${datavalue17}")
+ }else{
+datavalue17=  "[sign: " + "${signatureResult17}" +"]"
+data.put('data',"${datavalue17}")
+}
+	sendEvent(data)
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+//	sendEvent(name: "switch", value: "on", displayed: false)
+def params18 = null
+def signatureResult18 = null
+log.debug "id is ${device.id}"
+ params18 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "switch",  value: "on",  displayed: false]
+	]
+signatureResult18 = null
+try {
+    httpGet(params18) { resp ->
+        signatureResult18 = resp.data
+        log.debug "response data: ${signatureResult18}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "switch",  value: "on",  displayed: false, data: [sign: "${signatureResult18}"])
+//	sendEvent(name: "level", value: 100, displayed: false)
+def params19 = null
+def signatureResult19 = null
+log.debug "id is ${device.id}"
+ params19 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "level",  value: 100,  displayed: false]
+	]
+signatureResult19 = null
+try {
+    httpGet(params19) { resp ->
+        signatureResult19 = resp.data
+        log.debug "response data: ${signatureResult19}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "level",  value: 100,  displayed: false, data: [sign: "${signatureResult19}"])
+//	sendEvent(name: "button", value: "pushed", data: [buttonNumber: 1], displayed: false)
+def params20 = null
+def signatureResult20 = null
+log.debug "id is ${device.id}"
+ params20 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "button",  value: "pushed",  data: [buttonNumber: 1],  displayed: false]
+	]
+signatureResult20 = null
+try {
+    httpGet(params20) { resp ->
+        signatureResult20 = resp.data
+        log.debug "response data: ${signatureResult20}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "button",  value: "pushed",  data: [ sign: "${signatureResult20}" ,buttonNumber: 1],  displayed: false)
+//	sendEvent(name: "numberOfButtons", value: 1, displayed: false)
+def params21 = null
+def signatureResult21 = null
+log.debug "id is ${device.id}"
+ params21 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "numberOfButtons",  value: 1,  displayed: false]
+	]
+signatureResult21 = null
+try {
+    httpGet(params21) { resp ->
+        signatureResult21 = resp.data
+        log.debug "response data: ${signatureResult21}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "numberOfButtons",  value: 1,  displayed: false, data: [sign: "${signatureResult21}"])
+}
+
+def configure() {
+//	sendEvent(name: "DeviceWatch-Enroll", value: [protocol: "zigbee", scheme:"untracked"].encodeAsJson(), displayed: false)
+def params22 = null
+def signatureResult22 = null
+log.debug "id is ${device.id}"
+ params22 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-Enroll",  value: [protocol: "zigbee",  scheme:"untracked"].encodeAsJson(),  displayed: false]
+	]
+signatureResult22 = null
+try {
+    httpGet(params22) { resp ->
+        signatureResult22 = resp.data
+        log.debug "response data: ${signatureResult22}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "DeviceWatch-Enroll",  value: [protocol: "zigbee",  scheme:"untracked"].encodeAsJson(),  displayed: false, data: [sign: "${signatureResult22}"])
+	
+	zigbee.addBinding(zigbee.ONOFF_CLUSTER) + zigbee.addBinding(zigbee.LEVEL_CONTROL_CLUSTER) + zigbee.addBinding(0x0005)
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

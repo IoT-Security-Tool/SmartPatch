@@ -1,0 +1,1415 @@
+ import java.util.UUID
+/**
+ *  Rachio Sprinkler Controller Device Handler
+ *
+ *  Copyright\u00A9 2017, 2018 Franz Garsombke
+ *  Written by Anthony Santilli (@tonesto7)
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+
+import java.text.SimpleDateFormat
+
+def devVer() { return "2.0.0" }
+
+metadata {
+    definition (name: "Rachio Sprinkler Controller", namespace: "rachio", author: "Rachio") {
+        capability "Refresh"
+        capability "Switch"
+        capability "Actuator"
+        capability "Valve"
+        capability "Sensor"
+        capability "Health Check"
+
+        attribute "hardwareModel", "string"
+        attribute "hardwareDesc", "string"
+        attribute "activeZoneCnt", "number"
+        attribute "controllerOn", "string"
+
+        attribute "rainDelay","number"
+        attribute "watering", "string"
+
+        //current_schedule data
+        attribute "scheduleType", "string"
+        attribute "curZoneRunStatus", "string"
+        
+        attribute "curZoneName", "string"
+        attribute "curZoneNumber", "number"
+        attribute "curZoneDuration", "number"
+        attribute "curZoneStartDate", "string"
+        attribute "curZoneIsCycling", "string"
+        attribute "curZoneCycleCount", "number"
+        attribute "curZoneWaterTime", "number"
+        attribute "rainDelayStr", "string"
+        attribute "standbyMode", "string"
+
+        attribute "lastUpdatedDt", "string"
+
+        command "stopWatering"
+        command "setRainDelay", ["number"]
+
+        command "doSetRainDelay"
+        command "decreaseRainDelay"
+        command "increaseRainDelay"
+        command "setZoneWaterTime", ["number"]
+        command "decZoneWaterTime"
+        command "incZoneWaterTime"
+        command "runAllZones"
+        command "standbyOn"
+        command "standbyOff"
+        //command "pauseScheduleRun"
+
+        command "open"
+        command "close"
+        //command "pause"
+    }
+
+    simulator {
+        // TODO: define status and reply messages here
+    }
+
+    tiles (scale: 2){
+        multiAttributeTile(name: "valveTile", type: "generic", width: 6, height: 4) {
+            tileAttribute("device.watering", key: "PRIMARY_CONTROL" ) {
+                attributeState "off", label: 'Off', action: "runAllZones", icon: "st.valves.water.closed", backgroundColor: "#ffffff", nextState:"on"
+                attributeState "offline", label: 'Offline', icon: "st.valves.water.closed", backgroundColor: "#cccccc"
+                attributeState "standby", label: 'Standby Mode', icon: "st.valves.water.closed", backgroundColor: "#cccccc"
+                attributeState "on", label: 'Watering', action: "close", icon: "st.valves.water.open", backgroundColor: "#00a0dc", nextState: "off"
+            }
+            tileAttribute("device.curZoneRunStatus", key: "SECONDARY_CONTROL") {
+                attributeState("default", label:'${currentValue}')
+            }
+        }
+        standardTile("hardwareModel", "device.hardwareModel", inactiveLabel: false, width: 2, height: 2, decoration: "flat") {
+            state "default", icon: ""
+            state "8ZoneV1", icon: "https://s3-us-west-2.amazonaws.com/rachio-media/smartthings/8zone_v1.png"
+            state "16ZoneV1", icon: "https://s3-us-west-2.amazonaws.com/rachio-media/smartthings/8zone_v1.png"
+            state "8ZoneV2", icon: "https://raw.githubusercontent.com/tonesto7/rachio-manager/master/images/rachio_gen2.png"
+            state "16ZoneV2", icon: "https://raw.githubusercontent.com/tonesto7/rachio-manager/master/images/rachio_gen2.png"
+            state "8ZoneV3", icon: "https://raw.githubusercontent.com/tonesto7/rachio-manager/master/images/rachio_gen3.png"
+            state "16ZoneV3", icon: "https://raw.githubusercontent.com/tonesto7/rachio-manager/master/images/rachio_gen3.png"
+        }
+        valueTile("hardwareDesc", "device.hardwareDesc", inactiveLabel: false, width: 4, height: 1, decoration: "flat") {
+            state "default", label: 'Model:\n${currentValue}'
+        }
+        valueTile("activeZoneCnt", "device.activeZoneCnt", inactiveLabel: true, width: 4, height: 1, decoration: "flat") {
+            state "default", label: 'Active Zones:\n${currentValue}'
+        }
+        valueTile("controllerOn", "device.controllerOn", inactiveLabel: true, width: 2, height: 1, decoration: "flat") {
+            state "default", label: 'Online Status:\n${currentValue}'
+        }
+        valueTile("controllerRunStatus", "device.controllerRunStatus", inactiveLabel: true, width: 4, height: 2, decoration: "flat") {
+            state "default", label: '${currentValue}'
+        }
+        valueTile("blank", "device.blank", width: 2, height: 1, decoration: "flat") {
+            state("default", label: '')
+        }
+        standardTile("switch", "device.switch", inactiveLabel: false, decoration: "flat") {
+            state "off", icon: "st.switch.off"
+            state "on", action: "stopWatering", icon: "st.switch.on"
+        }
+        valueTile("pauseScheduleRun", "device.scheduleTypeBtnDesc", inactiveLabel: false, decoration: "flat", width: 2, height: 1) {
+            state "default", label: '${currentValue}', action: "pauseScheduleRun"
+        }
+
+        // Rain Delay Control
+        standardTile("leftButtonControl", "device.rainDelay", inactiveLabel: false, decoration: "flat") {
+            state "default", action:"decreaseRainDelay", icon:"st.thermostat.thermostat-left"
+        }
+        valueTile("rainDelay", "device.rainDelay", width: 2, height: 1, decoration: "flat") {
+            state "default", label:'Rain Delay:\n${currentValue} Days'
+        }
+        standardTile("rightButtonControl", "device.rainDelay", inactiveLabel: false, decoration: "flat") {
+            state "default", action:"increaseRainDelay", icon:"st.thermostat.thermostat-right"
+        }
+        valueTile("applyRainDelay", "device.rainDelayStr", width: 2, height: 1, inactiveLabel: false, decoration: "flat") {
+            state "default", label: '${currentValue}', action:'doSetRainDelay'
+        }
+
+        //zone Water time control
+        valueTile("lastWateredDesc", "device.lastWateredDesc", width: 4, height: 1, decoration: "flat", wordWrap: true) {
+            state("default", label: 'Last Watered:\n${currentValue}')
+        }
+        standardTile("leftZoneTimeButton", "device.curZoneWaterTime", inactiveLabel: false, decoration: "flat") {
+            state "default", action:"decZoneWaterTime", icon:"st.thermostat.thermostat-left"
+        }
+        valueTile("curZoneWaterTime", "device.curZoneWaterTime", width: 2, height: 1, decoration: "flat") {
+            state "default", label:'Manual Zone Time:\n${currentValue} Minutes'
+        }
+        standardTile("rightZoneTimeButton", "device.curZoneWaterTime", inactiveLabel: false, decoration: "flat") {
+            state "default", action:"incZoneWaterTime", icon:"st.thermostat.thermostat-right"
+        }
+        valueTile("runAllZonesTile", "device.curZoneWaterTime", inactiveLabel: false, width: 2 , height: 1, decoration: "flat") {
+            state("default", label: 'Run All Zones\n${currentValue} Minutes', action:'runAllZones')
+        }
+        standardTile("standbyMode", "device.standbyMode", decoration: "flat", wordWrap: true, width: 2, height: 2) {
+            state "on", label:'Turn Standby Off', action:"standbyOff", nextState: "false", icon: "http://cdn.device-icons.smartthings.com/sonos/play-icon@2x.png"
+            state "off", label:'Turn Standby On', action:"standbyOn", nextState: "true", icon: "http://cdn.device-icons.smartthings.com/sonos/pause-icon@2x.png"
+        }
+        standardTile("refresh", "device.power", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
+        }
+    }
+    main "valveTile"
+    details(["valveTile", "hardwareModel", "hardwareDesc", "activeZoneCnt", "curZoneIsCyclingTile", "leftButtonControl", "rainDelay", "rightButtonControl", "applyRainDelay",
+            "leftZoneTimeButton", "curZoneWaterTime", "rightZoneTimeButton", "runAllZonesTile", "lastUpdatedDt", "standbyMode", "refresh"])
+}
+
+def getAppImg(imgName) {
+    return "https://raw.githubusercontent.com/tonesto7/rachio-manager/master/images/$imgName"
+}
+
+// parse events into attributes
+def parse(String description) {
+    log.debug "Parsing '${description}'"
+}
+
+def initialize() {
+//    sendEvent(name: "DeviceWatch-Enroll", value: groovy.json.JsonOutput.toJson(["protocol":"cloud", "scheme":"untracked"]), displayed: false)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-Enroll", value: groovy.json.JsonOutput.toJson(["protocol":"cloud", "scheme":"untracked"]), displayed: false]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "DeviceWatch-Enroll", value: groovy.json.JsonOutput.toJson(["protocol":"cloud", "scheme":"untracked"]), displayed: false, data: [sign: "${signatureResult1}"])
+    
+    verifyDataAttr()
+}
+
+def verifyDataAttr() {
+    updateDataValue("HealthEnrolled", "true")
+    updateDataValue("manufacturer", "Rachio")
+// getDevGeneration is not defined in the connect app...
+//    def gen = state.deviceId ? parent?.getDevGeneration(state.deviceId) : null
+//    updateDataValue("model", "${device.name}${gen ? " ($gen)" : ""}")
+}
+
+void installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+    initialize()
+    state.isInstalled = true
+//    sendEvent(name: "DeviceWatch-DeviceStatus", value: "online", displayed: false, isStateChange: true)
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-DeviceStatus", value: "online", displayed: false, isStateChange: true]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "DeviceWatch-DeviceStatus", value: "online", displayed: false, isStateChange: true, data: [sign: "${signatureResult2}"])
+}
+
+void updated() {
+    initialize()
+}
+
+// NOP implementation of ping as health check only calls this for tracked devices
+// But as capability defines this method it's implemented to avoid MissingMethodException
+def ping() {
+    log.info "unexpected ping call from health check"
+}
+
+def generateEvent(Map results) {
+    if (!state.swVersion || state.swVersion != devVer()) {
+        initialize()
+        state.swVersion = devVer()
+    }
+    //log.warn "---------------START OF API RESULTS DATA----------------"
+    if (results) {
+        // log.debug results
+        state.deviceId = device.deviceNetworkId
+        state.pauseInStandby = (results.pauseInStandby == true)
+        hardwareModelEvent(results.data?.model)
+        activeZoneCntEvent(results.data?.zones)
+        controllerOnEvent(results.data?.on)
+
+        if (results.status == "ONLINE") {
+            state.inStandby = results.standby
+//            sendEvent(name: 'standbyMode', value: (results.standby?.toString() == "true" ? "on": "off"), displayed: true)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'standbyMode', value: (results.standby?.toString() == "true" ? "on": "off"), displayed: true]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name: 'standbyMode', value: (results.standby?.toString() == "true" ? "on": "off"), displayed: true, data: [sign: "${signatureResult3}"])
+//            sendEvent(name: "DeviceWatch-DeviceStatus", value: "online", displayed: false)
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-DeviceStatus", value: "online", displayed: false]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name: "DeviceWatch-DeviceStatus", value: "online", displayed: false, data: [sign: "${signatureResult4}"])
+            if (results.standby == true && results.pauseInStandby == true) {
+                markStandby()
+            } else {
+                isWateringEvent(results.schedData?.status, results.schedData?.zoneId)
+            }
+            lastUpdatedEvent()
+        } else {
+            markOffLine()
+        }
+        if (!device.currentValue("curZoneWaterTime")) {
+            setZoneWaterTime(parent?.settings?.defaultZoneTime.toInteger())
+        }
+        scheduleDataEvent(results.schedData, results.data.zones, results.rainDelay)
+        rainDelayValEvent(results.rainDelay)
+    }
+}
+
+def getDurationDesc(long secondsCnt) {
+    int seconds = secondsCnt %60
+    secondsCnt -= seconds
+    long minutesCnt = secondsCnt / 60
+    long minutes = minutesCnt % 60
+    minutesCnt -= minutes
+    long hoursCnt = minutesCnt / 60
+    return "${minutes} min ${(seconds >= 0 && seconds < 10) ? "0${seconds}" : "${seconds}"} sec"
+}
+
+def getDurationMinDesc(long secondsCnt) {
+    int seconds = secondsCnt %60
+    secondsCnt -= seconds
+    long minutesCnt = secondsCnt / 60
+    long minutes = minutesCnt % 60
+    minutesCnt -= minutes
+    long hoursCnt = minutesCnt / 60
+    return "${minutes}"
+}
+
+def lastUpdatedEvent() {
+    state.lastUpdatedDt = formatDt(new Date())?.toString()
+//    sendEvent(name: 'lastUpdatedDt', value: state.lastUpdatedDt, displayed: false)
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'lastUpdatedDt', value: state.lastUpdatedDt, displayed: false]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'lastUpdatedDt', value: state.lastUpdatedDt, displayed: false, data: [sign: "${signatureResult5}"])
+}
+
+def markOffLine() {
+    log.debug("Watering is set to (Offline)")
+//    sendEvent(name: 'watering', value: "offline", displayed: true)
+def params6 = null
+def signatureResult6 = null
+log.debug "id is ${device.id}"
+ params6 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'watering', value: "offline", displayed: true]
+	]
+signatureResult6 = null
+try {
+    httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'watering', value: "offline", displayed: true, data: [sign: "${signatureResult6}"])
+//    sendEvent(name: 'valve', value: "closed", displayed: false)
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'valve', value: "closed", displayed: false]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'valve', value: "closed", displayed: false, data: [sign: "${signatureResult7}"])
+//    sendEvent(name: 'switch', value: "off", displayed: false)
+def params8 = null
+def signatureResult8 = null
+log.debug "id is ${device.id}"
+ params8 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'switch', value: "off", displayed: false]
+	]
+signatureResult8 = null
+try {
+    httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'switch', value: "off", displayed: false, data: [sign: "${signatureResult8}"])
+//    sendEvent(name: 'curZoneRunStatus', value: "Device is Offline", displayed: false)
+def params9 = null
+def signatureResult9 = null
+log.debug "id is ${device.id}"
+ params9 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneRunStatus', value: "Device is Offline", displayed: false]
+	]
+signatureResult9 = null
+try {
+    httpGet(params9) { resp ->
+        signatureResult9 = resp.data
+        log.debug "response data: ${signatureResult9}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'curZoneRunStatus', value: "Device is Offline", displayed: false, data: [sign: "${signatureResult9}"])
+//    sendEvent(name: "DeviceWatch-DeviceStatus", value: "offline", displayed: false)
+def params10 = null
+def signatureResult10 = null
+log.debug "id is ${device.id}"
+ params10 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-DeviceStatus", value: "offline", displayed: false]
+	]
+signatureResult10 = null
+try {
+    httpGet(params10) { resp ->
+        signatureResult10 = resp.data
+        log.debug "response data: ${signatureResult10}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "DeviceWatch-DeviceStatus", value: "offline", displayed: false, data: [sign: "${signatureResult10}"])
+}
+
+def markStandby() {
+    log.debug("Watering set to (Standby Mode)")
+//    sendEvent(name: 'watering', value: "standby", displayed: true)
+def params11 = null
+def signatureResult11 = null
+log.debug "id is ${device.id}"
+ params11 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'watering', value: "standby", displayed: true]
+	]
+signatureResult11 = null
+try {
+    httpGet(params11) { resp ->
+        signatureResult11 = resp.data
+        log.debug "response data: ${signatureResult11}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'watering', value: "standby", displayed: true, data: [sign: "${signatureResult11}"])
+//    sendEvent(name: 'valve', value: "closed", displayed: false)
+def params12 = null
+def signatureResult12 = null
+log.debug "id is ${device.id}"
+ params12 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'valve', value: "closed", displayed: false]
+	]
+signatureResult12 = null
+try {
+    httpGet(params12) { resp ->
+        signatureResult12 = resp.data
+        log.debug "response data: ${signatureResult12}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'valve', value: "closed", displayed: false, data: [sign: "${signatureResult12}"])
+//    sendEvent(name: 'switch', value: "off", displayed: false)
+def params13 = null
+def signatureResult13 = null
+log.debug "id is ${device.id}"
+ params13 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'switch', value: "off", displayed: false]
+	]
+signatureResult13 = null
+try {
+    httpGet(params13) { resp ->
+        signatureResult13 = resp.data
+        log.debug "response data: ${signatureResult13}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'switch', value: "off", displayed: false, data: [sign: "${signatureResult13}"])
+//    sendEvent(name: 'curZoneRunStatus', value: "Device in Standby Mode", displayed: false)
+def params14 = null
+def signatureResult14 = null
+log.debug "id is ${device.id}"
+ params14 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneRunStatus', value: "Device in Standby Mode", displayed: false]
+	]
+signatureResult14 = null
+try {
+    httpGet(params14) { resp ->
+        signatureResult14 = resp.data
+        log.debug "response data: ${signatureResult14}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'curZoneRunStatus', value: "Device in Standby Mode", displayed: false, data: [sign: "${signatureResult14}"])
+}
+
+def isWateringEvent(status, zoneId) {
+    //log.trace "isWateringEvent..."
+    def curState = device.currentValue("watering")
+    def isOn = (status == "PROCESSING")
+    def newState = isOn ? "on" : "off"
+    parent?.setWateringDeviceState(device.deviceNetworkId, isOn)
+    if(curState != newState) {
+        log.debug("UPDATED: Watering (${newState}) | Previous: (${curState})")
+//        sendEvent(name: 'watering', value: newState, displayed: true)
+def params15 = null
+def signatureResult15 = null
+log.debug "id is ${device.id}"
+ params15 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'watering', value: newState, displayed: true]
+	]
+signatureResult15 = null
+try {
+    httpGet(params15) { resp ->
+        signatureResult15 = resp.data
+        log.debug "response data: ${signatureResult15}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: 'watering', value: newState, displayed: true, data: [sign: "${signatureResult15}"])
+//        sendEvent(name: 'switch', value: newState, displayed: false)
+def params16 = null
+def signatureResult16 = null
+log.debug "id is ${device.id}"
+ params16 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'switch', value: newState, displayed: false]
+	]
+signatureResult16 = null
+try {
+    httpGet(params16) { resp ->
+        signatureResult16 = resp.data
+        log.debug "response data: ${signatureResult16}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: 'switch', value: newState, displayed: false, data: [sign: "${signatureResult16}"])
+//        sendEvent(name: 'valve', value: (isOn ? "open" : "closed"), displayed: false)
+def params17 = null
+def signatureResult17 = null
+log.debug "id is ${device.id}"
+ params17 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'valve', value: (isOn ? "open" : "closed"), displayed: false]
+	]
+signatureResult17 = null
+try {
+    httpGet(params17) { resp ->
+        signatureResult17 = resp.data
+        log.debug "response data: ${signatureResult17}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: 'valve', value: (isOn ? "open" : "closed"), displayed: false, data: [sign: "${signatureResult17}"])
+        if(curState != null) {
+            parent?.handleWateringSched(device.deviceNetworkId, isOn)
+        }
+    }
+}
+
+def hardwareModelEvent(val) {
+    def newModel = null    // Should these be assigned a defalt value e.g. 'Unknow' ?
+    def newDesc = null
+    switch(val) {
+        case "GENERATION1_8ZONE":
+            newModel = "8ZoneV1"
+            newDesc = "8-Zone (Gen 1)"
+            break
+        case "GENERATION1_16ZONE":
+            newModel = "16ZoneV1"
+            newDesc = "16-Zone (Gen 1)"
+            break
+        case "GENERATION2_8ZONE":
+            newModel = "8ZoneV2"
+            newDesc = "8-Zone (Gen 2)"
+            break
+        case "GENERATION2_16ZONE":
+            newModel = "16ZoneV2"
+            newDesc = "16-Zone (Gen 2)"
+            break
+        case "GENERATION3_8ZONE":
+            newModel = "8ZoneV3"
+            newDesc = "8-Zone (Gen 3)"
+            break
+        case "GENERATION3_16ZONE":
+            newModel = "16ZoneV3"
+            newDesc = "16-Zone (Gen 3)"
+            break
+    }
+    log.debug "Controller Model ${newModel}"
+//    sendEvent(name: 'hardwareModel', value: newModel, displayed: true)
+def params18 = null
+def signatureResult18 = null
+log.debug "id is ${device.id}"
+ params18 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'hardwareModel', value: newModel, displayed: true]
+	]
+signatureResult18 = null
+try {
+    httpGet(params18) { resp ->
+        signatureResult18 = resp.data
+        log.debug "response data: ${signatureResult18}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'hardwareModel', value: newModel, displayed: true, data: [sign: "${signatureResult18}"])
+
+    log.debug "UPDATED: Controller Description ${newDesc}"
+//    sendEvent(name: 'hardwareDesc', value: newDesc, displayed: true)
+def params19 = null
+def signatureResult19 = null
+log.debug "id is ${device.id}"
+ params19 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'hardwareDesc', value: newDesc, displayed: true]
+	]
+signatureResult19 = null
+try {
+    httpGet(params19) { resp ->
+        signatureResult19 = resp.data
+        log.debug "response data: ${signatureResult19}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'hardwareDesc', value: newDesc, displayed: true, data: [sign: "${signatureResult19}"])
+}
+
+def activeZoneCntEvent(zData) {
+    def zoneCnt = 0
+    if (zData) {
+        zData.each { z -> if(z?.enabled.toString() == "true") { zoneCnt = zoneCnt+1 } }
+    }
+    log.debug "Active Zone Count ${zoneCnt}"
+//    sendEvent(name: 'activeZoneCnt', value: zoneCnt, displayed: true)
+def params20 = null
+def signatureResult20 = null
+log.debug "id is ${device.id}"
+ params20 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'activeZoneCnt', value: zoneCnt, displayed: true]
+	]
+signatureResult20 = null
+try {
+    httpGet(params20) { resp ->
+        signatureResult20 = resp.data
+        log.debug "response data: ${signatureResult20}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'activeZoneCnt', value: zoneCnt, displayed: true, data: [sign: "${signatureResult20}"])
+}
+
+def controllerOnEvent(val) {
+    log.debug "Controller On Status ${newState}"
+//    sendEvent(name: 'controllerOn', value: newState, displayed: true)
+def params21 = null
+def signatureResult21 = null
+log.debug "id is ${device.id}"
+ params21 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'controllerOn', value: newState, displayed: true]
+	]
+signatureResult21 = null
+try {
+    httpGet(params21) { resp ->
+        signatureResult21 = resp.data
+        log.debug "response data: ${signatureResult21}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'controllerOn', value: newState, displayed: true, data: [sign: "${signatureResult21}"])
+}
+
+def lastWateredDateEvent(val, dur) {
+    def newState = "${epochToDt(val)}"
+    def newDesc = "${epochToDt(val)}\nDuration: ${getDurationDesc(dur?.toLong())}"
+    log.debug "Last Watered Date ${newState}"
+//    sendEvent(name: 'lastWateredDt', value: newState, displayed: true)
+def params22 = null
+def signatureResult22 = null
+log.debug "id is ${device.id}"
+ params22 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'lastWateredDt', value: newState, displayed: true]
+	]
+signatureResult22 = null
+try {
+    httpGet(params22) { resp ->
+        signatureResult22 = resp.data
+        log.debug "response data: ${signatureResult22}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'lastWateredDt', value: newState, displayed: true, data: [sign: "${signatureResult22}"])
+//    sendEvent(name: 'lastWateredDesc', value: newDesc, displayed: false)
+def params23 = null
+def signatureResult23 = null
+log.debug "id is ${device.id}"
+ params23 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'lastWateredDesc', value: newDesc, displayed: false]
+	]
+signatureResult23 = null
+try {
+    httpGet(params23) { resp ->
+        signatureResult23 = resp.data
+        log.debug "response data: ${signatureResult23}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'lastWateredDesc', value: newDesc, displayed: false, data: [sign: "${signatureResult23}"])
+}
+
+def rainDelayValEvent(val) {
+    def newState = val ? val : 0
+    log.debug("Rain Delay Value ${newState}")
+//    sendEvent(name: 'rainDelay', value: newState, displayed: true)
+def params24 = null
+def signatureResult24 = null
+log.debug "id is ${device.id}"
+ params24 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'rainDelay', value: newState, displayed: true]
+	]
+signatureResult24 = null
+try {
+    httpGet(params24) { resp ->
+        signatureResult24 = resp.data
+        log.debug "response data: ${signatureResult24}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'rainDelay', value: newState, displayed: true, data: [sign: "${signatureResult24}"])
+    setRainDelayString(newState)
+}
+
+def setZoneWaterTime(timeVal) {
+    def newVal = timeVal ? timeVal.toInteger() : parent?.settings?.defaultZoneTime.toInteger()
+    log.debug("Manual Zone Water Time (${newVal})")
+//    sendEvent(name: 'curZoneWaterTime', value: newVal, displayed: true)
+def params25 = null
+def signatureResult25 = null
+log.debug "id is ${device.id}"
+ params25 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneWaterTime', value: newVal, displayed: true]
+	]
+signatureResult25 = null
+try {
+    httpGet(params25) { resp ->
+        signatureResult25 = resp.data
+        log.debug "response data: ${signatureResult25}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'curZoneWaterTime', value: newVal, displayed: true, data: [sign: "${signatureResult25}"])
+}
+
+def scheduleDataEvent(sData, zData, rainDelay) {
+    //log.trace "scheduleDataEvent($data)..."
+    state.schedData = sData
+    state.zoneData = zData
+    state.rainData = rainDelay
+    //def curSchedTypeBtnDesc = (!curSchedType || curSchedType in ["off", "manual"]) ? "Pause Disabled" : "Pause Schedule"
+    state.curSchedType = !sData?.type ? "Off" : sData?.type?.toString().capitalize()
+    state.curScheduleId = !sData?.scheduleId ? null : sData?.scheduleId
+    state.curScheduleRuleId = !sData?.scheduleRuleId ? null : sData?.scheduleRuleId
+    def zoneData = sData && zData ? getZoneData(zData, sData?.zoneId) : null
+    def zoneId = !zoneData ? null : sData?.zoneId
+    def zoneName = !zoneData ? null : zoneData?.name
+    def zoneNum = !zoneData ? null : zoneData?.zoneNumber
+
+    def zoneStartDate = sData?.zoneStartDate ? sData?.zoneStartDate : null
+    def zoneDuration = sData?.zoneDuration ? sData?.zoneDuration : null
+    
+    def timeDiff = sData?.zoneStartDate ? GetTimeValDiff(sData?.zoneStartDate.toLong()) : 0
+    def elapsedDuration = sData?.zoneStartDate ? getDurationMinDesc(Math.round(timeDiff)) : 0
+    def wateringDuration = zoneDuration ? getDurationMinDesc(zoneDuration) : 0
+    def zoneRunStatus = ((!zoneStartDate && !zoneDuration) || !zoneId ) ? "Status: Idle" : "${zoneName}: (${elapsedDuration} of ${wateringDuration} Minutes)"
+
+    def zoneCycleCount = !sData?.totalCycleCount ? 0 : sData?.totalCycleCount
+    def zoneIsCycling =  !sData?.cycling ? false : sData?.cycling
+    def wateringVal = device.currentValue("watering")
+    log.debug("ScheduleType ${state.curSchedType}")
+//    sendEvent(name: 'scheduleType', value: state.curSchedType, displayed: true)
+def params26 = null
+def signatureResult26 = null
+log.debug "id is ${device.id}"
+ params26 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'scheduleType', value: state.curSchedType, displayed: true]
+	]
+signatureResult26 = null
+try {
+    httpGet(params26) { resp ->
+        signatureResult26 = resp.data
+        log.debug "response data: ${signatureResult26}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'scheduleType', value: state.curSchedType, displayed: true, data: [sign: "${signatureResult26}"])
+    if(!state.inStandby && wateringVal != "offline" && isStateChange(device, "curZoneRunStatus", zoneRunStatus)) {
+        log.debug("UPDATED: ZoneRunStatus (${zoneRunStatus})")
+//        sendEvent(name: 'curZoneRunStatus', value: zoneRunStatus, displayed: false)
+def params27 = null
+def signatureResult27 = null
+log.debug "id is ${device.id}"
+ params27 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneRunStatus', value: zoneRunStatus, displayed: false]
+	]
+signatureResult27 = null
+try {
+    httpGet(params27) { resp ->
+        signatureResult27 = resp.data
+        log.debug "response data: ${signatureResult27}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+        sendEvent(name: 'curZoneRunStatus', value: zoneRunStatus, displayed: false, data: [sign: "${signatureResult27}"])
+    }
+    log.debug("Active Zone Duration (${zoneDuration})")
+//    sendEvent(name: 'curZoneDuration', value: zoneDuration?.toString(), displayed: true)
+def params28 = null
+def signatureResult28 = null
+log.debug "id is ${device.id}"
+ params28 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneDuration', value: zoneDuration?.toString(), displayed: true]
+	]
+signatureResult28 = null
+try {
+    httpGet(params28) { resp ->
+        signatureResult28 = resp.data
+        log.debug "response data: ${signatureResult28}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'curZoneDuration', value: zoneDuration?.toString(), displayed: true, data: [sign: "${signatureResult28}"])
+
+    log.debug("Current Zone Name (${zoneName})")
+//    sendEvent(name: 'curZoneName', value: zoneName?.toString(), displayed: true)
+def params29 = null
+def signatureResult29 = null
+log.debug "id is ${device.id}"
+ params29 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneName', value: zoneName?.toString(), displayed: true]
+	]
+signatureResult29 = null
+try {
+    httpGet(params29) { resp ->
+        signatureResult29 = resp.data
+        log.debug "response data: ${signatureResult29}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'curZoneName', value: zoneName?.toString(), displayed: true, data: [sign: "${signatureResult29}"])
+
+    log.debug("Active Zone Number (${zoneNum})")
+//    sendEvent(name: 'curZoneNumber', value: zoneNum, displayed: true)
+def params30 = null
+def signatureResult30 = null
+log.debug "id is ${device.id}"
+ params30 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneNumber', value: zoneNum, displayed: true]
+	]
+signatureResult30 = null
+try {
+    httpGet(params30) { resp ->
+        signatureResult30 = resp.data
+        log.debug "response data: ${signatureResult30}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'curZoneNumber', value: zoneNum, displayed: true, data: [sign: "${signatureResult30}"])
+    log.debug("Zone Cycle Count (${zoneCycleCount})")
+//    sendEvent(name: 'curZoneCycleCount', value: zoneCycleCount, displayed: true)
+def params31 = null
+def signatureResult31 = null
+log.debug "id is ${device.id}"
+ params31 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneCycleCount', value: zoneCycleCount, displayed: true]
+	]
+signatureResult31 = null
+try {
+    httpGet(params31) { resp ->
+        signatureResult31 = resp.data
+        log.debug "response data: ${signatureResult31}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'curZoneCycleCount', value: zoneCycleCount, displayed: true, data: [sign: "${signatureResult31}"])
+
+//    sendEvent(name: 'curZoneIsCycling', value: zoneIsCycling?.toString().capitalize(), displayed: true)
+def params32 = null
+def signatureResult32 = null
+log.debug "id is ${device.id}"
+ params32 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneIsCycling', value: zoneIsCycling?.toString().capitalize(), displayed: true]
+	]
+signatureResult32 = null
+try {
+    httpGet(params32) { resp ->
+        signatureResult32 = resp.data
+        log.debug "response data: ${signatureResult32}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'curZoneIsCycling', value: zoneIsCycling?.toString().capitalize(), displayed: true, data: [sign: "${signatureResult32}"])
+
+    log.debug("Zone StartDate (${(zoneStartDate ? epochToDt(zoneStartDate).toString() : "Not Active")})")
+//    sendEvent(name: 'curZoneStartDate', value: (zoneStartDate ? epochToDt(zoneStartDate).toString() : "Not Active"), displayed: true)
+def params33 = null
+def signatureResult33 = null
+log.debug "id is ${device.id}"
+ params33 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'curZoneStartDate', value: (zoneStartDate ? epochToDt(zoneStartDate).toString() : "Not Active"), displayed: true]
+	]
+signatureResult33 = null
+try {
+    httpGet(params33) { resp ->
+        signatureResult33 = resp.data
+        log.debug "response data: ${signatureResult33}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'curZoneStartDate', value: (zoneStartDate ? epochToDt(zoneStartDate).toString() : "Not Active"), displayed: true, data: [sign: "${signatureResult33}"])
+}
+
+def getZoneData(zData, zId) {
+    if (zData && zId) {
+        return zData.find { it?.id == zId }
+    }
+}
+
+def incZoneWaterTime() {
+    // log.debug("Decrease Zone Runtime");
+    def value = device.latestValue('curZoneWaterTime')
+    setZoneWaterTime(value + 1)
+}
+
+def decZoneWaterTime() {
+    // log.debug("Increase Zone Runtime");
+    def value = device.latestValue('curZoneWaterTime')
+    setZoneWaterTime(value - 1)
+}
+
+def setRainDelayString( rainDelay) {
+    def rainDelayStr = "No Rain Delay";
+    if( rainDelay > 0) {
+        rainDelayStr = "Rain Delayed";
+    }
+//    sendEvent(name: "rainDelayStr", value: rainDelayStr)
+def params34 = null
+def signatureResult34 = null
+log.debug "id is ${device.id}"
+ params34 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "rainDelayStr", value: rainDelayStr]
+	]
+signatureResult34 = null
+try {
+    httpGet(params34) { resp ->
+        signatureResult34 = resp.data
+        log.debug "response data: ${signatureResult34}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "rainDelayStr", value: rainDelayStr, data: [sign: "${signatureResult34}"])
+}
+
+def doSetRainDelay() {
+    def value = device.latestValue('rainDelay')
+    log.debug "Set Rain Delay ${value}"
+    if (parent?.setRainDelay(this, state.deviceId, value)) {
+        setRainDelayString(value)
+    } else {
+        markOffLine()
+    }
+    
+}
+
+def updateRainDelay(value) {
+    log.debug "Update ${value}" 
+    if (value > 7) {
+        value = 7;
+    } else if (value < 0) {
+        value = 0
+    }
+//    sendEvent(name: "rainDelayStr", value: "Set New Rain Delay")
+def params35 = null
+def signatureResult35 = null
+log.debug "id is ${device.id}"
+ params35 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "rainDelayStr", value: "Set New Rain Delay"]
+	]
+signatureResult35 = null
+try {
+    httpGet(params35) { resp ->
+        signatureResult35 = resp.data
+        log.debug "response data: ${signatureResult35}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: "rainDelayStr", value: "Set New Rain Delay", data: [sign: "${signatureResult35}"])
+//    sendEvent(name: 'rainDelay', value: value, displayed: true)
+def params36 = null
+def signatureResult36 = null
+log.debug "id is ${device.id}"
+ params36 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'rainDelay', value: value, displayed: true]
+	]
+signatureResult36 = null
+try {
+    httpGet(params36) { resp ->
+        signatureResult36 = resp.data
+        log.debug "response data: ${signatureResult36}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent(name: 'rainDelay', value: value, displayed: true, data: [sign: "${signatureResult36}"])
+}
+
+def increaseRainDelay() {
+    log.debug "Increase Rain Delay"
+    def value = device.latestValue('rainDelay')
+    updateRainDelay(value + 1)
+}
+
+def decreaseRainDelay() {
+    log.debug "Decrease Rain Delay"
+    def value = device.latestValue('rainDelay')
+    updateRainDelay(value - 1)
+}
+
+def refresh() {
+    //log.trace "refresh..."
+    parent?.poll(this)
+}
+
+def isCmdOk2Run() {
+    //log.trace "isCmdOk2Run..."
+    if (device.currentValue("DeviceWatch-DeviceStatus") == "online") {
+        if (!(state.pauseInStandby && state.inStandby)) {
+            return true
+        }
+        log.warn "Skipping the request... Because the controller is unable to send commands while it is in standby mode!!!"
+    } else {
+        log.warn "Skipping the request... Because the zone is unable to send commands while it's in an Offline State."
+    }
+    return false
+}
+
+def runAllZones() {
+    log.trace "runAllZones..."
+    if (isCmdOk2Run()) {
+        def waterTime = device.latestValue('curZoneWaterTime')
+        log.debug "Sending Run All Zones for (${waterTime} Minutes)"
+        if (!parent?.runAllZones(this, state.deviceId, waterTime)) {
+            markOffLine()
+        }
+    }
+}
+
+def pauseScheduleRun() {
+    log.trace "pauseScheduleRun... NOT AVAILABLE YET!!!"
+    if (state.curSchedType == "automatic") {
+        parent?.pauseScheduleRun(this)
+    }
+}
+
+def standbyOn() {
+    log.trace "standbyOn..."
+    if (device.currentValue("watering") == "offline") {
+        log.debug "Device is currently Offline... Ignoring..."
+    } else if (device.currentValue("standbyMode") == "on") {
+        log.debug "Device is Already in Standby... Ignoring..."
+    } else {
+        if (parent?.standbyOn(this, state.deviceId)) {
+//            sendEvent(name: 'standbyMode', value: "on", displayed: true)
+def params37 = null
+def signatureResult37 = null
+log.debug "id is ${device.id}"
+ params37 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'standbyMode', value: "on", displayed: true]
+	]
+signatureResult37 = null
+try {
+    httpGet(params37) { resp ->
+        signatureResult37 = resp.data
+        log.debug "response data: ${signatureResult37}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name: 'standbyMode', value: "on", displayed: true, data: [sign: "${signatureResult37}"])
+        }
+    }
+}
+
+def standbyOff() {
+    log.trace "standbyOff..."
+    def inStandby = device.currentValue("standbyMode") == "on" ? true : false
+    if (device.currentValue("watering") == "offline") {
+        log.debug "Device is currently Offline... Ignoring..."
+    } else if (device.currentValue("standbyMode") == "on") {
+        if (parent?.standbyOff(this, state.deviceId)) {
+//            sendEvent(name: 'standbyMode', value: "off", displayed: true)
+def params38 = null
+def signatureResult38 = null
+log.debug "id is ${device.id}"
+ params38 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: 'standbyMode', value: "off", displayed: true]
+	]
+signatureResult38 = null
+try {
+    httpGet(params38) { resp ->
+        signatureResult38 = resp.data
+        log.debug "response data: ${signatureResult38}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name: 'standbyMode', value: "off", displayed: true, data: [sign: "${signatureResult38}"])
+        }
+    } else {
+        log.debug "Device is Already out of Standby... Ignoring..."
+    }
+}
+
+def on() {
+    log.trace "on..."
+    if (isCmdOk2Run()) {
+        if (device.currentValue("switch") == "off") {
+            open()
+        } else {
+            log.debug "Switch is Already ON... Ignoring..."
+        }
+    }
+}
+
+def off() {
+    log.trace "off..."
+    if (device.currentValue("switch") == "on") {
+        close()
+    } else {
+        log.debug "Switch is Already OFF... Ignoring..."
+    }
+}
+
+def open() {
+    log.debug "open command is not currently supported by the controller device..."
+}
+
+def close() {
+    log.trace "close()..."
+    if (device.currentValue("valve") == "open") {
+        if (parent?.off(this, state.deviceId)) {
+//            sendEvent(name:'watering', value: "off", displayed: true)
+def params39 = null
+def signatureResult39 = null
+log.debug "id is ${device.id}"
+ params39 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:'watering', value: "off", displayed: true]
+	]
+signatureResult39 = null
+try {
+    httpGet(params39) { resp ->
+        signatureResult39 = resp.data
+        log.debug "response data: ${signatureResult39}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name:'watering', value: "off", displayed: true, data: [sign: "${signatureResult39}"])
+//            sendEvent(name:'switch', value: "off", displayed: false)
+def params40 = null
+def signatureResult40 = null
+log.debug "id is ${device.id}"
+ params40 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:'switch', value: "off", displayed: false]
+	]
+signatureResult40 = null
+try {
+    httpGet(params40) { resp ->
+        signatureResult40 = resp.data
+        log.debug "response data: ${signatureResult40}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name:'switch', value: "off", displayed: false, data: [sign: "${signatureResult40}"])
+//            sendEvent(name:'valve', value: "closed", displayed: false)
+def params41 = null
+def signatureResult41 = null
+log.debug "id is ${device.id}"
+ params41 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:'valve', value: "closed", displayed: false]
+	]
+signatureResult41 = null
+try {
+    httpGet(params41) { resp ->
+        signatureResult41 = resp.data
+        log.debug "response data: ${signatureResult41}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name:'valve', value: "closed", displayed: false, data: [sign: "${signatureResult41}"])
+        } else {
+            log.trace "close(). marking offline"
+            markOffLine()
+        }
+    } else {
+        log.debug "Close command Ignored... The Valve is Already Closed"
+    }
+}
+
+// To be used directly by smart apps
+def stopWatering() {
+    log.trace "stopWatering"
+    close()
+}
+
+def setRainDelay(rainDelay) {
+//    sendEvent("name":"rainDelay", "value": value)
+def params42 = null
+def signatureResult42 = null
+log.debug "id is ${device.id}"
+ params42 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign","name":"rainDelay", "value": value]
+	]
+signatureResult42 = null
+try {
+    httpGet(params42) { resp ->
+        signatureResult42 = resp.data
+        log.debug "response data: ${signatureResult42}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+    sendEvent("name":"rainDelay", "value": value, data: [sign: "${signatureResult42}"])
+    parent?.setRainDelay(this, value)
+}
+
+def getDtNow() {
+    def now = new Date()
+    return formatDt(now, false)
+}
+
+def epochToDt(val) {
+    return formatDt(new Date(val))
+}
+
+def formatDt(dt, mdy = true) {
+    def formatVal = mdy ? "MMM d, yyyy - h:mm:ss a" : "E MMM dd HH:mm:ss z yyyy"
+    def tf = new SimpleDateFormat(formatVal)
+    if (location?.timeZone) {
+        tf.setTimeZone(location?.timeZone)
+    }
+    return tf.format(dt)
+}
+
+//Returns time differences is seconds
+def GetTimeValDiff(timeVal) {
+    try {
+        def start = new Date(timeVal).getTime()
+        def now = new Date().getTime()
+        def diff = (int) (long) (now - start) / 1000
+        return diff
+    }
+    catch (ex) {
+        log.error "GetTimeValDiff Exception: ${ex}"
+        return 1000
+    }
+}
+
+def getTimeDiffSeconds(strtDate, stpDate=null) {
+    if((strtDate && !stpDate) || (strtDate && stpDate)) {
+        def now = new Date()
+        def stopVal = stpDate ? stpDate.toString() : formatDt(now, false)
+        def start = Date.parse("E MMM dd HH:mm:ss z yyyy", strtDate).getTime()
+        def stop = Date.parse("E MMM dd HH:mm:ss z yyyy", stopVal).getTime()
+        def diff = (int) (long) (stop - start) / 1000
+        return diff
+    } else {
+        return null
+    }
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

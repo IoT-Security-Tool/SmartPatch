@@ -1,0 +1,4 @@
+{"type":"MethodNode","name":"parse","linenumber":41,"lastlinenumber":44,"arg":["description"]}
+{"type":"createEvent","linenumber":43,"arguments":"(name: pair[0].trim(), value: pair[1].trim())"}
+{"type":"MethodNode","name":"on","linenumber":46,"lastlinenumber":48}
+{"type":"MethodNode","name":"off","linenumber":50,"lastlinenumber":52}

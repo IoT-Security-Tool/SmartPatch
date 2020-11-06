@@ -1,0 +1,19 @@
+{"type":"createEvent","linenumber":104,"arguments":[" name: \"secureInclusion\""," value: \"failed\""," eventType: \"ALERT\"","\t\t\t\tdescriptionText: \"This sensor failed to complete the network security key exchange. If you are unable to control it via SmartThings"," you must remove it from your network and add it again.\""]}
+{"type":"createEvent","linenumber":107,"arguments":["descriptionText: \"$device.displayName $description\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":131,"arguments":["descriptionText: cmd.toString()"]}
+{"type":"createEvent","linenumber":139,"arguments":["name: \"motion\""," value: \"active\""," descriptionText: \"$device.displayName detected motion\""]}
+{"type":"createEvent","linenumber":142,"arguments":["name: \"motion\""," value: \"inactive\""," descriptionText: \"$device.displayName motion has stopped\""]}
+{"type":"createEvent","linenumber":173,"arguments":["descriptionText: \"$device.displayName covering was removed\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":176,"arguments":["descriptionText: \"$device.displayName detected glass breakage\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":183,"arguments":["descriptionText: \"$device.displayName covering replaced\""," isStateChange: true"," displayed: false"]}
+{"type":"createEvent","linenumber":190,"arguments":["descriptionText: \"$device.displayName sent event $cmd.event\""]}
+{"type":"createEvent","linenumber":194,"arguments":["name: \"notification$cmd.notificationType\""," value: \"$cmd.event\""," descriptionText: text"," displayed: false"]}
+{"type":"createEvent","linenumber":197,"arguments":["name: \"alarm $cmd.v1AlarmType\""," value: value"," displayed: false"]}
+{"type":"createEvent","linenumber":203,"arguments":["name: \"WakeUp\""," value: \"wakeup\""," descriptionText: \"${device.displayName} woke up\""," isStateChange: true"," displayed: false"]}
+{"type":"createEvent","linenumber":234,"arguments":["map"]}
+{"type":"createEvent","linenumber":272,"arguments":["map"]}
+{"type":"createEvent","linenumber":284,"arguments":["name: \"ManufacturerCode\""," value: manufacturerCode"]}
+{"type":"createEvent","linenumber":285,"arguments":["name: \"ProduceTypeCode\""," value: productTypeCode"]}
+{"type":"createEvent","linenumber":286,"arguments":["name: \"ProductCode\""," value: productCode"]}
+{"type":"createEvent","linenumber":287,"arguments":["name: \"WirelessConfig\""," value: wirelessConfig"]}
+{"type":"createEvent","linenumber":302,"arguments":["descriptionText: \"$device.displayName: $cmd\""," displayed: false"]}

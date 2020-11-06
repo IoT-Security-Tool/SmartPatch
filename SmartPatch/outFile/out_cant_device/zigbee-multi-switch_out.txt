@@ -1,0 +1,305 @@
+ import java.util.UUID
+"License"
+"AS IS"
+
+metadata {
+	definition(name: "ZigBee Multi Switch", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "oic.d.switch", mnmn: "SmartThings", vid: "generic-switch") {
+		capability "Actuator"
+		capability "Configuration"
+		capability "Refresh"
+		capability "Health Check"
+		capability "Switch"
+
+		command "childOn", ["string"]
+		command "childOff", ["string"]
+
+		
+		fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0006", outClusters: "0006, 000A, 0019", model: "E220-KR2N0Z0-HA", deviceJoinName: "EZEX Switch 1"
+		fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0006", outClusters: "0006, 000A, 0019", model: "E220-KR3N0Z0-HA", deviceJoinName: "EZEX Switch 1"
+		fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0006", outClusters: "0006, 000A, 0019", model: "E220-KR4N0Z0-HA", deviceJoinName: "EZEX Switch 1"
+		fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0006", outClusters: "0006, 000A, 0019", model: "E220-KR5N0Z0-HA", deviceJoinName: "EZEX Switch 1"
+		fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0006", outClusters: "0006, 000A, 0019", model: "E220-KR6N0Z0-HA", deviceJoinName: "EZEX Switch 1"
+
+		fingerprint profileId: "0104", inClusters: "0000, 0005, 0004, 0006", outClusters: "0000", manufacturer: "ORVIBO", model: "074b3ffba5a045b7afd94c47079dd553", deviceJoinName: "Orvibo 2 Gang Switch 1"
+		fingerprint profileId: "0104", inClusters: "0000, 0005, 0004, 0006", outClusters: "0000", manufacturer: "ORVIBO", model: "9f76c9f31b4c4a499e3aca0977ac4494", deviceJoinName: "Orvibo 3 Gang Switch 1"
+		fingerprint profileId: "0104", inClusters: "0000, 0003, 0005, 0004, 0006", manufacturer: "REXENSE", model: "HY0003", deviceJoinName: "GDKES 3 Gang Switch 1"
+		fingerprint profileId: "0104", inClusters: "0000, 0003, 0005, 0004, 0006", manufacturer: "REXENSE", model: "HY0002", deviceJoinName: "GDKES 2 Gang Switch 1"
+		fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0005, 0006", manufacturer: "REX", model: "HY0097", deviceJoinName: "HONYAR 3 Gang Switch 1"
+		fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0005, 0006", manufacturer: "REX", model: "HY0096", deviceJoinName: "HONYAR 2 Gang Switch 1"
+		fingerprint profileId: "0104", inClusters: "0005, 0004, 0006", outClusters: "0003, 0019", manufacturer: "HEIMAN", model: "HS2SW3L-EFR-3.0", deviceJoinName: "HEIMAN 3 Gang Switch 1"
+		fingerprint profileId: "0104", inClusters: "0005, 0004, 0006", outClusters: "0003, 0019", manufacturer: "HEIMAN", model: "HS2SW2L-EFR-3.0", deviceJoinName: "HEIMAN 2 Gang Switch 1"
+	}
+	
+	simulator {
+		
+		status "on": "on/off: 1"
+		status "off": "on/off: 0"
+
+		
+		reply "zcl on-off on": "on/off: 1"
+		reply "zcl on-off off": "on/off: 0"
+	}
+
+	tiles(scale: 2) {
+		multiAttributeTile(name: "switch", type: "lighting", width: 6, height: 4, canChangeIcon: true) {
+			tileAttribute("device.switch", key: "PRIMARY_CONTROL") {
+				attributeState "on", label: '${name}', action: "switch.off", icon: "st.switches.light.on", backgroundColor: "#00A0DC", nextState: "turningOff"
+				attributeState "off", label: '${name}', action: "switch.on", icon: "st.switches.light.off", backgroundColor: "#ffffff", nextState: "turningOn"
+				attributeState "turningOn", label: '${name}', action: "switch.off", icon: "st.switches.light.on", backgroundColor: "#00A0DC", nextState: "turningOff"
+				attributeState "turningOff", label: '${name}', action: "switch.on", icon: "st.switches.light.off", backgroundColor: "#ffffff", nextState: "turningOn"
+			}
+		}
+		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+			state "default", label: "", action: "refresh.refresh", icon: "st.secondary.refresh"
+		}
+		main "switch"
+		details(["switch", "refresh"])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+        createChildDevices()
+        updateDataValue("onOff", "catchall")
+        refresh()
+}
+
+def updated() {
+        log.debug "updated()"
+        updateDataValue("onOff", "catchall")
+        refresh()
+}
+
+def parse(String description) {
+	Map eventMap = zigbee.getEvent(description)
+	Map eventDescMap = zigbee.parseDescriptionAsMap(description)
+
+	if (!eventMap && eventDescMap) {
+		eventMap = [:]
+		if (eventDescMap?.clusterId == zigbee.ONOFF_CLUSTER) {
+			eventMap[name] = "switch"
+			eventMap[value] = eventDescMap?.value
+		}
+	}
+
+	if (eventMap) {
+		if (eventDescMap?.sourceEndpoint == "01" || eventDescMap?.endpoint == "01") {
+//			sendEvent(eventMap)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${eventMap?.name}", value: "${eventMap?.value}"]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue1= ''
+if(eventMap.containsKey('data') ){
+datavalue1 = eventMap['data']
+datavalue1 = "[" + datavalue1+ "," +"sign: " + "${signatureResult1}" + "]"
+eventMap.put('data',"${datavalue1}")
+ }else{
+datavalue1=  "[sign: " + "${signatureResult1}" +"]"
+eventMap.put('data',"${datavalue1}")
+}
+			sendEvent(eventMap)
+		} else {
+			def childDevice = childDevices.find {
+				it.deviceNetworkId == "$device.deviceNetworkId:${eventDescMap.sourceEndpoint}" || it.deviceNetworkId == "$device.deviceNetworkId:${eventDescMap.endpoint}"
+			}
+			if (childDevice) {
+//				childDevice.sendEvent(eventMap)
+		def signatureResult2= null
+		signatureResult2 = 				childDevice.getSignature(eventMap.name,eventMap.value)
+eventMap.put('data',[sign: "${signatureResult2}"])
+				childDevice.sendEvent(eventMap)
+			} else {
+				log.debug "Child device: $device.deviceNetworkId:${eventDescMap.sourceEndpoint} was not found"
+			}
+		}
+	}
+}
+
+private void createChildDevices() {
+	def x = getChildCount()
+	for (i in 2..x) {
+		addChildDevice("Child Switch Health", "${device.deviceNetworkId}:0${i}", device.hubId,
+			[completedSetup: true, label: "${device.displayName[0..-2]}${i}", isComponent: false])
+	}
+}
+
+private getChildEndpoint(String dni) {
+	dni.split(":")[-1] as Integer
+}
+
+def on() {
+	log.debug("on")
+	zigbee.on()
+}
+
+def off() {
+	log.debug("off")
+	zigbee.off()
+}
+
+def childOn(String dni) {
+	log.debug(" child on ${dni}")
+	def childEndpoint = getChildEndpoint(dni)
+	zigbee.command(zigbee.ONOFF_CLUSTER, 0x01, "", [destEndpoint: childEndpoint])
+}
+
+def childOff(String dni) {
+	log.debug(" child off ${dni}")
+	def childEndpoint = getChildEndpoint(dni)
+	zigbee.command(zigbee.ONOFF_CLUSTER, 0x00, "", [destEndpoint: childEndpoint])
+}
+
+
+def ping() {
+	return refresh()
+}
+
+def refresh() {
+	if (isOrvibo()) {
+		zigbee.readAttribute(zigbee.ONOFF_CLUSTER, 0x0000, [destEndpoint: 0xFF])
+	} else {
+	        def cmds = zigbee.onOffRefresh()
+	        def x = getChildCount()
+	        for (i in 2..x) {
+	        	cmds += zigbee.readAttribute(zigbee.ONOFF_CLUSTER, 0x0000, [destEndpoint: i])
+	        }
+	        return cmds
+	}
+}
+
+def poll() {
+	refresh()
+}
+
+def healthPoll() {
+	log.debug "healthPoll()"
+	def cmds = refresh()
+	cmds.each { sendHubCommand(new physicalgraph.device.HubAction(it)) }
+}
+
+def configureHealthCheck() {
+	Integer hcIntervalMinutes = 12
+	if (!state.hasConfiguredHealthCheck) {
+		log.debug "Configuring Health Check, Reporting"
+		unschedule("healthPoll")
+		runEvery5Minutes("healthPoll")
+		def healthEvent = [name: "checkInterval", value: hcIntervalMinutes * 60, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID]]
+		
+//		sendEvent(healthEvent)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${healthEvent?.name}", value: "${healthEvent?.value}"]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue3= ''
+if(healthEvent.containsKey('data') ){
+datavalue3 = healthEvent['data']
+datavalue3 = "[" + datavalue3+ "," +"sign: " + "${signatureResult3}" + "]"
+healthEvent.put('data',"${datavalue3}")
+ }else{
+datavalue3=  "[sign: " + "${signatureResult3}" +"]"
+healthEvent.put('data',"${datavalue3}")
+}
+		sendEvent(healthEvent)
+		childDevices.each {
+//			it.sendEvent(healthEvent)
+		def signatureResult4= null
+		signatureResult4 = 			it.getSignature(healthEvent.name,healthEvent.value)
+healthEvent.put('data',[sign: "${signatureResult4}"])
+			it.sendEvent(healthEvent)
+		}
+		state.hasConfiguredHealthCheck = true
+	}
+}
+
+def configure() {
+	log.debug "configure()"
+	configureHealthCheck()
+
+	if (isOrvibo()) {
+		
+		def cmds = zigbee.writeAttribute(zigbee.BASIC_CLUSTER, 0x0099, 0x20, 0x01, [mfgCode: 0x0000])
+        	cmds += refresh()
+       		return cmds
+	} else {
+		
+	        def cmds = zigbee.onOffConfig(0, 120)
+	        def x = getChildCount()
+	        for (i in 2..x) {
+	        	cmds += zigbee.configureReporting(zigbee.ONOFF_CLUSTER, 0x0000, 0x10, 0, 120, null, [destEndpoint: i])
+	        }
+	        cmds += refresh()
+	        return cmds
+	}
+}
+
+private Boolean isOrvibo() {
+	device.getDataValue("manufacturer") == "ORVIBO"
+}
+
+private getChildCount() {
+	if (device.getDataValue("model") == "9f76c9f31b4c4a499e3aca0977ac4494" || device.getDataValue("model") == "HY0003" || device.getDataValue("model") == "HY0097" || device.getDataValue("model") == "HS2SW3L-EFR-3.0" ) {
+		return 3
+	} else if (device.getDataValue("model") == "E220-KR2N0Z0-HA") {
+		return 2
+	} else if (device.getDataValue("model") == "E220-KR3N0Z0-HA") {
+		return 3
+	} else if (device.getDataValue("model") == "E220-KR4N0Z0-HA") {
+		return 4
+	} else if (device.getDataValue("model") == "E220-KR5N0Z0-HA") {
+		return 5
+	} else if (device.getDataValue("model") == "E220-KR6N0Z0-HA") {
+		return 6 
+	} else {
+		return 2
+	}
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

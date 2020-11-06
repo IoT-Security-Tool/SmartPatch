@@ -1,0 +1,31 @@
+{"type":"subscribe","linenumber":13,"arguments":["command subscribe"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":14,"arguments":["command resubscribe"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":15,"arguments":["command unsubscribe"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"createEvent","linenumber":77,"arguments":["name: \"motion\""," value: value"," descriptionText: \"Motion is ${value}\""]}
+{"type":"subscribe","linenumber":115,"arguments":["log.debug Executing WeMo Motion 'subscribe'"," then 'timeSyncResponse'"," then 'getStatus'"]}
+{"type":"MethodNode","name":" then 'getStatus'","linenumber":0}
+{"type":"subscribe","linenumber":116,"arguments":[")"," timeSyncResponse()"," getStatus()"]}
+{"type":"MethodNode","name":" getStatus()","linenumber":0}
+{"type":"subscribe","linenumber":141,"arguments":["hostAddress) "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":142,"arguments":[")'"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":155,"arguments":[") "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":156,"arguments":["getHostAddress()"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":159,"arguments":["ip"," port) "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"sendEvent","linenumber":166,"arguments":["name: \"currentIP\""," value: ipvalue"," descriptionText: \"IP changed to ${ipvalue}\""]}
+{"type":"subscribe","linenumber":173,"arguments":["${ip}:${port}"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":177,"arguments":[") "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":178,"arguments":[")'"]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"subscribe","linenumber":193,"arguments":[") "]}
+{"type":"MethodNode","name":"","linenumber":0}
+{"type":"sendEvent","linenumber":229,"arguments":["name: \"motion\""," value: \"offline\""," descriptionText: \"The device is offline\""]}

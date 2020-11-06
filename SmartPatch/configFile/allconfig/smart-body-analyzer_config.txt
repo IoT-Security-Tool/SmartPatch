@@ -1,0 +1,12 @@
+{"type":"MethodNode","name":"parse","linenumber":89,"lastlinenumber":91,"arg":["description"]}
+{"type":"MethodNode","name":"parse","linenumber":93,"lastlinenumber":111,"arg":["event"]}
+{"type":"MethodNode","name":"storeGraphImage","linenumber":113,"lastlinenumber":115,"arg":["name","is","contentType"]}
+{"type":"MethodNode","name":"poll","linenumber":117,"lastlinenumber":120}
+{"type":"MethodNode","name":"refresh","linenumber":122,"lastlinenumber":127}
+{"type":"sendEvent","linenumber":124,"arguments":"(name:\"refreshing\", description:\"Refreshing Withings data\", displayed:true)"}
+{"type":"MethodNode","name":"measurementPoints","linenumber":129,"lastlinenumber":151,"arg":["name"]}
+{"type":"MethodNode","name":"normalizeMeasurementPoints","linenumber":153,"lastlinenumber":171,"arg":["name"]}
+{"type":"MethodNode","name":"plotPoint","linenumber":173,"lastlinenumber":185,"arg":["x","y","minMax"]}
+{"type":"MethodNode","name":"weightPoints","linenumber":187,"lastlinenumber":196}
+{"type":"MethodNode","name":"pulsePoints","linenumber":198,"lastlinenumber":207}
+{"type":"MethodNode","name":"fatPoints","linenumber":209,"lastlinenumber":218}

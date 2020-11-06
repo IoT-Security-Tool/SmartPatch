@@ -1,0 +1,7 @@
+{"type":"MethodNode","name":"selectPhrases","linenumber":31,"lastlinenumber":47}
+{"type":"MethodNode","name":"installed","linenumber":49,"lastlinenumber":58}
+{"type":"subscribe","linenumber":56,"arguments":["jawbone","sleeping","jawboneHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":60,"lastlinenumber":70}
+{"type":"subscribe","linenumber":67,"arguments":["jawbone","sleeping","jawboneHandler"]}
+{"type":"MethodNode","name":"initialize","linenumber":72,"lastlinenumber":74}
+{"type":"MethodNode","name":"jawboneHandler","linenumber":76,"lastlinenumber":89,"arg":["evt"]}

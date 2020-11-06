@@ -1,0 +1,16 @@
+{"type":"MethodNode","name":"setupNotifications","linenumber":37,"lastlinenumber":84}
+{"type":"MethodNode","name":"chooseTrack","linenumber":86,"lastlinenumber":92}
+{"type":"MethodNode","name":"songOptions","linenumber":94,"lastlinenumber":114}
+{"type":"MethodNode","name":"saveSelectedSong","linenumber":116,"lastlinenumber":139}
+{"type":"MethodNode","name":"installed","linenumber":141,"lastlinenumber":145}
+{"type":"MethodNode","name":"updated","linenumber":147,"lastlinenumber":152}
+{"type":"MethodNode","name":"initialize","linenumber":154,"lastlinenumber":170}
+{"type":"subscribe","linenumber":162,"arguments":["jawbone","goal","goalHandler"]}
+{"type":"subscribe","linenumber":163,"arguments":["jawbone","steps","stepHandler"]}
+{"type":"MethodNode","name":"goalHandler","linenumber":172,"lastlinenumber":181,"arg":["evt"]}
+{"type":"MethodNode","name":"stepHandler","linenumber":183,"lastlinenumber":247,"arg":["evt"]}
+{"type":"MethodNode","name":"lightsNotification","linenumber":250,"lastlinenumber":283}
+{"type":"MethodNode","name":"hueNotification","linenumber":285,"lastlinenumber":325}
+{"type":"MethodNode","name":"setTimer","linenumber":327,"lastlinenumber":331}
+{"type":"MethodNode","name":"resetHue","linenumber":334,"lastlinenumber":341}
+{"type":"MethodNode","name":"sonosNotification","linenumber":343,"lastlinenumber":366}

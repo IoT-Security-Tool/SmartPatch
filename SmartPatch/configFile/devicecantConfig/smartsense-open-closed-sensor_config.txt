@@ -1,0 +1,4 @@
+{"type":"sendEvent","linenumber":101,"arguments":["name: \"checkInterval\""," value: 60 * 12"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"createEvent","linenumber":124,"arguments":["map) : ["]}
+{"type":"sendEvent","linenumber":189,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 1 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":208,"arguments":["name: \"checkInterval\""," value: 60 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}

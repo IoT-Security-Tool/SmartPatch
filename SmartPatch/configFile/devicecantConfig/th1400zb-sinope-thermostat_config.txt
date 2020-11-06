@@ -1,0 +1,24 @@
+{"type":"MethodNode","name":"installed","linenumber":146}
+{"type":"sendEvent","linenumber":311,"arguments":["name: \"supportedThermostatModes\""," value: supportedThermostatModes"," displayed: (settings.trace ?: false)"]}
+{"type":"sendEvent","linenumber":318,"arguments":["name: \"heatingSetpointRange\""," value: [5.0"," 36.0]"," scale: scale"]}
+{"type":"sendEvent","linenumber":322,"arguments":["name: \"heatingSetpointRangeLow\""," value: [41","96]"," scale: scale"]}
+{"type":"sendEvent","linenumber":325,"arguments":["name: \"lock\""," value: \"unlocked\""]}
+{"type":"sendEvent","linenumber":333,"arguments":["name: \"heatingSetpointRange\""," value: [5","36]"," scale: state.scale"]}
+{"type":"sendEvent","linenumber":337,"arguments":["name: \"heatingSetpointRange\""," value: [41","96]"," scale: state.scale"]}
+{"type":"sendEvent","linenumber":359,"arguments":["name: \"checkInterval\""," value: 30*60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":422,"arguments":["name: map.name"," value: map.value"," unit: scale"]}
+{"type":"sendEvent","linenumber":423,"arguments":["name: \"checkInterval\""," value: 30*60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":428,"arguments":["name: map.name"," value: map.value"]}
+{"type":"sendEvent","linenumber":431,"arguments":["name: \"thermostatOperatingState\""," value: operatingState"]}
+{"type":"sendEvent","linenumber":438,"arguments":["name: map.name"," value: map.value"," unit: scale"]}
+{"type":"sendEvent","linenumber":444,"arguments":["name: map.name"," value: map.value"]}
+{"type":"sendEvent","linenumber":451,"arguments":["name: map.name"," value: map.value"]}
+{"type":"sendEvent","linenumber":467,"arguments":["name: map.name"," value: map.value"]}
+{"type":"sendEvent","linenumber":561,"arguments":["\"name\": \"heatingSetpoint\""," \"value\": tempValueString"," scale: scale"]}
+{"type":"sendEvent","linenumber":562,"arguments":["\"name\": \"thermostatSetpoint\""," \"value\": tempValueString"," scale: scale"]}
+{"type":"sendEvent","linenumber":622,"arguments":["name: \"thermostatMode\""," value: \"off\""," data: [supportedThermostatModes: getSupportedThermostatModes()]"]}
+{"type":"sendEvent","linenumber":632,"arguments":["name: \"thermostatMode\""," value: \"heat\""," data: [supportedThermostatModes: getSupportedThermostatModes()]"]}
+{"type":"sendEvent","linenumber":654,"arguments":["name: \"lock\""," value: \"unlocked\""]}
+{"type":"sendEvent","linenumber":663,"arguments":["name: \"lock\""," value: \"locked\""]}
+{"type":"sendEvent","linenumber":695,"arguments":["name: \"heatingSetpointRange\""," value: heatingSetpointRange"," scale: state.scale"]}
+{"type":"sendEvent","linenumber":906,"arguments":["results"]}

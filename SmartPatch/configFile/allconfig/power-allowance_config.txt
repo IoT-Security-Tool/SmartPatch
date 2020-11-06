@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":36,"lastlinenumber":39}
+{"type":"subscribe","linenumber":38,"arguments":["theSwitch","switch.on","switchOnHandler","[filterEvents:false]"]}
+{"type":"MethodNode","name":"updated","linenumber":41,"lastlinenumber":46}
+{"type":"subscribe","linenumber":45,"arguments":["theSwitch","switch.on","switchOnHandler","[filterEvents:false]"]}
+{"type":"MethodNode","name":"switchOnHandler","linenumber":48,"lastlinenumber":53,"arg":["evt"]}
+{"type":"MethodNode","name":"turnOffSwitch","linenumber":55,"lastlinenumber":57}

@@ -1,0 +1,11 @@
+{"type":"MethodNode","name":"installed","linenumber":46,"lastlinenumber":48}
+{"type":"MethodNode","name":"updated","linenumber":50,"lastlinenumber":52}
+{"type":"MethodNode","name":"initialize","linenumber":54,"lastlinenumber":60}
+{"type":"sendEvent","linenumber":55,"arguments":"(name: \"contact\", value: \"closed\")"}
+{"type":"sendEvent","linenumber":57,"arguments":"(name: \"DeviceWatch-DeviceStatus\", value: \"online\")"}
+{"type":"sendEvent","linenumber":58,"arguments":"(name: \"healthStatus\", value: \"online\")"}
+{"type":"sendEvent","linenumber":59,"arguments":"(name: \"DeviceWatch-Enroll\", value: [protocol: \"cloud\", scheme:\"untracked\"].encodeAsJson(), displayed: false)"}
+{"type":"MethodNode","name":"open","linenumber":63,"lastlinenumber":66}
+{"type":"sendEvent","linenumber":64,"arguments":"(name: \"contact\", value: \"open\")"}
+{"type":"MethodNode","name":"close","linenumber":68,"lastlinenumber":71}
+{"type":"sendEvent","linenumber":69,"arguments":"(name: \"contact\", value: \"closed\")"}

@@ -1,0 +1,1 @@
+{"type":"createEvent","linenumber":59,"arguments":["zwaveEvent(cmd)"]}

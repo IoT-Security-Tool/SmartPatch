@@ -1,0 +1,22 @@
+{"type":"MethodNode","name":"parse","linenumber":103,"lastlinenumber":114,"arg":["description"]}
+{"type":"createEvent","linenumber":112,"arguments":"(name: \"${description?.name}\", value: \"${description?.value}\")"}
+{"type":"MethodNode","name":"setBulbPower","linenumber":117,"lastlinenumber":120,"arg":["value"]}
+{"type":"MethodNode","name":"on","linenumber":122,"lastlinenumber":135}
+{"type":"sendEvent","linenumber":124,"arguments":"(name:\"switch\",value:on)"}
+{"type":"sendEvent","linenumber":130,"arguments":"(name: \"power\", value: calculatedPower.round(1))"}
+{"type":"sendEvent","linenumber":133,"arguments":"( name: \"level\", value: 1.0 )"}
+{"type":"MethodNode","name":"off","linenumber":137,"lastlinenumber":142}
+{"type":"sendEvent","linenumber":139,"arguments":"(name:\"switch\",value:off)"}
+{"type":"sendEvent","linenumber":141,"arguments":"(name: \"power\", value: 0.0)"}
+{"type":"MethodNode","name":"levelUp","linenumber":144,"lastlinenumber":154}
+{"type":"MethodNode","name":"levelDown","linenumber":156,"lastlinenumber":166}
+{"type":"MethodNode","name":"setLevel","linenumber":168,"lastlinenumber":186,"arg":["value","rate"]}
+{"type":"sendEvent","linenumber":172,"arguments":"( name: \"level\", value: level )"}
+{"type":"sendEvent","linenumber":173,"arguments":"( name: \"switch.setLevel\", value:level )"}
+{"type":"sendEvent","linenumber":185,"arguments":"(name: \"power\", value: calculatedPower.round(1))"}
+{"type":"MethodNode","name":"poll","linenumber":188,"lastlinenumber":191}
+{"type":"MethodNode","name":"refresh","linenumber":193,"lastlinenumber":196}
+{"type":"MethodNode","name":"installed","linenumber":198,"lastlinenumber":200}
+{"type":"MethodNode","name":"updated","linenumber":202,"lastlinenumber":205}
+{"type":"MethodNode","name":"initialize","linenumber":207,"lastlinenumber":212}
+{"type":"MethodNode","name":"uninstalled","linenumber":225,"lastlinenumber":228}

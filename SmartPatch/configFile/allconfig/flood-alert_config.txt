@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":38,"lastlinenumber":40}
+{"type":"subscribe","linenumber":39,"arguments":["alarm","water.wet","waterWetHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":42,"lastlinenumber":45}
+{"type":"subscribe","linenumber":44,"arguments":["alarm","water.wet","waterWetHandler"]}
+{"type":"MethodNode","name":"waterWetHandler","linenumber":47,"lastlinenumber":72,"arg":["evt"]}

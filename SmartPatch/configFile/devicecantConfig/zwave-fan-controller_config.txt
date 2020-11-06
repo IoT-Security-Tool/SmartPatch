@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":55}
+{"type":"sendEvent","linenumber":56,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"createEvent","linenumber":110,"arguments":["name: \"switch\""," value: value"]}
+{"type":"createEvent","linenumber":111,"arguments":["name: \"level\""," value: rawLevel == 99 ? 100 : rawLevel"]}
+{"type":"createEvent","linenumber":123,"arguments":["name: \"fanSpeed\""," value: fanLevel"]}

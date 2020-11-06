@@ -1,0 +1,11 @@
+{"type":"sendEvent","linenumber":157,"arguments":["name: \"checkInterval\""," value: 2 * 15 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":161,"arguments":["name: \"supportedThermostatModes\""," value: supportedThermostatModes"," displayed: false"]}
+{"type":"sendEvent","linenumber":163,"arguments":["name: \"thermostatSetpointRange\""," value: thermostatSetpointRange"," displayed: false"]}
+{"type":"sendEvent","linenumber":164,"arguments":["name: \"heatingSetpointRange\""," value: heatingSetpointRange"," displayed: false"]}
+{"type":"MethodNode","name":"installed","linenumber":167}
+{"type":"sendEvent","linenumber":168,"arguments":["name: \"temperatureAlarm\""," value: \"cleared\""," displayed: false"]}
+{"type":"sendEvent","linenumber":224,"arguments":["name: \"temperatureAlarm\""," value: \"cleared\""," displayed: false"]}
+{"type":"createEvent","linenumber":300,"arguments":["map"]}
+{"type":"sendEvent","linenumber":332,"arguments":["name: \"temperatureAlarm\""," value: \"freeze\""]}
+{"type":"sendEvent","linenumber":337,"arguments":["name: \"temperatureAlarm\""," value: \"heat\""]}
+{"type":"sendEvent","linenumber":340,"arguments":["name: \"temperatureAlarm\""," value: \"cleared\""]}

@@ -1,0 +1,18 @@
+{"type":"MethodNode","name":"parse","linenumber":68,"lastlinenumber":95,"arg":["description"]}
+{"type":"createEvent","linenumber":76,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"createEvent","linenumber":82,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"sendEvent","linenumber":91,"arguments":"( name: \"level\", value: i )"}
+{"type":"MethodNode","name":"on","linenumber":97,"lastlinenumber":101}
+{"type":"sendEvent","linenumber":99,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"MethodNode","name":"off","linenumber":103,"lastlinenumber":107}
+{"type":"sendEvent","linenumber":105,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"MethodNode","name":"refresh","linenumber":109,"lastlinenumber":114}
+{"type":"MethodNode","name":"setLevel","linenumber":116,"lastlinenumber":134,"arg":["value","rate"]}
+{"type":"sendEvent","linenumber":121,"arguments":"(name: \"switch\", value: \"off\")"}
+{"type":"sendEvent","linenumber":125,"arguments":"(name: \"switch\", value: \"on\")"}
+{"type":"sendEvent","linenumber":128,"arguments":"(name: \"level\", value: value)"}
+{"type":"MethodNode","name":"configure","linenumber":136,"lastlinenumber":153}
+{"type":"MethodNode","name":"hex","linenumber":157,"lastlinenumber":163,"arg":["value","width"]}
+{"type":"MethodNode","name":"convertHexToInt","linenumber":165,"lastlinenumber":167,"arg":["hex"]}
+{"type":"MethodNode","name":"swapEndianHex","linenumber":169,"lastlinenumber":171,"arg":["hex"]}
+{"type":"MethodNode","name":"reverseArray","linenumber":173,"lastlinenumber":185,"arg":["array"]}

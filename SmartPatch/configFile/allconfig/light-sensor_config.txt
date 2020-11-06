@@ -1,0 +1,2 @@
+{"type":"MethodNode","name":"parse","linenumber":49,"lastlinenumber":63,"arg":["description"]}
+{"type":"createEvent","linenumber":54,"arguments":"(\t\t\t\tname:  \"illuminance\",\t\t\t\tvalue: Math.round(zigbee.lux(raw as Integer)).toString(),\t\t\t\tunit:  \"lux\"\t\t\t)"}

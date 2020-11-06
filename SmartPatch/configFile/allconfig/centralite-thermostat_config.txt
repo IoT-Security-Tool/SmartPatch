@@ -1,0 +1,31 @@
+{"type":"MethodNode","name":"parse","linenumber":82,"lastlinenumber":123,"arg":["description"]}
+{"type":"createEvent","linenumber":118,"arguments":"(map)"}
+{"type":"MethodNode","name":"getModeMap","linenumber":125,"lastlinenumber":130}
+{"type":"MethodNode","name":"getFanModeMap","linenumber":132,"lastlinenumber":135}
+{"type":"MethodNode","name":"refresh","linenumber":137,"lastlinenumber":147}
+{"type":"MethodNode","name":"getTemperature","linenumber":154,"lastlinenumber":163,"arg":["value"]}
+{"type":"MethodNode","name":"setHeatingSetpoint","linenumber":165,"lastlinenumber":176,"arg":["degrees"]}
+{"type":"sendEvent","linenumber":171,"arguments":"(\"name\": \"heatingSetpoint\", \"value\": degreesInteger, \"unit\": temperatureScale)"}
+{"type":"MethodNode","name":"setCoolingSetpoint","linenumber":178,"lastlinenumber":186,"arg":["degrees"]}
+{"type":"sendEvent","linenumber":182,"arguments":"(\"name\": \"coolingSetpoint\", \"value\": degreesInteger, \"unit\": temperatureScale)"}
+{"type":"MethodNode","name":"modes","linenumber":188,"lastlinenumber":190}
+{"type":"MethodNode","name":"setThermostatMode","linenumber":192,"lastlinenumber":200}
+{"type":"MethodNode","name":"setThermostatFanMode","linenumber":202,"lastlinenumber":218}
+{"type":"MethodNode","name":"setThermostatMode","linenumber":220,"lastlinenumber":223,"arg":["value"]}
+{"type":"MethodNode","name":"setThermostatFanMode","linenumber":225,"lastlinenumber":228,"arg":["value"]}
+{"type":"MethodNode","name":"off","linenumber":230,"lastlinenumber":234}
+{"type":"sendEvent","linenumber":232,"arguments":"(\"name\":\"thermostatMode\", \"value\":\"off\")"}
+{"type":"MethodNode","name":"cool","linenumber":236,"lastlinenumber":240}
+{"type":"sendEvent","linenumber":238,"arguments":"(\"name\":\"thermostatMode\", \"value\":\"cool\")"}
+{"type":"MethodNode","name":"heat","linenumber":242,"lastlinenumber":246}
+{"type":"sendEvent","linenumber":244,"arguments":"(\"name\":\"thermostatMode\", \"value\":\"heat\")"}
+{"type":"MethodNode","name":"emergencyHeat","linenumber":248,"lastlinenumber":252}
+{"type":"sendEvent","linenumber":250,"arguments":"(\"name\":\"thermostatMode\", \"value\":\"emergency heat\")"}
+{"type":"MethodNode","name":"on","linenumber":254,"lastlinenumber":256}
+{"type":"MethodNode","name":"fanOn","linenumber":258,"lastlinenumber":262}
+{"type":"sendEvent","linenumber":260,"arguments":"(\"name\":\"thermostatFanMode\", \"value\":\"fanOn\")"}
+{"type":"MethodNode","name":"auto","linenumber":264,"lastlinenumber":266}
+{"type":"MethodNode","name":"fanAuto","linenumber":268,"lastlinenumber":272}
+{"type":"sendEvent","linenumber":270,"arguments":"(\"name\":\"thermostatFanMode\", \"value\":\"fanAuto\")"}
+{"type":"MethodNode","name":"configure","linenumber":274,"lastlinenumber":281}
+{"type":"MethodNode","name":"hex","linenumber":283,"lastlinenumber":285,"arg":["value"]}

@@ -1,0 +1,6 @@
+{"type":"createEvent","linenumber":82,"arguments":["descriptionText: \"${device.displayName} woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":123,"arguments":["map"]}
+{"type":"createEvent","linenumber":134,"arguments":["map"]}
+{"type":"createEvent","linenumber":147,"arguments":["map"]}
+{"type":"createEvent","linenumber":160,"arguments":["map"]}
+{"type":"createEvent","linenumber":164,"arguments":["displayed: false"," descriptionText: \"$device.displayName: $cmd\""]}

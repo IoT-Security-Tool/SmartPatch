@@ -1,0 +1,5 @@
+{"type":"sendEvent","linenumber":56,"arguments":["name: \"power\""," value: powerValue"]}
+{"type":"sendEvent","linenumber":59,"arguments":["event"]}
+{"type":"sendEvent","linenumber":60,"arguments":["name: \"checkInterval\""," value: 30*60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":94,"arguments":["name: \"checkInterval\""," value: 30*60"," displayed: false"," data: [protocol: \"zigbee\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":152,"arguments":["results"]}

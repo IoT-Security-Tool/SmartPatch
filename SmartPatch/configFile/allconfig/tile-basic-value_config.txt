@@ -1,0 +1,9 @@
+{"type":"MethodNode","name":"installed","linenumber":95,"lastlinenumber":103}
+{"type":"sendEvent","linenumber":96,"arguments":"(name: \"text\", value: \"src\")"}
+{"type":"sendEvent","linenumber":97,"arguments":"(name: \"longText\", value: \"The Longer The Text, The Better The src\")"}
+{"type":"sendEvent","linenumber":98,"arguments":"(name: \"integer\", value: 47)"}
+{"type":"sendEvent","linenumber":99,"arguments":"(name: \"integerFloat\", value: 47.0)"}
+{"type":"sendEvent","linenumber":100,"arguments":"(name: \"pi\", value: 3.14159)"}
+{"type":"sendEvent","linenumber":101,"arguments":"(name: \"floatAsText\", value: \"3.14159\")"}
+{"type":"sendEvent","linenumber":102,"arguments":"(name: \"multiLine\", value: \"Line 1\\nLine 2\\nLine 3\")"}
+{"type":"MethodNode","name":"parse","linenumber":105,"lastlinenumber":106,"arg":["description"]}

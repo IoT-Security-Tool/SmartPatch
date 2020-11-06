@@ -1,0 +1,6 @@
+{"type":"MethodNode","name":"installed","linenumber":48,"lastlinenumber":52}
+{"type":"MethodNode","name":"updated","linenumber":54,"lastlinenumber":59}
+{"type":"MethodNode","name":"initialize","linenumber":61,"lastlinenumber":63}
+{"type":"subscribe","linenumber":62,"arguments":["trigger","switch.on","switchOnHandler"]}
+{"type":"MethodNode","name":"switchOnHandler","linenumber":65,"lastlinenumber":108,"arg":["evt"]}
+{"type":"MethodNode","name":"lightsOut","linenumber":110,"lastlinenumber":117}

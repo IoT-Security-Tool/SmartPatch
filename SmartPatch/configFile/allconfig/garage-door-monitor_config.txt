@@ -1,0 +1,10 @@
+{"type":"MethodNode","name":"installed","linenumber":41,"lastlinenumber":44}
+{"type":"subscribe","linenumber":43,"arguments":["multisensor","acceleration","accelerationHandler"]}
+{"type":"MethodNode","name":"updated","linenumber":46,"lastlinenumber":50}
+{"type":"subscribe","linenumber":49,"arguments":["multisensor","acceleration","accelerationHandler"]}
+{"type":"MethodNode","name":"accelerationHandler","linenumber":52,"lastlinenumber":72,"arg":["evt"]}
+{"type":"MethodNode","name":"takeAction","linenumber":74,"lastlinenumber":90}
+{"type":"MethodNode","name":"sendTextMessage","linenumber":92,"lastlinenumber":108}
+{"type":"MethodNode","name":"updateSmsHistory","linenumber":110,"lastlinenumber":118}
+{"type":"MethodNode","name":"clearSmsHistory","linenumber":120,"lastlinenumber":122}
+{"type":"MethodNode","name":"clearStatus","linenumber":124,"lastlinenumber":126}

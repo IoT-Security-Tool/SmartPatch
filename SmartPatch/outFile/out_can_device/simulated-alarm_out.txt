@@ -1,0 +1,259 @@
+ import java.util.UUID
+/**
+ *  Simulated Alarm
+ *
+ *  Copyright 2014 SmartThings
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+metadata {
+	definition (name: "Simulated Alarm", namespace: "smartthings/testing", author: "SmartThings") {
+		capability "Alarm"
+		capability "Sensor"
+		capability "Actuator"
+		capability "Health Check"
+	}
+
+	simulator {
+		// reply messages
+		["strobe","siren","both","off"].each {
+			reply "$it": "alarm:$it"
+		}
+	}
+
+	tiles {
+		standardTile("alarm", "device.alarm", width: 2, height: 2) {
+			state "off", label:'off', action:'alarm.both', icon:"st.alarm.alarm.alarm", backgroundColor:"#ffffff"
+			state "strobe", label:'strobe!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
+			state "siren", label:'siren!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
+			state "both", label:'alarm!', action:'alarm.off', icon:"st.alarm.alarm.alarm", backgroundColor:"#e86d13"
+		}
+		standardTile("strobe", "device.alarm", inactiveLabel: false, decoration: "flat") {
+			state "default", label:'', action:"alarm.strobe", icon:"st.secondary.strobe", backgroundColor:"#cccccc"
+		}
+		standardTile("siren", "device.alarm", inactiveLabel: false, decoration: "flat") {
+			state "default", label:'', action:"alarm.siren", icon:"st.secondary.siren", backgroundColor:"#cccccc"
+		}       
+		standardTile("off", "device.alarm", inactiveLabel: false, decoration: "flat") {
+			state "default", label:'', action:"alarm.off", icon:"st.secondary.off"
+		}
+		main "alarm"
+		details(["alarm","strobe","siren","test","off"])
+	}
+}
+
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+
+	log.trace "Executing 'installed'"
+	initialize()
+}
+
+def updated() {
+	log.trace "Executing 'updated'"
+	initialize()
+}
+
+private initialize() {
+	log.trace "Executing 'initialize'"
+
+//	sendEvent(name: "DeviceWatch-DeviceStatus", value: "online")
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-DeviceStatus", value: "online"]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "DeviceWatch-DeviceStatus", value: "online", data: [sign: "${signatureResult1}"])
+//	sendEvent(name: "healthStatus", value: "online")
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "healthStatus", value: "online"]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "healthStatus", value: "online", data: [sign: "${signatureResult2}"])
+//	sendEvent(name: "DeviceWatch-Enroll", value: [protocol: "cloud", scheme:"untracked"].encodeAsJson(), displayed: false)
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "DeviceWatch-Enroll", value: [protocol: "cloud", scheme:"untracked"].encodeAsJson(), displayed: false]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "DeviceWatch-Enroll", value: [protocol: "cloud", scheme:"untracked"].encodeAsJson(), displayed: false, data: [sign: "${signatureResult3}"])
+}
+
+def strobe() {
+//	sendEvent(name: "alarm", value: "strobe")
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "alarm", value: "strobe"]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "alarm", value: "strobe", data: [sign: "${signatureResult4}"])
+}
+
+def siren() {
+//	sendEvent(name: "alarm", value: "siren")
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "alarm", value: "siren"]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "alarm", value: "siren", data: [sign: "${signatureResult5}"])
+}
+
+def both() {
+//	sendEvent(name: "alarm", value: "both")
+def params6 = null
+def signatureResult6 = null
+log.debug "id is ${device.id}"
+ params6 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "alarm", value: "both"]
+	]
+signatureResult6 = null
+try {
+    httpGet(params6) { resp ->
+        signatureResult6 = resp.data
+        log.debug "response data: ${signatureResult6}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "alarm", value: "both", data: [sign: "${signatureResult6}"])
+}
+
+def off() {
+//	sendEvent(name: "alarm", value: "off")
+def params7 = null
+def signatureResult7 = null
+log.debug "id is ${device.id}"
+ params7 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "alarm", value: "off"]
+	]
+signatureResult7 = null
+try {
+    httpGet(params7) { resp ->
+        signatureResult7 = resp.data
+        log.debug "response data: ${signatureResult7}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "alarm", value: "off", data: [sign: "${signatureResult7}"])
+}
+
+// Parse incoming device messages to generate events
+def parse(String description) {
+	def pair = description.split(":")
+//	createEvent(name: pair[0].trim(), value: pair[1].trim())
+def params8 = null
+def signatureResult8 = null
+params8 = [
+uri: state.URL,
+path: state.PATH,
+query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: pair[0].trim(), value: pair[1].trim()]
+]
+signatureResult8 = null
+  try {
+        httpGet(params8) { resp ->
+        signatureResult8 = resp.data
+        log.debug "response data: ${signatureResult8}"
+      }
+
+} catch (e) {
+    log.error "something went wronge: $e"
+}
+	createEvent(name: pair[0].trim(), value: pair[1].trim(), data: [sign: "${signatureResult8}"])
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

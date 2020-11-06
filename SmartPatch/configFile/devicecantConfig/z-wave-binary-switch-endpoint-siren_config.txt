@@ -1,0 +1,5 @@
+{"type":"MethodNode","name":"installed","linenumber":30}
+{"type":"sendEvent","linenumber":32,"arguments":["name: \"alarm\""," value: \"off\""," isStateChange: true"]}
+{"type":"sendEvent","linenumber":41,"arguments":["name: \"checkInterval\""," value: 2 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":58,"arguments":["name: \"alarm\""," value: cmd.value ? \"both\" : \"off\""]}
+{"type":"sendEvent","linenumber":59,"arguments":["name: \"switch\""," value: cmd.value ? \"on\" : \"off\""]}

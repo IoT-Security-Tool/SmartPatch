@@ -1,0 +1,9 @@
+{"type":"MethodNode","name":"installed","linenumber":38}
+{"type":"sendEvent","linenumber":42,"arguments":["cmd"]}
+{"type":"createEvent","linenumber":52,"arguments":["name: \"checkInterval\""," value: 8 * 60 * 60 + 2 * 60"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"createEvent","linenumber":67,"arguments":["descriptionText: description"," displayed: true"]}
+{"type":"createEvent","linenumber":80,"arguments":["descriptionText: \"$device.displayName woke up\""," isStateChange: false"]}
+{"type":"createEvent","linenumber":102,"arguments":["map"]}
+{"type":"createEvent","linenumber":109,"arguments":["event"]}
+{"type":"createEvent","linenumber":138,"arguments":["name: \"temperatureAlarm\""," value: \"heat\""," descriptionText: text"]}
+{"type":"createEvent","linenumber":142,"arguments":["name: \"temperatureAlarm\""," value: \"cleared\""," descriptionText: text"," isStateChange: true"]}

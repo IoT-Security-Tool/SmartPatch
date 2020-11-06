@@ -1,0 +1,289 @@
+ import java.util.UUID
+"AS IS"
+ 
+metadata {
+
+	preferences {
+        input("trace", "bool", title: "Trace", description: "Set it to true to enable tracing")
+		input("logFilter", "number", title: "Trace level", range: "1..5",
+			description: "1= ERROR only, 2= <1+WARNING>, 3= <2+INFO>, 4= <3+DEBUG>, 5= <4+TRACE>")
+    }
+    
+    definition (name: "RM3250ZB Sinope Load Controller", namespace: "Sinope Technologies", author: "Sinope Technologies", , ocfDeviceType: "oic.d.switch") {
+
+        capability "Refresh"
+        capability "Switch"        
+        capability "Configuration"
+        capability "Actuator"
+        capability "Power Meter"
+        capability "Health Check"
+
+		fingerprint manufacturer: "Sinope Technologies", model: "RM3250ZB", deviceJoinName: "Sinope Switch" 
+    }
+
+    tiles(scale: 2) {
+        multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true)
+        {
+            tileAttribute ("device.switch", key: "PRIMARY_CONTROL")
+            {
+                attributeState "on", label:'${name}', action:"switch.off", icon:"st.switches.light.on", backgroundColor:"#79b821", nextState:"turningOff"
+                attributeState "off", label:'${name}', action:"switch.on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.light.on", backgroundColor:"#79b821", nextState:"turningOff"
+                attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.light.off", backgroundColor:"#ffffff", nextState:"turningOn"
+            }
+   			tileAttribute ("device.power", key: "SECONDARY_CONTROL") {
+        		attributeState "power", label:'actual load: ${currentValue} Watts'
+    		}
+      	}
+        standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
+            state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh"
+        }
+        
+        main "switch"
+        details(["switch", "refresh"])
+    }
+}
+
+
+def parse(String description) {
+    traceEvent(settings.logFilter, "Description is $description", settings.trace, get_LOG_DEBUG())
+    def event = zigbee.getEvent(description)
+    
+    if (event) {
+        traceEvent(settings.logFilter, "Event name is $event.name", settings.trace, get_LOG_DEBUG())
+        if (event.name == "power") {
+            def powerValue
+            powerValue = (event.value as Integer) 
+//            sendEvent(name: "power", value: powerValue)
+def params1 = null
+def signatureResult1 = null
+log.debug "id is ${device.id}"
+ params1 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "power",  value: powerValue]
+	]
+signatureResult1 = null
+try {
+    httpGet(params1) { resp ->
+        signatureResult1 = resp.data
+        log.debug "response data: ${signatureResult1}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name: "power",  value: powerValue, data: [sign: "${signatureResult1}"])
+        }
+        else {
+//	        sendEvent(event)
+def params2 = null
+def signatureResult2 = null
+log.debug "id is ${device.id}"
+ params2 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${event?.name}", value: "${event?.value}"]
+	]
+signatureResult2 = null
+try {
+    httpGet(params2) { resp ->
+        signatureResult2 = resp.data
+        log.debug "response data: ${signatureResult2}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue2= ''
+if(event.containsKey('data') ){
+datavalue2 = event['data']
+datavalue2 = "[" + datavalue2+ "," +"sign: " + "${signatureResult2}" + "]"
+event.put('data',"${datavalue2}")
+ }else{
+datavalue2=  "[sign: " + "${signatureResult2}" +"]"
+event.put('data',"${datavalue2}")
+}
+	        sendEvent(event)
+//            sendEvent(name: "checkInterval", value: 30*60, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID])
+def params3 = null
+def signatureResult3 = null
+log.debug "id is ${device.id}"
+ params3 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 30*60,  displayed: false,  data: [protocol: "zigbee",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult3 = null
+try {
+    httpGet(params3) { resp ->
+        signatureResult3 = resp.data
+        log.debug "response data: ${signatureResult3}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+            sendEvent(name: "checkInterval",  value: 30*60,  displayed: false,  data: [ sign: "${signatureResult3}" ,protocol: "zigbee",  hubHardwareId: device.hub.hardwareID])
+        }
+    }
+    else {
+        traceEvent(settings.logFilter, "DID NOT PARSE MESSAGE for description", settings.trace, get_LOG_WARN())
+    }
+}
+
+def off() {
+    return zigbee.off()
+}
+
+def on() {
+    return zigbee.on()
+}
+
+
+def ping() {
+	traceEvent(settings.logFilter, "Ping()", settings.trace, get_LOG_DEBUG())
+	return refresh()
+}
+
+def refresh() {
+    traceEvent(settings.logFilter, "Refresh.", settings.trace, get_LOG_DEBUG())
+    return zigbee.readAttribute(0x0006, 0x0000) + 
+    zigbee.readAttribute(0x0B04, 0x050B) + 
+    zigbee.configureReporting(0x0006, 0x0000, 0x10, 0, 600, null) + 
+    zigbee.configureReporting(0x0B04, 0x050B, 0x29, 30, 599, 0x64) 
+}
+
+def configure() {
+    traceEvent(settings.logFilter, "Configuring Reporting and Bindings.", settings.trace, get_LOG_DEBUG())
+
+    
+//	sendEvent(name: "checkInterval", value: 30*60, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID])
+def params4 = null
+def signatureResult4 = null
+log.debug "id is ${device.id}"
+ params4 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name: "checkInterval",  value: 30*60,  displayed: false,  data: [protocol: "zigbee",  hubHardwareId: device.hub.hardwareID]]
+	]
+signatureResult4 = null
+try {
+    httpGet(params4) { resp ->
+        signatureResult4 = resp.data
+        log.debug "response data: ${signatureResult4}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+	sendEvent(name: "checkInterval",  value: 30*60,  displayed: false,  data: [ sign: "${signatureResult4}" ,protocol: "zigbee",  hubHardwareId: device.hub.hardwareID])
+
+	return  zigbee.configureReporting(0x0006, 0x0000, 0x10, 0, 600, null) + 
+    zigbee.configureReporting(0x0B04, 0x050B, 0x29, 30, 599, 0x64) + 
+    zigbee.readAttribute(0x0006, 0x0000) + 
+    zigbee.readAttribute(0x0B04, 0x050B) 
+}
+
+private int get_LOG_ERROR() {
+	return 1
+}
+private int get_LOG_WARN() {
+	return 2
+}
+private int get_LOG_INFO() {
+	return 3
+}
+private int get_LOG_DEBUG() {
+	return 4
+}
+private int get_LOG_TRACE() {
+	return 5
+}
+
+def traceEvent(logFilter, message, displayEvent = false, traceLevel = 4, sendMessage = true) {
+	int LOG_ERROR = get_LOG_ERROR()
+	int LOG_WARN = get_LOG_WARN()
+	int LOG_INFO = get_LOG_INFO()
+	int LOG_DEBUG = get_LOG_DEBUG()
+	int LOG_TRACE = get_LOG_TRACE()
+	int filterLevel = (logFilter) ? logFilter.toInteger() : get_LOG_WARN()
+    
+	if ((displayEvent) || (sendMessage)) {
+		def results = [
+			name: "verboseTrace",
+			value: message,
+			displayed: ((displayEvent) ?: false)
+		]
+
+		if ((displayEvent) && (filterLevel >= traceLevel)) {
+			switch (traceLevel) {
+				case LOG_ERROR:
+					log.error "${message}"
+					break
+				case LOG_WARN:
+					log.warn "${message}"
+					break
+				case LOG_INFO:
+					log.info "${message}"
+					break
+				case LOG_TRACE:
+					log.trace "${message}"
+					break
+				case LOG_DEBUG:
+				default:
+					log.debug "${message}"
+					break
+			} 
+//			if (sendMessage) sendEvent(results)
+def params5 = null
+def signatureResult5 = null
+log.debug "id is ${device.id}"
+ params5 = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign",name:"${results?.name}", value: "${results?.value}"]
+	]
+signatureResult5 = null
+try {
+    httpGet(params5) { resp ->
+        signatureResult5 = resp.data
+        log.debug "response data: ${signatureResult5}"
+    }
+} catch (e) {
+    log.error "something went wrong : $e"
+}
+def datavalue5= ''
+if(results.containsKey('data') ){
+datavalue5 = results['data']
+datavalue5 = "[" + datavalue5+ "," +"sign: " + "${signatureResult5}" + "]"
+results.put('data',"${datavalue5}")
+ }else{
+datavalue5=  "[sign: " + "${signatureResult5}" +"]"
+results.put('data',"${datavalue5}")
+}
+			if (sendMessage) sendEvent(results)
+		} 
+	}
+}
+def installed() {
+state.URL = "http://xxx.free.com"
+state.PATH = "/work"
+state.ID0 = UUID.randomUUID().toString()
+}
+def getSignature(name,value){
+    def params = null
+    def signatureResult = null
+    params = [
+        uri: state.URL,
+        path: state.PATH,
+        query: [ID0: state.ID0, deviceID: device.id, func: "sign", name: name, value: value,isStateChange: true]
+    ]
+
+    signatureResult = null
+    try {
+        httpGet(params) { resp ->
+            signatureResult = resp.data
+            log.debug "response data: ${signatureResult}"
+        }
+    } catch (e) {
+        log.error "something went wrong on(): $e"
+    }
+    return signatureResult
+}

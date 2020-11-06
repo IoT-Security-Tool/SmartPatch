@@ -1,0 +1,459 @@
+"License"
+"AS IS"
+
+definition(
+    name: "Tesla (Connect)",
+    namespace: "smartthings",
+    author: "SmartThings",
+    description: "Integrate your Tesla car with SmartThings.",
+    category: "SmartThings Labs",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Partner/tesla-app%402x.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Partner/tesla-app%403x.png",
+    singleInstance: true
+)
+
+preferences {
+	page(name: "loginToTesla", title: "Tesla")
+	page(name: "selectCars", title: "Tesla")
+}
+
+def loginToTesla() {
+	def showUninstall = username != null && password != null
+	return dynamicPage(name: "loginToTesla", title: "Connect your Tesla", nextPage:"selectCars", uninstall:showUninstall) {
+		section("Log in to your Tesla account:") {
+			input "username", "text", title: "Username", required: true, autoCorrect:false
+			input "password", "password", title: "Password", required: true, autoCorrect:false
+		}
+		section("To use Tesla, SmartThings encrypts and securely stores your Tesla credentials.") {}
+	}
+}
+
+def selectCars() {
+	def loginResult = forceLogin()
+
+	if(loginResult.success)
+	{
+		def options = carsDiscovered() ?: []
+
+		return dynamicPage(name: "selectCars", title: "Tesla", install:true, uninstall:true) {
+			section("Select which Tesla to connect"){
+				input(name: "selectedCars", type: "enum", required:false, multiple:true, options:options)
+			}
+		}
+	}
+	else
+	{
+		log.error "login result false"
+        return dynamicPage(name: "selectCars", title: "Tesla", install:false, uninstall:true, nextPage:"") {
+			section("") {
+				paragraph "Please check your username and password"
+			}
+		}
+	}
+}
+
+
+def installed() {
+
+	log.debug "Installed"
+	initialize()
+}
+
+def updated() {
+	log.debug "Updated"
+
+	unsubscribe()
+	initialize()
+}
+
+def uninstalled() {
+	removeChildDevices(getChildDevices())
+}
+
+def initialize() {
+
+
+	if (selectCars) {
+		addDevice()
+	}
+
+	
+	def delete = getChildDevices().findAll { !selectedCars }
+	log.info delete
+    
+}
+
+
+def addDevice() {
+    def devices = getcarList()
+    log.trace "Adding childs $devices - $selectedCars"
+	selectedCars.each { dni ->
+		def d = getChildDevice(dni)
+		if(!d) {
+			def newCar = devices.find { (it.dni) == dni }
+			d = addChildDevice("smartthings", "Tesla", dni, null, [name:"Tesla", label:"Tesla"])
+			log.trace "created ${d.name} with id $dni"
+		} else {
+			log.trace "found ${d.name} with id $key already exists"
+		}
+	}
+}
+
+private removeChildDevices(delete)
+{
+	log.debug "deleting ${delete.size()} Teslas"
+	delete.each {
+		state.suppressDelete[it.deviceNetworkId] = true
+		deleteChildDevice(it.deviceNetworkId)
+		state.suppressDelete.remove(it.deviceNetworkId)
+	}
+}
+
+def getcarList() {
+	def devices = []
+
+	def carListParams = [
+		uri: "https://portal.vn.teslamotors.com/",
+        path: "/vehicles",
+		headers: [Cookie: getCookieValue(), 'User-Agent': validUserAgent()]
+	]
+    
+	httpGet(carListParams) { resp ->
+		log.debug "Getting car list"
+		if(resp.status == 200) {
+            def vehicleId = resp.data.id.value[0].toString()
+            def vehicleVIN = resp.data.vin[0]
+            def dni = vehicleVIN + ":" + vehicleId
+ 			def name = "Tesla [${vehicleId}]"
+            
+            
+            
+            devices += ["name" : "${name}", "dni" : "${dni}"]
+            
+		} else if(resp.status == 302) {
+        	
+			singleUrl = resp.headers.Location.value
+		} else {
+			
+			log.error "car list: unknown response"
+		}        
+	}
+    return devices
+}
+
+Map carsDiscovered() {
+	def devices =  getcarList()
+    log.trace "Map $devices"    
+	def map = [:]
+	if (devices instanceof java.util.Map) {
+		devices.each {
+			def value = "${it?.name}"
+			def key = it?.dni
+			map["${key}"] = value
+		}
+	} else { 
+		devices.each {
+			def value = "${it?.name}"
+			def key = it?.dni
+			map["${key}"] = value
+		}
+	}
+	map
+}
+
+def removeChildFromSettings(child) {
+	def device = child.device
+	def dni = device.deviceNetworkId
+	log.debug "removing child device $device with dni ${dni}"
+	if(!state?.suppressDelete?.get(dni))
+	{
+		def newSettings = settings.cars?.findAll { it != dni } ?: []
+		app.updateSetting("cars", newSettings)
+	}
+}
+
+private forceLogin() {
+	updateCookie(null)
+	login()
+}
+
+
+private login() {
+	if(getCookieValueIsValid()) {
+		return [success:true]
+	}
+	return doLogin()
+}
+
+private doLogin() {
+	def loginParams = [
+		uri: "https://portal.vn.teslamotors.com",
+        path: "/login",
+		contentType: "application/x-www-form-urlencoded",
+		body: "user_session%5Bemail%5D=${username}&user_session%5Bpassword%5D=${password}"
+	]
+
+	def result = [success:false]
+	
+    try {
+    	httpPost(loginParams) { resp ->
+            if (resp.status == 302) {
+                log.debug "login 302 json headers: " + resp.headers.collect { "${it.name}:${it.value}" }
+                def cookie = resp?.headers?.'Set-Cookie'?.split(";")?.getAt(0)
+                if (cookie) {
+                    log.debug "login setting cookie to $cookie"
+                    updateCookie(cookie)                
+                    result.success = true
+                } else {
+                    
+                    result.reason = "Bad login"
+                }
+            } else {
+                
+                result.reason = "Bad login"
+            }
+    	}        
+	} catch (groovyx.net.http.HttpResponseException e) {
+			result.reason = "Bad login"
+	}
+	return result
+}
+
+private command(String dni, String command, String value = '') {
+	def id = getVehicleId(dni)
+    def commandPath
+	switch (command) {
+		case "flash":
+    		commandPath = "/vehicles/${id}/command/flash_lights"
+            break;
+		case "honk":
+    		commandPath = "/vehicles/${id}/command/honk_horn"  
+            break;
+		case "doorlock":
+    		commandPath = "/vehicles/${id}/command/door_lock"  
+            break;            
+		case "doorunlock":
+    		commandPath = "/vehicles/${id}/command/door_unlock"  
+            break;  
+		case "climaon":
+    		commandPath = "/vehicles/${id}/command/auto_conditioning_start"  
+            break;            
+		case "climaoff":
+    		commandPath = "/vehicles/${id}/command/auto_conditioning_stop"  
+            break;             
+		case "roof":
+    		commandPath = "/vehicles/${id}/command/sun_roof_control?state=${value}" 
+            break;    
+		case "temp":
+    		commandPath = "/vehicles/${id}/command/set_temps?driver_temp=${value}&passenger_temp=${value}"
+            break;              
+		default:
+			break; 
+    }   
+    
+	def commandParams = [
+		uri: "https://portal.vn.teslamotors.com",
+		path: commandPath,
+		headers: [Cookie: getCookieValue(), 'User-Agent': validUserAgent()]
+	]
+
+	def loginRequired = false
+
+	httpGet(commandParams) { resp ->
+
+		if(resp.status == 403) {
+			loginRequired = true
+		} else if (resp.status == 200) {
+			def data = resp.data
+            sendNotification(data.toString())
+		} else {
+			log.error "unknown response: ${resp.status} - ${resp.headers.'Content-Type'}"
+		}
+	}
+	if(loginRequired) { throw new Exception("Login Required") }
+}
+
+private honk(String dni) {
+	def id = getVehicleId(dni)
+	def honkParams = [
+		uri: "https://portal.vn.teslamotors.com",
+		path: "/vehicles/${id}/command/honk_horn",
+		headers: [Cookie: getCookieValue(), 'User-Agent': validUserAgent()]
+	]
+
+	def loginRequired = false
+
+	httpGet(honkParams) { resp ->
+
+		if(resp.status == 403) {
+			loginRequired = true
+		} else if (resp.status == 200) {
+			def data = resp.data
+		} else {
+			log.error "unknown response: ${resp.status} - ${resp.headers.'Content-Type'}"
+		}
+	}
+
+	if(loginRequired) {
+		throw new Exception("Login Required")
+	}
+}
+
+private poll(String dni) {
+	def id = getVehicleId(dni)
+	def pollParams1 = [
+		uri: "https://portal.vn.teslamotors.com",
+		path: "/vehicles/${id}/command/climate_state",
+		headers: [Cookie: getCookieValue(), 'User-Agent': validUserAgent()]
+	]
+
+	def childDevice = getChildDevice(dni)
+    
+	def loginRequired = false
+
+	httpGet(pollParams1) { resp ->
+
+		if(resp.status == 403) {
+			loginRequired = true
+		} else if (resp.status == 200) {
+			def data = resp.data
+//            childDevice?.sendEvent(name: 'temperature', value: cToF(data.inside_temp).toString())
+		def signatureResult1= null
+		signatureResult1 =             childDevice?.getSignature('temperature',cToF(data.inside_temp).toString())
+            childDevice?.sendEvent(name: 'temperature',  value: cToF(data.inside_temp).toString(),data: [sign: "${signatureResult1}"])
+
+            if (data.is_auto_conditioning_on)            
+//            	childDevice?.sendEvent(name: 'clima', value: 'on')
+		def signatureResult2= null
+		signatureResult2 =             	childDevice?.getSignature('clima','on')
+            	childDevice?.sendEvent(name: 'clima',  value: 'on',data: [sign: "${signatureResult2}"])
+
+            else
+//                childDevice?.sendEvent(name: 'clima', value: 'off')
+		def signatureResult3= null
+		signatureResult3 =                 childDevice?.getSignature('clima','off')
+                childDevice?.sendEvent(name: 'clima',  value: 'off',data: [sign: "${signatureResult3}"])
+
+//            childDevice?.sendEvent(name: 'thermostatSetpoint', value: cToF(data.driver_temp_setting).toString())            
+		def signatureResult4= null
+		signatureResult4 =             childDevice?.getSignature('thermostatSetpoint',cToF(data.driver_temp_setting).toString())
+            childDevice?.sendEvent(name: 'thermostatSetpoint',  value: cToF(data.driver_temp_setting).toString(),data: [sign: "${signatureResult4}"])            
+
+		} else {
+			log.error "unknown response: ${resp.status} - ${resp.headers.'Content-Type'}"
+		}
+	}
+
+	def pollParams2 = [
+		uri: "https://portal.vn.teslamotors.com",
+		path: "/vehicles/${id}/command/vehicle_state",
+		headers: [Cookie: getCookieValue(), 'User-Agent': validUserAgent()]
+	]
+
+	httpGet(pollParams2) { resp ->
+		if(resp.status == 403) {
+			loginRequired = true
+		} else if (resp.status == 200) {
+			def data = resp.data
+            if (data.sun_roof_percent_open == 0)
+//            	childDevice?.sendEvent(name: 'roof', value: 'close')
+		def signatureResult5= null
+		signatureResult5 =             	childDevice?.getSignature('roof','close')
+            	childDevice?.sendEvent(name: 'roof',  value: 'close',data: [sign: "${signatureResult5}"])
+
+			else if (data.sun_roof_percent_open > 0 && data.sun_roof_percent_open < 70)
+//            	childDevice?.sendEvent(name: 'roof', value: 'vent')
+		def signatureResult6= null
+		signatureResult6 =             	childDevice?.getSignature('roof','vent')
+            	childDevice?.sendEvent(name: 'roof',  value: 'vent',data: [sign: "${signatureResult6}"])
+
+			else if (data.sun_roof_percent_open >= 70 && data.sun_roof_percent_open <= 80)                
+//            	childDevice?.sendEvent(name: 'roof', value: 'comfort')
+		def signatureResult7= null
+		signatureResult7 =             	childDevice?.getSignature('roof','comfort')
+            	childDevice?.sendEvent(name: 'roof',  value: 'comfort',data: [sign: "${signatureResult7}"])
+
+            else if (data.sun_roof_percent_open > 80 && data.sun_roof_percent_open <= 100)
+//            	childDevice?.sendEvent(name: 'roof', value: 'open')           
+		def signatureResult8= null
+		signatureResult8 =             	childDevice?.getSignature('roof','open')
+            	childDevice?.sendEvent(name: 'roof',  value: 'open',data: [sign: "${signatureResult8}"])           
+
+            if (data.locked)            
+//            	childDevice?.sendEvent(name: 'door', value: 'lock')
+		def signatureResult9= null
+		signatureResult9 =             	childDevice?.getSignature('door','lock')
+            	childDevice?.sendEvent(name: 'door',  value: 'lock',data: [sign: "${signatureResult9}"])
+
+            else
+//                childDevice?.sendEvent(name: 'door', value: 'unlock')
+		def signatureResult10= null
+		signatureResult10 =                 childDevice?.getSignature('door','unlock')
+                childDevice?.sendEvent(name: 'door',  value: 'unlock',data: [sign: "${signatureResult10}"])
+
+		} else {
+			log.error "unknown response: ${resp.status} - ${resp.headers.'Content-Type'}"
+		}
+	}
+
+	def pollParams3 = [
+		uri: "https://portal.vn.teslamotors.com",
+		path: "/vehicles/${id}/command/charge_state",
+		headers: [Cookie: getCookieValue(), 'User-Agent': validUserAgent()]
+	]
+
+	httpGet(pollParams3) { resp ->
+		if(resp.status == 403) {
+			loginRequired = true
+		} else if (resp.status == 200) {
+			def data = resp.data
+//            childDevice?.sendEvent(name: 'connected', value: data.charging_state.toString())
+		def signatureResult11= null
+		signatureResult11 =             childDevice?.getSignature('connected',data.charging_state.toString())
+            childDevice?.sendEvent(name: 'connected',  value: data.charging_state.toString(),data: [sign: "${signatureResult11}"])
+
+//            childDevice?.sendEvent(name: 'miles', value: data.battery_range.toString())
+		def signatureResult12= null
+		signatureResult12 =             childDevice?.getSignature('miles',data.battery_range.toString())
+            childDevice?.sendEvent(name: 'miles',  value: data.battery_range.toString(),data: [sign: "${signatureResult12}"])
+
+//            childDevice?.sendEvent(name: 'battery', value: data.battery_level.toString())
+		def signatureResult13= null
+		signatureResult13 =             childDevice?.getSignature('battery',data.battery_level.toString())
+            childDevice?.sendEvent(name: 'battery',  value: data.battery_level.toString(),data: [sign: "${signatureResult13}"])
+
+		} else {
+			log.error "unknown response: ${resp.status} - ${resp.headers.'Content-Type'}"
+		}
+	}
+
+	if(loginRequired) {
+		throw new Exception("Login Required")
+	}
+}
+
+private getVehicleId(String dni) {
+    return dni.split(":").last()
+}
+
+private Boolean getCookieValueIsValid()
+{
+	
+	return getCookieValue()
+}
+
+private updateCookie(String cookie) {
+	state.cookie = cookie
+}
+
+private getCookieValue() {
+	state.cookie
+}
+
+def cToF(temp) {
+    return temp * 1.8 + 32
+}
+
+private validUserAgent() {
+	"curl/7.24.0 (x86_64-apple-darwin12.0) libcurl/7.24.0 OpenSSL/0.9.8x zlib/1.2.5"
+}

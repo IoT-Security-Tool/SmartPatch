@@ -1,0 +1,9 @@
+{"type":"MethodNode","name":"installed","linenumber":104}
+{"type":"sendEvent","linenumber":105,"arguments":["name: \"checkInterval\""," value: checkInterval"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID"," offlinePingable: \"1\"]"]}
+{"type":"sendEvent","linenumber":106,"arguments":["name: \"supportedWindowShadeCommands\""," value: JsonOutput.toJson([\"open\""," \"close\""," \"pause\"])"," displayed: false"]}
+{"type":"sendEvent","linenumber":112,"arguments":["name: \"checkInterval\""," value: checkInterval"," displayed: false"]}
+{"type":"createEvent","linenumber":156,"arguments":["name: \"level\""," value: level"," unit: \"%\""," displayed: false"]}
+{"type":"createEvent","linenumber":157,"arguments":["name: \"windowShade\""," value: shadeValue"," descriptionText: descriptionText"," isStateChange: levelEvent.isStateChange"]}
+{"type":"createEvent","linenumber":169,"arguments":["name: \"windowShade\""," value: \"partially open\""," displayed: false"," descriptionText: \"$device.displayName shade stopped\""]}
+{"type":"createEvent","linenumber":179,"arguments":["[descriptionText: \"$device.displayName MSR: $msr\""," isStateChange: false]"]}
+{"type":"createEvent","linenumber":197,"arguments":["map"]}

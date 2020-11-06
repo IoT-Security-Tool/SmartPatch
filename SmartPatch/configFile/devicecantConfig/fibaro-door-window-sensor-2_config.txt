@@ -1,0 +1,13 @@
+{"type":"MethodNode","name":"installed","linenumber":104}
+{"type":"sendEvent","linenumber":107,"arguments":["name: \"tamper\""," value: \"clear\""," displayed: false"]}
+{"type":"sendEvent","linenumber":108,"arguments":["name: \"contact\""," value: \"open\""," displayed: false"]}
+{"type":"sendEvent","linenumber":109,"arguments":["name: \"checkInterval\""," value: 21600 * 4 + 120"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":122,"arguments":["name: \"temperatureAlarm\""," value: null"," displayed: false"]}
+{"type":"sendEvent","linenumber":124,"arguments":["name: \"temperatureAlarm\""," value: \"clear\""," displayed: false"]}
+{"type":"sendEvent","linenumber":166,"arguments":["name: \"checkInterval\""," value: (settings.wakeUpInterval as Integer) * 3600 * 4 + 120"," displayed: false"," data: [protocol: \"zwave\""," hubHardwareId: device.hub.hardwareID]"]}
+{"type":"sendEvent","linenumber":230,"arguments":["name: \"multiStatus\""," value: statusValue"," descriptionText: statusValue"," displayed: display"]}
+{"type":"sendEvent","linenumber":237,"arguments":["descriptionText: \"$device.displayName woke up\""," isStateChange: true"]}
+{"type":"createEvent","linenumber":318,"arguments":["map"]}
+{"type":"createEvent","linenumber":337,"arguments":["map"]}
+{"type":"sendEvent","linenumber":342,"arguments":["name: \"battery\""," value: cmd.batteryLevel.toString()"," unit: \"%\""," displayed: true"]}
+{"type":"createEvent","linenumber":353,"arguments":["\t\t\tdescriptionText: \"Failed to complete the network security key exchange. If you are unable to receive data from it"," you must remove it from your network and add it again.\"","\t\t\teventType: \"ALERT\"","\t\t\tname: \"secureInclusion\"","\t\t\tvalue: \"failed\"","\t\t\tdisplayed: true","\t\t"]}
