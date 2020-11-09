@@ -75,7 +75,6 @@ def dealargs(String[] str){
     for(int i =index;i<str.size();i++){
         def temp = str[i]
         //childDevice.sendEvent(name: "color", value: colorUtil.hslToHex((device.color.hue / 3.6) as int, (device.color.saturation * 100) as int))
-        //
         if(temp.contains("(")){
             if(!isGoodBracket(temp)){
                 for(int j = i +1 ;j<str.size();j++){
@@ -150,6 +149,54 @@ def addinitlist(flag){
     }
 }
 
+def addchild(obj,temp,args,afterstr,num){
+    /*if(beforeTxt.toString().contains("."))
+    {
+        for (int k = bracket_start; k <= bracket_end; k++){
+            outlist<<("//"+sourcelist[k])
+        }
+        sourcelist[i]=""*/
+    def returnlist = []
+    if(temp.size()==1) {
+        returnlist.add("\t\tdef signatureResult"+num+"= null")
+        returnlist.add("\t\tsignatureResult"+num+" = "+obj+"getSignature("+args+".name,"+args+".value)")
+        returnlist.add(args+".put('data',[sign: \"\${signatureResult"+num+"}\"])")
+        returnlist.add(obj+"sendEvent("+args+")"+afterstr)
+    }else{
+        def eventmap = dealargs(temp)
+        def filedname = eventmap.get("name")
+        if(eventmap.get("name") == null)  filedname = eventmap.get("\"name\"")
+        def filedvalue = eventmap.get("value")
+        if(eventmap.get("value") == null)  filedvalue = eventmap.get("\"value\"")
+        returnlist.add("\t\tdef signatureResult"+num+"= null")
+        returnlist.add("\t\tsignatureResult"+num+" = "+obj+"getSignature("+filedname+","+filedvalue+")")
+        returnlist.add(obj+"sendEvent("+args+",data: [sign: \"\${signatureResult"+num+"}\"]"+")"+afterstr)
+    }
+    return returnlist
+    //}
+    //		sendEvent( dni, [name: "power",value:0.0] ) More investigation is needed.
+    /*else if(!tempargs[0].contains(":")){
+        if(tempargs.size()==2) {
+            addchildevent.add("def signatureResult"+event_num+"= null")
+            addchildevent.add("signatureResult"+event_num+" = "+beforeTxt+"getSignature("+tempargs[1]+".name,"+tempargs[1]+".value)")
+            addchildevent.add(tempargs[1]+".put('data',[sign: \"\${signatureResult"+event_num+"}\"])")
+            addchildevent.add(beforeTxt+"sendEvent("+tempargs[0]+","+tempargs[1]+")")
+        }else{
+            println(tempargs)
+            def eventmap = dealargs(tempargs,1)
+            println(eventmap)
+            def filedname = eventmap.get("name")
+            def filedvalue = eventmap.get("value")
+            addchildevent.add("def signatureResult"+event_num+"= null")
+            addchildevent.add("signatureResult"+event_num+" = "+beforeTxt+"getSignature("+filedname+","+filedvalue+")")
+            addchildevent.add(beforeTxt+"sendEvent("+args+",data: [sign: \"\${signatureResult"+event_num+"}\"]"+")")
+        }
+    }*/
+}
+
+/**
+ * add codes and output
+ */
 def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num,rownum,childEventlist,childLine){
     def OpPath = "../"
     def sourcelist = sourcefile.readLines()
@@ -237,7 +284,7 @@ def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notdup
             }
         }
 
-        //TODO child
+        //for child device
         def bracket_start = 0
         def bracket_end = 0
         slurper = new JsonSlurper()
@@ -463,6 +510,9 @@ def initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notdup
 
 }
 
+/**
+ * get and analyze source code information
+ */
 def getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedLinenumber,time_init_num,childEventlist,childLine) {
     for (int i = 0; i < configlist.size(); i++) {
         def json = slurper.parseText(configlist[i])
@@ -515,7 +565,10 @@ def getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedL
         }else if(json.name=="initialize"){
             time_init_num[0] = json.linenumber
         }
-        //TODO child
+        //for xx?xx.sendEvent():
+        //xx.sendEvent()
+        //There are some situations that are not encountered in the dataset
+        // but may need to be further optimized
         else if(json.type=="sendEvent" || json.type=="sendEvent_v1"){
             childEventlist.add(configlist[i])
             childLine.add(json.linenumber)
@@ -530,52 +583,6 @@ def getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedL
         }
     }
 }
-
-def addchild(obj,temp,args,afterstr,num){
-    /*if(beforeTxt.toString().contains("."))
-    {
-        for (int k = bracket_start; k <= bracket_end; k++){
-            outlist<<("//"+sourcelist[k])
-        }
-        sourcelist[i]=""*/
-    def returnlist = []
-    if(temp.size()==1) {
-        returnlist.add("\t\tdef signatureResult"+num+"= null")
-        returnlist.add("\t\tsignatureResult"+num+" = "+obj+"getSignature("+args+".name,"+args+".value)")
-        returnlist.add(args+".put('data',[sign: \"\${signatureResult"+num+"}\"])")
-        returnlist.add(obj+"sendEvent("+args+")"+afterstr)
-    }else{
-        def eventmap = dealargs(temp)
-        def filedname = eventmap.get("name")
-        if(eventmap.get("name") == null)  filedname = eventmap.get("\"name\"")
-        def filedvalue = eventmap.get("value")
-        if(eventmap.get("value") == null)  filedvalue = eventmap.get("\"value\"")
-        returnlist.add("\t\tdef signatureResult"+num+"= null")
-        returnlist.add("\t\tsignatureResult"+num+" = "+obj+"getSignature("+filedname+","+filedvalue+")")
-        returnlist.add(obj+"sendEvent("+args+",data: [sign: \"\${signatureResult"+num+"}\"]"+")"+afterstr)
-    }
-    return returnlist
-    //}
-    //		sendEvent( dni, [name: "power",value:0.0] ) More investigation is needed.
-    /*else if(!tempargs[0].contains(":")){
-        if(tempargs.size()==2) {
-            addchildevent.add("def signatureResult"+event_num+"= null")
-            addchildevent.add("signatureResult"+event_num+" = "+beforeTxt+"getSignature("+tempargs[1]+".name,"+tempargs[1]+".value)")
-            addchildevent.add(tempargs[1]+".put('data',[sign: \"\${signatureResult"+event_num+"}\"])")
-            addchildevent.add(beforeTxt+"sendEvent("+tempargs[0]+","+tempargs[1]+")")
-        }else{
-            println(tempargs)
-            def eventmap = dealargs(tempargs,1)
-            println(eventmap)
-            def filedname = eventmap.get("name")
-            def filedvalue = eventmap.get("value")
-            addchildevent.add("def signatureResult"+event_num+"= null")
-            addchildevent.add("signatureResult"+event_num+" = "+beforeTxt+"getSignature("+filedname+","+filedvalue+")")
-            addchildevent.add(beforeTxt+"sendEvent("+args+",data: [sign: \"\${signatureResult"+event_num+"}\"]"+")")
-        }
-    }*/
-}
-
 
 /*
 def getExcel(value,rowNo){

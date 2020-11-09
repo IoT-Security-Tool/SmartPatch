@@ -42,37 +42,6 @@ def whichMethod(int line){
     return ""
 }
 
-
-
-def getconfig(configlist,slurper,methodMap,sendEventlist,createEventlist,createEventnumberlist,sendEventnumberlist) {
-    for (int i = 0; i < configlist.size(); i++) {
-        def json = slurper.parseText(configlist[i])
-        if (json.type == "MethodNode") {
-            methodMap.put(json.name,json.linenumber)
-        }else if(json.type=="sendEvent"){
-            sendEventlist.add(configlist[i])
-        }else if(json.type=="createEvent"){
-            // creatEventindex=i
-            createEventlist.add(configlist[i])
-        }
-    }
-    print("the linenum of createEvent：")
-    for (int i = 0; i < createEventlist.size(); i++) {
-        def createjson = slurper.parseText(createEventlist[i])
-        createEventnumberlist.add(createjson.linenumber)
-        print(createjson.linenumber+" ")
-    }
-    print("\n")
-
-    print("the linenum of sendEvent：")
-    for (int i = 0; i < sendEventlist.size(); i++) {
-        def sendjson = slurper.parseText(sendEventlist[i])
-        sendEventnumberlist.add(sendjson.linenumber)
-        print(sendjson.linenumber+" ")
-    }
-    print("\n")
-}
-
 def dealargs(String[] str){
     def index = 0
     def map = [:]
@@ -95,6 +64,26 @@ def dealargs(String[] str){
         }
     }
     return map
+}
+
+def addchild(obj,temp,args,num){
+    def returnlist = []
+    if(temp.size()==1) {
+        returnlist.add("\t\tdef signatureResult"+num+"= null")
+        returnlist.add("\t\tsignatureResult"+num+" = "+obj+"getSignature("+args+".name,"+args+".value)")
+        returnlist.add(args+".put('data',[sign: \"\${signatureResult"+num+"}\"])")
+        returnlist.add(obj+"sendEvent("+args+")")
+    }else{
+        def eventmap = dealargs(temp)
+        def filedname = eventmap.get("name")
+        if(eventmap.get("name") == null)  filedname = eventmap.get("\"name\"")
+        def filedvalue = eventmap.get("value")
+        if(eventmap.get("value") == null)  filedvalue = eventmap.get("\"value\"")
+        returnlist.add("\t\tdef signatureResult"+num+"= null")
+        returnlist.add("\t\tsignatureResult"+num+" = "+obj+"getSignature("+filedname+","+filedvalue+")")
+        returnlist.add(obj+"sendEvent("+args+",data: [sign: \"\${signatureResult"+num+"}\"]"+")")
+    }
+    return returnlist
 }
 
 def addcreatEvent(List l, String str, String beforestr, String afterstr, int num){
@@ -251,6 +240,8 @@ def addsendEvent(List l, String str, String beforestr, String afterstr, int num)
         if(str.contains(":")){
             sendevent = beforestr + "sendEvent("
             def pos = 0
+            //parameters can also be processed as map during extraction,
+            //which will make judgment more accurate and convenient
             if(str.contains("data")){
                 int intIndex = str.indexOf("data")
                 for (int i=intIndex+3; i< str.length(); i++){
@@ -303,6 +294,36 @@ def extractBeforeMessage(msg){
     }
     return BeforeTxt
 }
+
+def getconfig(configlist,slurper,methodMap,sendEventlist,createEventlist,createEventnumberlist,sendEventnumberlist) {
+    for (int i = 0; i < configlist.size(); i++) {
+        def json = slurper.parseText(configlist[i])
+        if (json.type == "MethodNode") {
+            methodMap.put(json.name,json.linenumber)
+        }else if(json.type=="sendEvent"){
+            sendEventlist.add(configlist[i])
+        }else if(json.type=="createEvent"){
+            // creatEventindex=i
+            createEventlist.add(configlist[i])
+        }
+    }
+    print("the linenum of createEvent：")
+    for (int i = 0; i < createEventlist.size(); i++) {
+        def createjson = slurper.parseText(createEventlist[i])
+        createEventnumberlist.add(createjson.linenumber)
+        print(createjson.linenumber+" ")
+    }
+    print("\n")
+
+    print("the linenum of sendEvent：")
+    for (int i = 0; i < sendEventlist.size(); i++) {
+        def sendjson = slurper.parseText(sendEventlist[i])
+        sendEventnumberlist.add(sendjson.linenumber)
+        print(sendjson.linenumber+" ")
+    }
+    print("\n")
+}
+
 
 def add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sendEventnumberlist,createEventlist,sendEventlist,outfile,row){
 
@@ -539,26 +560,6 @@ def add(filename,headfile,sourcefile,methodMap,slurper,createEventnumberlist,sen
     for (int i = 0; i < outlist.size(); i++) {
         outfile<<outlist[i]<<"\n"
     }
-}
-
-def addchild(obj,temp,args,num){
-    def returnlist = []
-    if(temp.size()==1) {
-        returnlist.add("\t\tdef signatureResult"+num+"= null")
-        returnlist.add("\t\tsignatureResult"+num+" = "+obj+"getSignature("+args+".name,"+args+".value)")
-        returnlist.add(args+".put('data',[sign: \"\${signatureResult"+num+"}\"])")
-        returnlist.add(obj+"sendEvent("+args+")")
-    }else{
-        def eventmap = dealargs(temp)
-        def filedname = eventmap.get("name")
-        if(eventmap.get("name") == null)  filedname = eventmap.get("\"name\"")
-        def filedvalue = eventmap.get("value")
-        if(eventmap.get("value") == null)  filedvalue = eventmap.get("\"value\"")
-        returnlist.add("\t\tdef signatureResult"+num+"= null")
-        returnlist.add("\t\tsignatureResult"+num+" = "+obj+"getSignature("+filedname+","+filedvalue+")")
-        returnlist.add(obj+"sendEvent("+args+",data: [sign: \"\${signatureResult"+num+"}\"]"+")")
-    }
-    return returnlist
 }
 
 /*

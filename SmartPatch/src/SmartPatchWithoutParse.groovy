@@ -199,6 +199,11 @@ def extractParam(file,linenum){
                 if (str.substring(j, j+11) == "createEvent") {
                     SaveTxt = str.substring(j+11,str.length())
                     SaveTxt = SaveTxt.trim()
+                    //(cmd) }
+                    //It can also be stored as map when extracting
+                    //Similar to dealargs() in "addappfunc"
+                    //To avoid unexpected errors that are not in the data set
+                    //The same for AST method
                     N = SaveTxt.length()
                     if(SaveTxt[N-1] != ")") SaveTxt = SaveTxt.substring(0,N-1)
                     return SaveTxt.trim()

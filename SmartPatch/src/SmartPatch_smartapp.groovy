@@ -52,8 +52,10 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
             keyline=[]
             //0-7:device mode position sunrise sunset sunriseTime sunsetTime app
             eventflag=[]
+            //do not add duplicate code to the same type of event
             notduplicate=[]
             beginnum=0
+            //whether it contains the install() and init()
             installedLinenumber=[]
             time_init_num=[]
 
@@ -72,12 +74,12 @@ if (candir !=null && candir.exists()&& candir.isDirectory()){
             }
             outfile.createNewFile()
             configlist = configfile.collect {it}
-            //TODO childFlag
+
             childLine=[]
             childEventlist=[]
             entity.getKey(configlist,slurper,eventflag,beginnum,keyline,notduplicate,installedLinenumber,time_init_num,childEventlist,childLine)
             entity.solveline(sourcefile,keyline)
-            //todo childFlag
+
             entity.initSource(headfile,headfile_sun,sourcefile,outfile,eventflag,keyline,notduplicate,installedLinenumber,time_init_num,i+1,childEventlist,childLine)
 
             long runEnd = System.currentTimeMillis();

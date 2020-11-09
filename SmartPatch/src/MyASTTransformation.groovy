@@ -112,11 +112,6 @@ class MyASTTransformation implements ASTTransformation {
                 }
                 jsonlist.add(json)*/
             }
-            //TODO child
-            /*else if (sub.methodAsString.toString().contains("sendEvent")) {
-                def lineno = statement.lineNumber
-                addchildjson(src,lineno)
-            }*/
         }
         //else if(statement.getExpression().getRightExpression().getClass().getSimpleName() ==  "MethodCallExpression"){
         else if(statement.getExpression().getClass().getSimpleName() == "BinaryExpression" ||
@@ -451,5 +446,156 @@ class MyASTTransformation implements ASTTransformation {
         out.close()
     }
     */
+
+    /*
+    //Additional methods for extracting parameters: this works for most simple cases
+
+    def processparam(sub,param){
+    //println(sub.getArguments().getText())
+    //def str = sub.getArguments().getText()
+    //def param = str.substring(1,str.length()-1)
+    def str = sub.getArguments().getText()
+    if(sub.getArguments().size() == 1 && sub.getArguments().getExpression(0).getClass().getSimpleName() == "MethodCallExpression"){
+        param += sub.getArguments().getExpression(0).methodAsString
+        param += "("
+        param = processparam(sub.getArguments().getExpression(0),param)
+        param += ")"
+    }else if(sub.getArguments().size() == 1){
+        for (int j = 0; j < sub.getArguments().size(); j++) {
+            if (sub.getArguments().getExpression(0).type.toString() == "java.lang.String"
+                    || sub.getArguments().getExpression(0).type.toString() == "groovy.lang.GString"){
+                param = param + "\"" + sub.getArguments().getExpression(0).text.toString() +"\""
+            }else if(str.contains(",")){
+                //MapExpression
+                //NamedArgumentListExpression namedArgumentListExpression = tuple.getExpression(j)
+
+                def maplist = sub.getArguments().getExpression(j).getMapEntryExpressions()
+                for (int k = 0; k < maplist.size(); k++) {
+                    MapEntryExpression mapEntry = maplist[k]
+                    //argmap.put(mapEntry.keyExpression.text, mapEntry.valueExpression.text)
+                    //println(mapEntry.valueExpression.type)
+                    param = param + mapEntry.keyExpression.text.toString() + ":"
+                    if(mapEntry.keyExpression.text.toString() == "data"){
+                        def datalist = mapEntry.valueExpression.getMapEntryExpressions()
+                        param = param + "["
+                        for (int datanum = 0; datanum < datalist.size(); datanum++){
+                            MapEntryExpression datamapEntry = datalist[datanum]
+                            param = param + datamapEntry.keyExpression.text.toString() + ":"
+                            if(datamapEntry.valueExpression.getClass().getSimpleName() == "MethodCallExpression"){
+                                def size = datamapEntry.valueExpression.getArguments().size()
+                                for(int l=0 ; l<size; l++){
+                                    if(datamapEntry.valueExpression.getArguments().getExpression(l).getClass().getSimpleName() == "MapExpression")
+                                    {
+                                        param += processparam(datamapEntry.valueExpression,param)
+                                    }
+                                    else{
+                                        param = param + datamapEntry.valueExpression.text.toString()
+                                    }
+                                }
+                            }
+                            else if(datamapEntry.valueExpression.type.toString() == "java.lang.String"
+                                    || datamapEntry.valueExpression.type.toString() == "groovy.lang.GString"){
+                                param = param + "\"" + datamapEntry.valueExpression.text.toString() +"\""
+                            }else{
+                                param = param + datamapEntry.valueExpression.text.toString()
+                            }
+                            if(datanum != datalist.size()-1){
+                                param = param + ","
+                            }
+                        }
+                        param = param + "]"
+                    }
+                    //if(mapEntry.valueExpression.type.toString() == "java.lang.Object"){
+                    else if(mapEntry.valueExpression.getClass().getSimpleName() == "MethodCallExpression"){
+                        def size = mapEntry.valueExpression.getArguments().size()
+                        for(int l=0 ; l<size; l++){
+                            //println(mapEntry.valueExpression.getArguments().getExpression(l).getClass().getSimpleName())
+                            if(mapEntry.valueExpression.getArguments().getExpression(l).getClass().getSimpleName() == "MapExpression")
+                            {
+                                param += processparam(mapEntry.valueExpression,param)
+                            }
+                            else{
+                                param = param + mapEntry.valueExpression.text.toString()
+                            }
+                        }
+                    }
+                    //else if(mapEntry.valueExpression.getClass().getSimpleName() == "MapExpression"){
+                        //MapExpression key = mapEntry.valueExpression
+                        //def list = key.getMapEntryExpressions()
+                        //param = param + "\"" + mapEntry.valueExpression.text.toString() +"\""
+                    //}
+                    else if(mapEntry.valueExpression.type.toString() == "java.lang.String"
+                            || mapEntry.valueExpression.type.toString() == "groovy.lang.GString"){
+                        param = param + "\"" + mapEntry.valueExpression.text.toString() +"\""
+                    }
+                    else{
+                        param = param + mapEntry.valueExpression.text.toString()
+                    }
+                    if(k != maplist.size()-1){
+                        param = param + ","
+                    }
+                }
+            }
+            else{
+                param = param + sub.getArguments().getExpression(0).text.toString()
+            }
+        }
+    }
+    //else if (str.contains(",")){
+    else if (sub.getArguments().size() >= 2){
+        //println(sub.getArguments().type) java.lang.Object
+        //println(sub.getArguments().getType()) java.lang.Object
+        //TupleExpression tuple = sub.getArguments()
+        for (int j = 0; j < sub.getArguments().size(); j++) {
+            if (sub.getArguments().getExpression(j).type.toString() == "java.lang.String"
+                    || sub.getArguments().getExpression(j).type.toString() == "groovy.lang.GString"){
+                param = param + "\"" + sub.getArguments().getExpression(j).text.toString() +"\""
+                if(j != sub.getArguments().size()-1){
+                    param = param + ","
+                }
+            }
+//            else{
+//                //MapExpression
+//                //NamedArgumentListExpression namedArgumentListExpression = tuple.getExpression(j)
+//
+//                def maplist = sub.getArguments().getExpression(j).getMapEntryExpressions()
+//                for (int k = 0; k < maplist.size(); k++) {
+//                    MapEntryExpression mapEntry = maplist[k]
+//                    //argmap.put(mapEntry.keyExpression.text, mapEntry.valueExpression.text)
+//                    //println(mapEntry.valueExpression.type)
+//                    param = param + mapEntry.keyExpression.text.toString() + ":"
+//                    //if(mapEntry.valueExpression.type.toString() == "java.lang.Object"){
+//                    if(mapEntry.valueExpression.getClass().getSimpleName() == "MethodCallExpression"){
+//                        def size = mapEntry.valueExpression.getArguments().size()
+//                        for(int l=0 ; l<size; l++){
+//                            //println(mapEntry.valueExpression.getArguments().getExpression(l).getClass().getSimpleName())
+//                            if(mapEntry.valueExpression.getArguments().getExpression(l).getClass().getSimpleName() == "MapExpression")
+//                            {
+//                                param += processparam(mapEntry.valueExpression,param)
+//                            }
+//                            else{
+//                                param = param + mapEntry.valueExpression.text.toString()
+//                            }
+//                        }
+//                    }
+//                    else if(mapEntry.valueExpression.type.toString() == "java.lang.String"
+//                            || mapEntry.valueExpression.type.toString() == "groovy.lang.GString"){
+//                        param = param + "\"" + mapEntry.valueExpression.text.toString() +"\""
+//                    }else{
+//                        param = param + mapEntry.valueExpression.text.toString()
+//                    }
+//                    if(k != maplist.size()-1){
+//                        param = param + ","
+//                    }
+//                }
+//            }
+            }
+        }
+        else{
+            param = str.substring(1,str.length()-1)
+        }
+        return param
+    }
+     */
 
 }
